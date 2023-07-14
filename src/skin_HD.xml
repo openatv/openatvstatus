@@ -32,7 +32,7 @@
 				}
 			</convert>
 		</widget>
-		<widget name="platinfo" position="13,573" size="773,28" font="Regular;20" halign="left" valign="center" />
+		<widget name="platinfo" position="13,573" size="773,28" font="Regular;20" halign="left" valign="center" foregroundColor="black" backgroundColor="grey" />
 		<eLabel name="red" position="33,603" size="6,43" backgroundColor="red" zPosition="1" />
 		<eLabel name="blue" position="363,603" size="6,43" backgroundColor="blue" zPosition="1" />
 		<widget name="key_red" position="46,606" size="303,28" font="Regular;20" transparent="1" backgroundColor="#1A0F0F0F"/>
@@ -57,6 +57,7 @@
 		<eLabel text="EndBuild" position="780,76" size="230,28" font="Regular;20" halign="right" valign="center" foregroundColor="black" backgroundColor="grey" transparent="1" />
 		<eLabel text="SyncTime" position="1010,76" size="100,28" font="Regular;20" halign="right" valign="center" foregroundColor="black" backgroundColor="grey" transparent="1" />
 		<eLabel text="BuildTime" position="1110,76" size="100,28" font="Regular;20" halign="right" valign="center" foregroundColor="black" backgroundColor="grey" transparent="1" />
+		<ePixmap position="1170,15" size="45,45" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/pic/bouquet_fHD.png" alphatest="blend" zPosition="1" />\
 		<widget source="menu" render="Listbox" position="10,110" size="1213,497" scrollbarMode="showOnDemand" transparent="1">
 			<convert type="TemplatedMultiContent">
 				{"template": [

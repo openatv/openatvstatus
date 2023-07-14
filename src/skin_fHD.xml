@@ -32,7 +32,7 @@
 				}
 			</convert>
 		</widget>
-		<widget name="platinfo" position="20,860" size="1160,42" font="Regular;30" halign="left" valign="center" />
+		<widget name="platinfo" position="20,860" size="1160,42" font="Regular;30" halign="left" valign="center" foregroundColor="black" backgroundColor="grey" />
 		<eLabel name="red" position="50,905" size="10,65" backgroundColor="red" zPosition="1" />
 		<eLabel name="blue" position="470,905" size="10,65" backgroundColor="blue" zPosition="1" />
 		<widget name="key_red" position="70,910" size="380,42" font="global_title;30" transparent="1" />
@@ -40,15 +40,15 @@
 	</screen>
 
 	<screen name="ATVimageslist" position="center,center" size="1850,1040" title="" flags="wfNoBorder">
-		<ePixmap position="15,15" size="450,75" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/pic/openATV_HD.png" alphatest="blend" zPosition="1" />\
+		<ePixmap position="15,15" size="450,75" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/pic/openATV_fHD.png" alphatest="blend" zPosition="1" />\
 		<widget source="Title" position="480,24" size="399,72" font="Regular;54" halign="left" valign="bottom" render="Label" transparent="1" />
 		<widget name="prev_label" position="750,15" size="300,36" font="Regular;24" halign="right" valign="top" transparent="1" />
 		<widget name="curr_label" position="1087,15" size="415,36" font="Regular;24" halign="center" valign="top" transparent="1" />
 		<widget name="next_label" position="1545,15" size="300,36" font="Regular;24" halign="left" valign="top" transparent="1" />
 		<widget name="prev_plat" position="750,24" size="300,69" font="Regular;36" halign="right" valign="bottom" transparent="1" />
-		<ePixmap position="1069,49" size="45,45" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/pic/key_left_HD.png" alphatest="blend" zPosition="1" />\
+		<ePixmap position="1070,49" size="45,45" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/pic/key_left_fHD.png" alphatest="blend" zPosition="1" />\
 		<widget name="curr_plat" position="1087,30" size="415,69" font="Regular;51" halign="center" valign="bottom" transparent="1" foregroundColor="green" />
-		<ePixmap position="1479,49" size="45,45" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/pic/key_right_HD.png" alphatest="blend" zPosition="1" />\
+		<ePixmap position="1480,49" size="45,45" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/pic/key_right_fHD.png" alphatest="blend" zPosition="1" />\
 		<widget name="next_plat" position="1545,24" size="300,69" font="Regular;36" halign="left" valign="bottom" transparent="1" />
 		<eLabel text="BoxName" position="20,114" size="300,42" font="Regular;30" halign="left" valign="center" foregroundColor="black" backgroundColor="grey" transparent="1" />
 		<eLabel text="BuildStatus" position="320,114" size="159,42" font="Regular;30" halign="right" valign="center" foregroundColor="black" backgroundColor="grey" transparent="1" />
@@ -57,6 +57,7 @@
 		<eLabel text="EndBuild" position="1170,114" size="345,42" font="Regular;30" halign="right" valign="center" foregroundColor="black" backgroundColor="grey" transparent="1" />
 		<eLabel text="SyncTime" position="1515,114" size="150,42" font="Regular;30" halign="right" valign="center" foregroundColor="black" backgroundColor="grey" transparent="1" />
 		<eLabel text="BuildTime" position="1665,114" size="150,42" font="Regular;30" halign="right" valign="center" foregroundColor="black" backgroundColor="grey" transparent="1" />
+		<ePixmap position="1755,35" size="45,45" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/pic/bouquet_fHD.png" alphatest="blend" zPosition="1" />\
 		<widget source="menu" render="Listbox" position="15,165" size="1819,745" scrollbarMode="showOnDemand" transparent="1">
 			<convert type="TemplatedMultiContent">
 				{"template": [
@@ -78,7 +79,7 @@
 		<eLabel name="red" position="49,979" size="9,64" backgroundColor="red" zPosition="1" />
 		<eLabel name="green" position="544,979" size="9,64" backgroundColor="green" zPosition="1" />
 		<eLabel name="yellow" position="1039,979" size="9,64" backgroundColor="yellow" zPosition="1" />
-		<ePixmap position="1590,981" size="45,45" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/pic/key_menu_HD.png" alphatest="blend" zPosition="1" />\
+		<ePixmap position="1590,981" size="45,45" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/pic/key_menu_fHD.png" alphatest="blend" zPosition="1" />\
 		<widget name="key_red" position="69,984" size="454,42" font="Regular;30" halign="left" transparent="1" foregroundColor="white" backgroundColor="#1A0F0F0F" />
 		<widget name="key_green" position="564,984" size="454,42" font="Regular;30" halign="left" transparent="1" foregroundColor="white" backgroundColor="#1A0F0F0F" />
 		<widget name="key_yellow" position="1059,984" size="454,42" font="Regular;30" halign="left" transparent="1" foregroundColor="white" backgroundColor="#1A0F0F0F" />
