@@ -1,0 +1,227 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2023-07-13 12:21+0200\n"
+"PO-Revision-Date: 2023-07-13 12:21+0200\n"
+"Last-Translator: Mr.Servo <mrservo via GitHub.com>\n"
+"Language-Team: \n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+"X-Generator: Poedit 3.3.2\n"
+
+#: ..\plugin.py:42
+msgid "faster"
+msgstr "schneller"
+
+#: ..\plugin.py:42
+msgid "normal"
+msgstr "normal"
+
+#: ..\plugin.py:42
+msgid "off"
+msgstr "aus"
+
+#: ..\plugin.py:42
+msgid "slower"
+msgstr "langsamer"
+
+#: ..\plugin.py:43
+msgid "from selected box"
+msgstr "von ausgewählter Box"
+
+#: ..\plugin.py:161
+msgid "Favorites"
+msgstr "Favoriten"
+
+#: ..\plugin.py:163 ..\plugin.py:405
+msgid "remove box from favorites"
+msgstr "Box aus Favoriten entfernen"
+
+#: ..\plugin.py:164 ..\plugin.py:335
+msgid "Images list"
+msgstr "Imageliste"
+
+#: ..\plugin.py:240
+msgid "No favorites (box, platform) set yet."
+msgstr "Noch keine Favoriten (Box, Plattform) gesetzt."
+
+#: ..\plugin.py:240
+msgid "Please select favorite(s) in the image lists."
+msgstr "Bitte Favorit(en) in den Imagelisten auswählen."
+
+#: ..\plugin.py:265
+msgid "platform"
+msgstr "Plattform"
+
+#: ..\plugin.py:265 ..\plugin.py:415
+msgid "boxes"
+msgstr "Boxen"
+
+#: ..\plugin.py:265 ..\plugin.py:415
+msgid "failed"
+msgstr "fehlgeschlagen"
+
+#: ..\plugin.py:265 ..\plugin.py:415
+msgid "last build cycle"
+msgstr "letzter Bauzyklus"
+
+#: ..\plugin.py:272 ..\plugin.py:455
+msgid "Box '%s-%s' was sucessfully removed from favorites!"
+msgstr "Box '%s-%s' wurde erfolgreich aus den Favoriten entfernt!"
+
+#: ..\plugin.py:281 ..\plugin.py:461
+msgid "Do you really want to remove Box '%s-%s' from favorites?"
+msgstr "Wollen Sie die Box '%s-%s' wirklich aus den Favoriten entfernen?"
+
+#: ..\plugin.py:346
+msgid "jump to construction site"
+msgstr "springe zur Baustelle"
+
+#: ..\plugin.py:347
+msgid "jump to favorite(s)"
+msgstr "springe zu Favorit(en)"
+
+#: ..\plugin.py:348 ..\plugin.py:555
+msgid "Settings"
+msgstr "Einstellungen"
+
+#: ..\plugin.py:383
+msgid "previous"
+msgstr "vorherige"
+
+#: ..\plugin.py:384
+msgid "current platform"
+msgstr "derzeitige Plattform"
+
+#: ..\plugin.py:385
+msgid "next"
+msgstr "nächste"
+
+#: ..\plugin.py:407
+msgid "add box to favorites"
+msgstr "Box zu Favoriten hinzufügen"
+
+#: ..\plugin.py:411
+msgid "next build ends in %sh, still %s boxes before"
+msgstr "nächstes Bauende in %sh, zuvor noch %s Box(en)"
+
+#: ..\plugin.py:413
+msgid "image is under construction or failed, duration is unclear..."
+msgstr "Image wird gerade gebaut oder ist defekt, die Dauer ist unklar..."
+
+#: ..\plugin.py:417
+msgid "no box found in this platform!"
+msgstr "keine Box in dieser Plattform gefunden!"
+
+#: ..\plugin.py:418
+msgid "nothing to do - no build cycle"
+msgstr "Nichts zu tun - kein Bauzyklus"
+
+#: ..\plugin.py:466
+msgid "Box '%s-%s' was sucessfully added to favorites!"
+msgstr "Box '%s-%s' wurde erfolgreich zu den Favoriten hinzugefügt!"
+
+#: ..\plugin.py:476
+msgid "At the moment no image is built on the platform '%s'!"
+msgstr "Im Moment wird auf der Plattform '%s' kein Image gebaut!"
+
+#: ..\plugin.py:528
+msgid "Boxdetails"
+msgstr "Boxdetails"
+
+#: ..\plugin.py:562
+msgid "Preferred box architecture for images list:"
+msgstr "Bevorzugte Boxarchitektur für die Imagelisten:"
+
+#: ..\plugin.py:562
+msgid ""
+"Specify which box architecture should be preferred when images list will be "
+"called. If option 'current' is selected, the architecture of the selected "
+"box is taken."
+msgstr ""
+"Legen Sie fest, welche Boxarchitektur beim Aufruf der Imagelisten bevorzugt "
+"aufgerufen werden soll. Wenn Option \"current\" gewählt wurde, wird die "
+"Architektur der gewählten Box genommen."
+
+#: ..\plugin.py:563
+msgid "Animation for change of platform:"
+msgstr "Animation bei Plattformwechsel:"
+
+#: ..\plugin.py:563
+msgid ""
+"Sets the animation speed for the carousel function when changing platforms."
+msgstr ""
+"Legt die Animationsgeschwindigkeit für die Karussellfunktion bei "
+"Plattformwechsel fest."
+
+#: ..\plugin.py:565
+msgid "cancel"
+msgstr "abbrechen"
+
+#: ..\plugin.py:566
+msgid "save settings"
+msgstr "Einstellungen speichern"
+
+#: ..\plugin.py:587
+msgid "Current overview of the OpenATV images building servers"
+msgstr "Aktuelle Übersicht über die openATV Image-Bauserver"
+
+#~ msgid "Use images list for box selection"
+#~ msgstr "Nutze Imagelisten für Boxauswahl"
+
+#~ msgid ""
+#~ "Box '%s' is not in current platform! Please change to another platform."
+#~ msgstr ""
+#~ "Box '%s' ist nicht in aktueller Plattform! Bitte Plattform wechseln."
+
+#~ msgid "last build cycles"
+#~ msgstr "letzter Bauzyklus"
+
+#~ msgid "last build cycle: %sh, %s boxes, failed: %s"
+#~ msgstr "letzter Bauzyklus: %sh, %s Boxen, fehlgeschlagen: %s"
+
+#~ msgid "Open images list"
+#~ msgstr "Öffne Imagelisten"
+
+#~ msgid ""
+#~ "Specify which view you would like to see when when the plugin is started."
+#~ msgstr ""
+#~ "Legen Sie fest, welche Ansicht beim Starten des Plugins aufgerufen werden "
+#~ "soll."
+
+#~ msgid "View for plugin start:"
+#~ msgstr "Ansicht bei Plugin Start:"
+
+#~ msgid "imagelist"
+#~ msgstr "Imageliste"
+
+#~ msgid "complete platform lists"
+#~ msgstr "komplette Plattformliste"
+
+#~ msgid "Favorites view"
+#~ msgstr "Favoriten"
+
+#~ msgid "Buildserver"
+#~ msgstr "Bauserver"
+
+#~ msgid "Large font size in overview:"
+#~ msgstr "Große Schriftgröße in der Übersicht:"
+
+#~ msgid "Shows image build status overview in larger letters."
+#~ msgstr "Zeigt die Imagebau Statusübersicht in großen Buchstaben."
+
+#~ msgid "jump to currently built box"
+#~ msgstr "springe zur aktuell gebauter Box"
+
+#~ msgid "image is being built..."
+#~ msgstr "Image wird gerade gebaut..."
+
+#~ msgid "Shows which image currently is under construction and more"
+#~ msgstr "Zeigt welche Images gerade gebaut werden und mehr"
