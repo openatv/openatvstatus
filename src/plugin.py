@@ -43,7 +43,7 @@ config.plugins.OpenATVstatus.animate = ConfigSelection(default="50", choices=[("
 config.plugins.OpenATVstatus.favarch = ConfigSelection(default="current", choices=[("current", _("from selected box"))] + BS.archlist)
 config.plugins.OpenATVstatus.favboxes = ConfigText(default="", fixed_size=False)
 
-VERSION = "0.2"
+VERSION = "1.0"
 MODULE_NAME = __name__.split(".")[-1]
 FAVLIST = [tuple(atom.strip() for atom in item.replace("(", "").replace(")", "").split(",")) for item in config.plugins.OpenATVstatus.favboxes.value.split(";")] if config.plugins.OpenATVstatus.favboxes.value else []
 PICURL = "https://raw.githubusercontent.com/oe-alliance/remotes/master/boxes/"

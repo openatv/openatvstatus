@@ -57,7 +57,7 @@
 		<eLabel text="EndBuild" position="1170,114" size="345,42" font="Regular;30" halign="right" valign="center" foregroundColor="black" backgroundColor="grey" transparent="1" />
 		<eLabel text="SyncTime" position="1515,114" size="150,42" font="Regular;30" halign="right" valign="center" foregroundColor="black" backgroundColor="grey" transparent="1" />
 		<eLabel text="BuildTime" position="1665,114" size="150,42" font="Regular;30" halign="right" valign="center" foregroundColor="black" backgroundColor="grey" transparent="1" />
-		<ePixmap position="1755,35" size="45,45" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/pic/bouquet_fHD.png" alphatest="blend" zPosition="1" />\
+		<ePixmap position="1755,35" size="45,45" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/pic/bouquet_fHD.png" alphatest="blend" zPosition="1" />
 		<widget source="menu" render="Listbox" position="15,165" size="1819,745" scrollbarMode="showOnDemand" transparent="1">
 			<convert type="TemplatedMultiContent">
 				{"template": [
