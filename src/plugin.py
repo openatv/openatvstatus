@@ -167,7 +167,7 @@ class ATVfavorites(Screen, HelpableScreen):
 		self["actions"] = ActionMap(["WizardActions",
 				   					 "DirectionActions",
 									 "MenuActions",
-									"ColorActions"], {"ok": self.keyOk,
+									"ColorActions"], {"ok": self.keyBlue,
 			   											"back": self.exit,
 														'cancel': self.exit,
 														"red": self.keyRed,
@@ -260,10 +260,9 @@ class ATVfavorites(Screen, HelpableScreen):
 
 	def refreshstatus(self):
 		self.currindex = self["menu"].getSelectedIndex()
-		if self.currindex:
-			currplat = BS.getplatform(self.boxlist[self.currindex][1])
-			platdict = self.platdict[currplat]
-			self["platinfo"].setText("%s: %s, %s: %sh, %s %s, %s: %s" % (_("platform"), currplat, _("last build cycle"), platdict["cycletime"], platdict["boxcounter"], _("boxes"), _("failed"), platdict["boxfailed"]))
+		currplat = BS.getplatform(self.boxlist[self.currindex][1])
+		platdict = self.platdict[currplat]
+		self["platinfo"].setText("%s: %s, %s: %sh, %s %s, %s: %s" % (_("platform"), currplat, _("last build cycle"), platdict["cycletime"], platdict["boxcounter"], _("boxes"), _("failed"), platdict["boxfailed"]))
 
 	def msgboxReturn(self, answer):
 		if answer is True:
