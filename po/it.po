@@ -1,0 +1,166 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2023-07-15 17:52+0200\n"
+"PO-Revision-Date: 2023-07-15 21:25+0200\n"
+"Last-Translator: Lululla <Lululla via GitHub.com>\n"
+"Language-Team: Lululla\n"
+"Language: it_IT\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Generated-By: pygettext.py 1.5\n"
+"X-Generator: Poedit 3.3.2\n"
+
+#: ..\plugin.py:42
+msgid "faster"
+msgstr "veloce"
+
+#: ..\plugin.py:42
+msgid "normal"
+msgstr "normale"
+
+#: ..\plugin.py:42
+msgid "off"
+msgstr "spento"
+
+#: ..\plugin.py:42
+msgid "slower"
+msgstr "lento"
+
+#: ..\plugin.py:43
+msgid "selected box"
+msgstr "box selezionato"
+
+#: ..\plugin.py:162
+msgid "Favorites"
+msgstr "Preferiti"
+
+#: ..\plugin.py:164 ..\plugin.py:405
+msgid "remove box from favorites"
+msgstr "rimuovi Box da preferiti"
+
+#: ..\plugin.py:165 ..\plugin.py:335
+msgid "Images list"
+msgstr "Lista Immagini"
+
+#: ..\plugin.py:241
+msgid "No favorites (box, platform) set yet."
+msgstr "Nessun preferito (box, piattaforma) ancora impostato."
+
+#: ..\plugin.py:241
+msgid "Please select favorite(s) in the image lists."
+msgstr "Si prega di selezionare il/i preferito(i) negli elenchi di immagini."
+
+#: ..\plugin.py:265
+msgid "platform"
+msgstr "piattaforma"
+
+#: ..\plugin.py:265 ..\plugin.py:416
+msgid "boxes"
+msgstr "box"
+
+#: ..\plugin.py:265 ..\plugin.py:416
+msgid "failed"
+msgstr "fallito"
+
+#: ..\plugin.py:265 ..\plugin.py:416
+msgid "last build cycle"
+msgstr "ultimo ciclo di sviluppo"
+
+#: ..\plugin.py:272 ..\plugin.py:456
+msgid "Box '%s-%s' was sucessfully removed from favorites!"
+msgstr "Il Box '%s-%s' è stato rimosso con successo dai preferiti!"
+
+#: ..\plugin.py:281 ..\plugin.py:462
+msgid "Do you really want to remove Box '%s-%s' from favorites?"
+msgstr "Vuoi davvero rimuovere il box '%s-%s' dai preferiti?"
+
+#: ..\plugin.py:346
+msgid "jump to construction site"
+msgstr "vai al sito di sviluppo"
+
+#: ..\plugin.py:347
+msgid "jump to favorite(s)"
+msgstr "vai al/i favorito(i)"
+
+#: ..\plugin.py:348 ..\plugin.py:556
+msgid "Settings"
+msgstr "Impostazioni"
+
+#: ..\plugin.py:383
+msgid "previous"
+msgstr "precedente"
+
+#: ..\plugin.py:384
+msgid "current platform"
+msgstr "piattaforma attuale"
+
+#: ..\plugin.py:385
+msgid "next"
+msgstr "prossimo"
+
+#: ..\plugin.py:407
+msgid "add box to favorites"
+msgstr "aggiungi box ai preferiti"
+
+#: ..\plugin.py:412
+msgid "next build ends in %sh, still %s boxes before"
+msgstr "la prossima build termina tra %sh, ancora %s box prima"
+
+#: ..\plugin.py:414
+msgid "image is under construction or failed, duration is unclear..."
+msgstr "l'immagine è in costruzione o fallita, la durata non è chiara..."
+
+#: ..\plugin.py:418
+msgid "no box found in this platform!"
+msgstr "nessun box trovato in questa piattaforma!"
+
+#: ..\plugin.py:419
+msgid "nothing to do - no build cycle"
+msgstr "niente da fare - nessun ciclo di sviluppo"
+
+#: ..\plugin.py:467
+msgid "Box '%s-%s' was sucessfully added to favorites!"
+msgstr "Il Box '%s-%s' è stato aggiunto con successo ai preferiti!"
+
+#: ..\plugin.py:477
+msgid "At the moment no image is built on the platform '%s'!"
+msgstr "Al momento nessuna immagine è in sviluppo sulla piattaforma '%s'!"
+
+#: ..\plugin.py:529
+msgid "Boxdetails"
+msgstr "Specifiche del Box"
+
+#: ..\plugin.py:563
+msgid "Preferred box architecture for images list:"
+msgstr "Architettura del box preferito per l'elenco delle immagini:"
+
+#: ..\plugin.py:563
+msgid "Specify which box architecture should be preferred when images list will be called. If option 'current' is selected, the architecture of the selected box is taken."
+msgstr "Specificare quale architettura del box dovrebbe essere preferita quando verrà caricato l'elenco delle immagini. Se è selezionata l'opzione 'current', viene presa l'architettura del box selezionato."
+
+#: ..\plugin.py:564
+msgid "Animation for change of platform:"
+msgstr "Animazione per il cambio di piattaforma:"
+
+#: ..\plugin.py:564
+msgid "Sets the animation speed for the carousel function when changing platforms."
+msgstr "Animazione per il cambio di piattaforma."
+
+#: ..\plugin.py:566
+msgid "cancel"
+msgstr "annulla"
+
+#: ..\plugin.py:567
+msgid "save settings"
+msgstr "salva impostazioni"
+
+#: ..\plugin.py:588
+msgid "Current overview of the OpenATV images building servers"
+msgstr "Panoramica attuale dei server di creazione di immagini OpenATV"
