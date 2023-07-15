@@ -40,10 +40,10 @@ BS.start()
 
 config.plugins.OpenATVstatus = ConfigSubsection()
 config.plugins.OpenATVstatus.animate = ConfigSelection(default="50", choices=[("off", _("off")), ("70", _("slower")), ("50", _("normal")), ("30", _("faster"))])
-config.plugins.OpenATVstatus.favarch = ConfigSelection(default="current", choices=[("current", _("from selected box"))] + BS.archlist)
+config.plugins.OpenATVstatus.favarch = ConfigSelection(default="current", choices=[("current", _("selected box"))] + BS.archlist)
 config.plugins.OpenATVstatus.favboxes = ConfigText(default="", fixed_size=False)
 
-VERSION = "0.2"
+VERSION = "1.0"
 MODULE_NAME = __name__.split(".")[-1]
 FAVLIST = [tuple(atom.strip() for atom in item.replace("(", "").replace(")", "").split(",")) for item in config.plugins.OpenATVstatus.favboxes.value.split(";")] if config.plugins.OpenATVstatus.favboxes.value else []
 PICURL = "https://raw.githubusercontent.com/oe-alliance/remotes/master/boxes/"
@@ -216,13 +216,8 @@ class ATVfavorites(Screen, HelpableScreen):
 								self.platdict[currplat]["cycletime"] = BS.strf_delta(cycletime)
 								self.platdict[currplat]["boxcounter"] = counter
 								self.platdict[currplat]["boxfailed"] = failed
-							estimated = ""
-							if buildtime:
-								estimated = "%sh" % BS.strf_delta(buildtime)
-								buildtime = "%sh" % buildtime
-							else:
-								buildtime = ""
-							textlist = [box[0], box[1], bd["BuildStatus"], estimated, "%s" % boxesahead, bd["StartBuild"], bd["EndBuild"], buildtime, color]
+							buildtime = "%sh" % BS.strf_delta(buildtime) if buildtime else ""
+							textlist = [box[0], box[1], bd["BuildStatus"], buildtime, "%s" % boxesahead, bd["StartBuild"], bd["EndBuild"], bd["BuildTime"], color]
 							baselist.append(textlist)
 							picfile = join(TMPPATH, "%s.png" % box[0])
 							if exists(picfile):
@@ -259,10 +254,11 @@ class ATVfavorites(Screen, HelpableScreen):
 		self["menu"].updateList(menulist)
 
 	def refreshstatus(self):
-		self.currindex = self["menu"].getSelectedIndex()
-		currplat = BS.getplatform(self.boxlist[self.currindex][1])
-		platdict = self.platdict[currplat]
-		self["platinfo"].setText("%s: %s, %s: %sh, %s %s, %s: %s" % (_("platform"), currplat, _("last build cycle"), platdict["cycletime"], platdict["boxcounter"], _("boxes"), _("failed"), platdict["boxfailed"]))
+		if FAVLIST:
+			self.currindex = self["menu"].getSelectedIndex()
+			currplat = BS.getplatform(self.boxlist[self.currindex][1])
+			platdict = self.platdict[currplat]
+			self["platinfo"].setText("%s: %s, %s: %sh, %s %s, %s: %s" % (_("platform"), currplat, _("last build cycle"), platdict["cycletime"], platdict["boxcounter"], _("boxes"), _("failed"), platdict["boxfailed"]))
 
 	def msgboxReturn(self, answer):
 		if answer is True:
@@ -406,10 +402,8 @@ class ATVimageslist(Screen, HelpableScreen):
 		else:
 			self["key_red"].setText(_("add box to favorites"))
 		buildtime, boxesahead, cycletime, counter, failed = BS.evaluate(self.boxlist[self.currindex][0])
-		print("#####buildtime:", buildtime)
 		if buildtime:
-			estimated = BS.strf_delta(buildtime)
-			self["boxinfo"].setText(_("next build ends in %sh, still %s boxes before") % (estimated, boxesahead))
+			self["boxinfo"].setText(_("next build ends in %sh, still %s boxes before") % (BS.strf_delta(buildtime), boxesahead))
 		else:
 			self["boxinfo"].setText(_("image is under construction or failed, duration is unclear..."))
 		if cycletime:
