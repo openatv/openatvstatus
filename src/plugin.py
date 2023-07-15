@@ -402,10 +402,8 @@ class ATVimageslist(Screen, HelpableScreen):
 		else:
 			self["key_red"].setText(_("add box to favorites"))
 		buildtime, boxesahead, cycletime, counter, failed = BS.evaluate(self.boxlist[self.currindex][0])
-		print("#####buildtime:", buildtime)
 		if buildtime:
-			estimated = BS.strf_delta(buildtime)
-			self["boxinfo"].setText(_("next build ends in %sh, still %s boxes before") % (estimated, boxesahead))
+			self["boxinfo"].setText(_("next build ends in %sh, still %s boxes before") % (BS.strf_delta(buildtime), boxesahead))
 		else:
 			self["boxinfo"].setText(_("image is under construction or failed, duration is unclear..."))
 		if cycletime:
