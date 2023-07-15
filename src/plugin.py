@@ -216,13 +216,8 @@ class ATVfavorites(Screen, HelpableScreen):
 								self.platdict[currplat]["cycletime"] = BS.strf_delta(cycletime)
 								self.platdict[currplat]["boxcounter"] = counter
 								self.platdict[currplat]["boxfailed"] = failed
-							estimated = ""
-							if buildtime:
-								estimated = "%sh" % BS.strf_delta(buildtime)
-								buildtime = "%sh" % buildtime
-							else:
-								buildtime = ""
-							textlist = [box[0], box[1], bd["BuildStatus"], estimated, "%s" % boxesahead, bd["StartBuild"], bd["EndBuild"], buildtime, color]
+							buildtime = "%sh" % BS.strf_delta(buildtime) if buildtime else ""
+							textlist = [box[0], box[1], bd["BuildStatus"], buildtime, "%s" % boxesahead, bd["StartBuild"], bd["EndBuild"], bd["BuildTime"], color]
 							baselist.append(textlist)
 							picfile = join(TMPPATH, "%s.png" % box[0])
 							if exists(picfile):
