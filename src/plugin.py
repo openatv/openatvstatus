@@ -40,7 +40,7 @@ BS.start()
 
 config.plugins.OpenATVstatus = ConfigSubsection()
 config.plugins.OpenATVstatus.animate = ConfigSelection(default="50", choices=[("off", _("off")), ("70", _("slower")), ("50", _("normal")), ("30", _("faster"))])
-config.plugins.OpenATVstatus.favarch = ConfigSelection(default="current", choices=[("current", _("from selected box"))] + BS.archlist)
+config.plugins.OpenATVstatus.favarch = ConfigSelection(default="current", choices=[("current", _("selected box"))] + BS.archlist)
 config.plugins.OpenATVstatus.favboxes = ConfigText(default="", fixed_size=False)
 
 VERSION = "1.0"
