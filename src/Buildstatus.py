@@ -161,7 +161,7 @@ class Buildstatus():
 			return None, 0, None, 0, 0
 		buildbox = self.findbuildbox()
 		boxinfo = self.htmldict["boxinfo"]
-		buildtime = timedelta()
+		nextbuild = timedelta()
 		cycletime = timedelta()
 		boxesahead = 0
 		boxcounter = 0
@@ -175,14 +175,14 @@ class Buildstatus():
 			if boxname == buildbox:  # aktuell gebaute Box
 				collect = True
 				if not foundbox:
-					buildtime = timedelta()  # reset
+					nextbuild = timedelta()  # reset
 					boxesahead = 0
 			else:
 				h, m, s = time
 				cycletime += timedelta(hours=int(h), minutes=int(m), seconds=int(s))
 			if collect and len(time) > 1:
 				h, m, s = time
-				buildtime += timedelta(hours=int(h), minutes=int(m), seconds=int(s))
+				nextbuild += timedelta(hours=int(h), minutes=int(m), seconds=int(s))
 				boxesahead += 1
 			if boxname == box:  # eigener Boxname
 				foundbox = True
@@ -193,8 +193,8 @@ class Buildstatus():
 		if box is not None and not foundbox:
 			print("[%s] WARNING in module 'evaluate': '%s" % (MODULE_NAME, "Box not found in this architecture. Try another architecture."))
 			return None, 0, cycletime, boxcounter, failed
-		buildtime = None if buildtime == timedelta() else buildtime
-		return buildtime, str(boxesahead - 1), cycletime, boxcounter, str(failed)
+		nextbuild = None if nextbuild == timedelta() else nextbuild
+		return nextbuild, str(boxesahead - 1), cycletime, boxcounter, str(failed)
 
 	def strf_delta(self, td):  # converts deltatime-format in hours (e.g. '2 days 01:00' in '49:00:00')
 		h, r = divmod(int(td.total_seconds()), 60 * 60)
@@ -217,7 +217,7 @@ def main(argv):  # shell interface
 	cycletime = None
 	counter = 0
 	failed = 0
-	helpstring = "Buildstatus v1.0: try 'python Buildstatus.py -h' for more information"
+	helpstring = "Buildstatus v1.1: try 'python Buildstatus.py -h' for more information"
 
 	BS = Buildstatus()
 	BS.start()  # interactive call without threading
@@ -277,9 +277,9 @@ def main(argv):  # shell interface
 			BS.error = None
 	if evaluate:
 		if boxname:
-			buildtime, boxesahead, cycletime, counter, failed = BS.evaluate(boxname)
-			if buildtime is not None:
-				print("estimated time for next image '%s': %s h (%s boxes ahead)" % (boxname, BS.strf_delta(buildtime), boxesahead))
+			nextbuild, boxesahead, cycletime, counter, failed = BS.evaluate(boxname)
+			if nextbuild is not None:
+				print("estimated time for next image '%s': %s h (%s boxes ahead)" % (boxname, BS.strf_delta(nextbuild), boxesahead))
 			if BS.error:
 				print(BS.error.replace(mainfmt, "").strip())
 				BS.error = None
@@ -288,7 +288,7 @@ def main(argv):  # shell interface
 			exit()
 	if cycle:
 		if not cycletime:
-			buildtime, boxesahead, cycletime, counter, failed = BS.evaluate()
+			nextbuild, boxesahead, cycletime, counter, failed = BS.evaluate()
 		if cycletime:
 			print("estimated durance of complete cycle (%s): %s h" % (currplat, BS.strf_delta(cycletime)))
 		if BS.error:
