@@ -11,6 +11,7 @@
 #########################################################################################################
 
 # PYTHON IMPORTS
+from datetime import datetime
 from os import makedirs
 from os.path import join, exists
 from requests import get, exceptions
@@ -160,6 +161,7 @@ class ATVfavorites(Screen, HelpableScreen):
 		self.platdict = dict()
 		self.currindex = 0
 		self.setTitle(_("Favorites"))
+		self["curr_date"] = Label()
 		self["platinfo"] = Label()
 		self["key_red"] = Label(_("remove box from favorites"))
 		self["key_blue"] = Label(_("Images list"))
@@ -185,6 +187,7 @@ class ATVfavorites(Screen, HelpableScreen):
 		makedirs(TMPPATH, exist_ok=True)
 
 	def onLayoutFinished(self):
+		self["curr_date"].setText(datetime.now().strftime('%x'))
 		self.createMenulist()
 		self.refreshstatus()
 
@@ -210,14 +213,16 @@ class ATVfavorites(Screen, HelpableScreen):
 							bd = BS.htmldict["boxinfo"][box[0]]
 							palette = {"Building": 0x00B028, "Failed": 0xFF0400, "Complete": 0xFFFFFF, "Waiting": 0xFFAE00}
 							color = palette.get(bd["BuildStatus"], 0xB0B0B0)
-							buildtime, boxesahead, cycletime, counter, failed = BS.evaluate(box[0])
+							nextbuild, boxesahead, cycletime, counter, failed = BS.evaluate(box[0])
 							if box[1] not in self.platdict:
 								self.platdict[currplat] = dict()
 								self.platdict[currplat]["cycletime"] = BS.strf_delta(cycletime)
 								self.platdict[currplat]["boxcounter"] = counter
 								self.platdict[currplat]["boxfailed"] = failed
-							buildtime = "%sh" % BS.strf_delta(buildtime) if buildtime else ""
-							textlist = [box[0], box[1], bd["BuildStatus"], buildtime, "%s" % boxesahead, bd["StartBuild"], bd["EndBuild"], bd["BuildTime"], color]
+							nextbuild = "%sh" % BS.strf_delta(nextbuild) if nextbuild else ""
+							buildtime = bd["BuildTime"].strip()
+							buildtime = "%sh" % buildtime if buildtime else ""
+							textlist = [box[0], box[1], bd["BuildStatus"], nextbuild, "%s" % boxesahead, bd["StartBuild"], bd["EndBuild"], buildtime, color]
 							baselist.append(textlist)
 							picfile = join(TMPPATH, "%s.png" % box[0])
 							if exists(picfile):
@@ -335,6 +340,7 @@ class ATVimageslist(Screen, HelpableScreen):
 		self["prev_label"] = Label()
 		self["curr_label"] = Label()
 		self["next_label"] = Label()
+		self["curr_date"] = Label()
 		self["boxinfo"] = Label()
 		self["platinfo"] = Label()
 		self["menu"] = List([])
@@ -379,6 +385,7 @@ class ATVimageslist(Screen, HelpableScreen):
 		self["prev_label"].setText(_("previous"))
 		self["curr_label"].setText(_("current platform"))
 		self["next_label"].setText(_("next"))
+		self["curr_date"].setText(datetime.now().strftime('%x'))
 		menulist = []
 		boxlist = []
 		if BS.htmldict:
@@ -387,7 +394,9 @@ class ATVimageslist(Screen, HelpableScreen):
 				bd = BS.htmldict["boxinfo"][boxname]
 				palette = {"Building": 0x00B028, "Failed": 0xFF0400, "Complete": 0xB0B0B0, "Waiting": 0xFFAE00}
 				color = 0xFDFf00 if [item for item in FAVLIST if item == (boxname, self.currarch)] else palette.get(bd["BuildStatus"], 0xB0B0B0)
-				menulist.append(tuple([boxname, bd["BuildStatus"], bd["StartBuild"], bd["StartFeedSync"], bd["EndBuild"], bd["SyncTime"], bd["BuildTime"], color]))
+				buildtime = bd["BuildTime"].strip()
+				buildtime = "%sh" % buildtime if buildtime else ""
+				menulist.append(tuple([boxname, bd["BuildStatus"], bd["StartBuild"], bd["StartFeedSync"], bd["EndBuild"], bd["SyncTime"], buildtime, color]))
 			self["menu"].setList(menulist)
 			self.boxlist = boxlist
 		if self.currfav:
@@ -401,9 +410,9 @@ class ATVimageslist(Screen, HelpableScreen):
 			self["key_red"].setText(_("remove box from favorites"))
 		else:
 			self["key_red"].setText(_("add box to favorites"))
-		buildtime, boxesahead, cycletime, counter, failed = BS.evaluate(self.boxlist[self.currindex][0])
-		if buildtime:
-			self["boxinfo"].setText(_("next build ends in %sh, still %s boxes before") % (BS.strf_delta(buildtime), boxesahead))
+		nextbuild, boxesahead, cycletime, counter, failed = BS.evaluate(self.boxlist[self.currindex][0])
+		if nextbuild:
+			self["boxinfo"].setText(_("next build ends in %sh, still %s boxes before") % (BS.strf_delta(nextbuild), boxesahead))
 		else:
 			self["boxinfo"].setText(_("image is under construction or failed, duration is unclear..."))
 		if cycletime:
