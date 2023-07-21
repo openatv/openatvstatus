@@ -192,11 +192,10 @@ class Buildstatus():
 			boxcounter += 1
 		if box is not None and not foundbox:
 			print("[%s] WARNING in module 'evaluate': '%s" % (MODULE_NAME, "Box not found in this architecture. Try another architecture."))
-			return None, 0, cycletime, boxcounter, failed
-		nextbuild = None if nextbuild == timedelta() else nextbuild
-		return nextbuild, str(boxesahead - 1), cycletime, boxcounter, str(failed)
+			return timedelta(), 0, cycletime, boxcounter, failed
+		return nextbuild, boxesahead - 1, cycletime, boxcounter, failed
 
-	def strf_delta(self, td):  # converts deltatime-format in hours (e.g. '2 days 01:00' in '49:00:00')
+	def strf_delta(self, td):  # converts deltatime-format in hours (e.g. '2 days, 01:00' in '49:00:00')
 		h, r = divmod(int(td.total_seconds()), 60 * 60)
 		m, s = divmod(r, 60)
 		h, m, s = (str(x).zfill(2) for x in (h, m, s))
@@ -217,7 +216,7 @@ def main(argv):  # shell interface
 	cycletime = None
 	counter = 0
 	failed = 0
-	helpstring = "Buildstatus v1.1: try 'python Buildstatus.py -h' for more information"
+	helpstring = "Buildstatus v1.2: try 'python Buildstatus.py -h' for more information"
 
 	BS = Buildstatus()
 	BS.start()  # interactive call without threading

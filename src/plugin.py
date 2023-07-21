@@ -44,7 +44,7 @@ config.plugins.OpenATVstatus.animate = ConfigSelection(default="50", choices=[("
 config.plugins.OpenATVstatus.favarch = ConfigSelection(default="current", choices=[("current", _("selected box"))] + BS.archlist)
 config.plugins.OpenATVstatus.favboxes = ConfigText(default="", fixed_size=False)
 
-VERSION = "1.0"
+VERSION = "V1.2"
 MODULE_NAME = __name__.split(".")[-1]
 FAVLIST = [tuple(atom.strip() for atom in item.replace("(", "").replace(")", "").split(",")) for item in config.plugins.OpenATVstatus.favboxes.value.split(";")] if config.plugins.OpenATVstatus.favboxes.value else []
 PICURL = "https://raw.githubusercontent.com/oe-alliance/remotes/master/boxes/"
@@ -85,20 +85,13 @@ class Carousel():
 		if not choicelist:
 			self.error = "[%s] ERROR in module 'start': choicelist is empty or None!" % MODULE_NAME
 			return
-		index = index % len(choicelist)
-		rlist = choicelist.copy()
-		for i in range(3 - len(choicelist)):  # fill-up tiny rlists only
-			rlist += choicelist
+		self.choicelist = choicelist
 		self.callback = callback
-		if index == 0:
-			rlist = rlist[-1:] + rlist[:-1]  # rotate backward
-		elif index > 1:
-			for i in range(index - 1):
-				rlist = rlist[1:] + rlist[:1]  # rotate forward
-		self.rlist = rlist
-		self.prevstr = rlist[0]
-		self.currstr = rlist[1]
-		self.nextstr = rlist[2]
+		self.buildRotateList()
+		self.moveToIndex(index)
+		self.prevstr = self.rlist[0]
+		self.currstr = self.rlist[1]
+		self.nextstr = self.rlist[2]
 		self.maxlen = max(len(self.prevstr), len(self.currstr), len(self.nextstr))
 
 	def stop(self):
@@ -109,6 +102,20 @@ class Carousel():
 		self.callactive = False
 		if self.carouselTimer:
 			self.carouselTimer.stop()
+
+	def buildRotateList(self):
+		self.rlist = self.choicelist.copy()
+		for idx in range(3 - len(self.choicelist)):  # fill-up tiny rlists only
+			self.rlist += self.choicelist
+
+	def moveToIndex(self, index):
+		index = index % len(self.choicelist)
+		self.buildRotateList()
+		if index == 0:
+			self.rlist = self.rlist[-1:] + self.rlist[:-1]  # rotate backward
+		elif index > 1:
+			for idx in range(index - 1):
+				self.rlist = self.rlist[1:] + self.rlist[:1]  # rotate forward to desired position
 
 	def turnForward(self):  # pre-calculated constants to improve performance of 'self.turn'
 		self.forward = True
@@ -161,6 +168,7 @@ class ATVfavorites(Screen, HelpableScreen):
 		self.platdict = dict()
 		self.currindex = 0
 		self.setTitle(_("Favorites"))
+		self["version"] = Label(VERSION)
 		self["curr_date"] = Label()
 		self["platinfo"] = Label()
 		self["key_red"] = Label(_("remove box from favorites"))
@@ -217,8 +225,8 @@ class ATVfavorites(Screen, HelpableScreen):
 							if box[1] not in self.platdict:
 								self.platdict[currplat] = dict()
 								self.platdict[currplat]["cycletime"] = BS.strf_delta(cycletime)
-								self.platdict[currplat]["boxcounter"] = counter
-								self.platdict[currplat]["boxfailed"] = failed
+								self.platdict[currplat]["boxcounter"] = "%s" % counter
+								self.platdict[currplat]["boxfailed"] = "%s" % failed
 							nextbuild = "%sh" % BS.strf_delta(nextbuild) if nextbuild else ""
 							buildtime = bd["BuildTime"].strip()
 							buildtime = "%sh" % buildtime if buildtime else ""
@@ -329,7 +337,7 @@ class ATVimageslist(Screen, HelpableScreen):
 		self.skin = readSkin("ATVimageslist")
 		Screen.__init__(self, session, self.skin)
 		self.boxlist = []
-		self.platidx = 0
+		self.platidx = BS.archlist.index(self.currarch)
 		self.currindex = 0
 		self.favindex = 0
 		self.foundFavs = []
@@ -340,6 +348,7 @@ class ATVimageslist(Screen, HelpableScreen):
 		self["prev_label"] = Label()
 		self["curr_label"] = Label()
 		self["next_label"] = Label()
+		self["version"] = Label(VERSION)
 		self["curr_date"] = Label()
 		self["boxinfo"] = Label()
 		self["platinfo"] = Label()
@@ -368,7 +377,6 @@ class ATVimageslist(Screen, HelpableScreen):
 														"prevMarker": self.prevPlatform,
 														"menu": self.openConfig,
 													}, -1)
-		self.platidx = BS.archlist.index(self.currarch)
 		self.CS = Carousel(delay=int(config.plugins.OpenATVstatus.animate.value))
 		self.CS.start(BS.platlist, self.platidx, self.CarouselCallback)
 		self.onLayoutFinish.append(self.onLayoutFinished)
@@ -488,6 +496,7 @@ class ATVimageslist(Screen, HelpableScreen):
 				self.refreshstatus()
 			else:
 				self.platidx = BS.archlist.index(self.currfav[1])
+				self.CS.moveToIndex(self.platidx)
 				self.setPlatformStatic()
 				self.refreshplatlist()
 
