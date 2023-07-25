@@ -12,21 +12,23 @@
 
 # PYTHON IMPORTS
 from datetime import datetime
+from json import loads
 from os import makedirs
 from os.path import join, exists
 from requests import get, exceptions
 from xml.etree.ElementTree import tostring, parse
 
 # ENIGMA IMPORTS
-from enigma import getDesktop, eTimer
+from enigma import getDesktop, eTimer, getPeerStreamingBoxes, BT_SCALE, BT_KEEP_ASPECT_RATIO, BT_HALIGN_CENTER, BT_VALIGN_CENTER
 from Components.ActionMap import ActionMap
 from Components.config import config, ConfigSubsection, ConfigSelection, ConfigText, getConfigListEntry
 from Components.ConfigList import ConfigListScreen
 from Components.Label import Label
+from Components.Pixmap import Pixmap
 from Components.Sources.List import List
+from Components.SystemInfo import BoxInfo
 from Plugins.Plugin import PluginDescriptor
 from Screens.Screen import Screen
-from Screens.HelpMenu import HelpableScreen
 from Screens.MessageBox import MessageBox
 from Tools.LoadPixmap import LoadPixmap
 from twisted.internet.reactor import callInThread
@@ -44,7 +46,7 @@ config.plugins.OpenATVstatus.animate = ConfigSelection(default="50", choices=[("
 config.plugins.OpenATVstatus.favarch = ConfigSelection(default="current", choices=[("current", _("selected box"))] + BS.archlist)
 config.plugins.OpenATVstatus.favboxes = ConfigText(default="", fixed_size=False)
 
-VERSION = "V1.2"
+VERSION = "V1.3"
 MODULE_NAME = __name__.split(".")[-1]
 FAVLIST = [tuple(atom.strip() for atom in item.replace("(", "").replace(")", "").split(",")) for item in config.plugins.OpenATVstatus.favboxes.value.split(";")] if config.plugins.OpenATVstatus.favboxes.value else []
 PICURL = "https://raw.githubusercontent.com/oe-alliance/remotes/master/boxes/"
@@ -59,13 +61,13 @@ def readSkin(skin):
 			try:
 				domskin = parse(file).getroot()
 				for element in domskin:
-					if element.tag == "screen" and element.attrib['name'] == skin:
+					if element.tag == "screen" and element.attrib["name"] == skin:
 						skintext = tostring(element).decode()
 						break
-			except Exception as err:
-				print("[Skin] Error: Unable to parse skin data in '%s' - '%s'!" % (skinfile, err))
-	except OSError as err:
-		print("[Skin] Error: Unexpected error opening skin file '%s'! (%s)" % (skinfile, err))
+			except Exception as error:
+				print("[Skin] Error: Unable to parse skin data in '%s' - '%s'!" % (skinfile, error))
+	except OSError as error:
+		print("[Skin] Error: Unexpected error opening skin file '%s'! (%s)" % (skinfile, error))
 	return skintext
 
 
@@ -158,28 +160,29 @@ class Carousel():
 			self.callback((self.prevstr, self.currstr, self.nextstr))
 
 
-class ATVfavorites(Screen, HelpableScreen):
+class ATVfavorites(Screen):
 	def __init__(self, session):
 		self.session = session
 		self.skin = readSkin("ATVfavorites")
 		Screen.__init__(self, session, self.skin)
+		self.setTitle(_("Favorites"))
 		self.boxlist = []
 		self.foundFavs = []
 		self.platdict = dict()
 		self.currindex = 0
-		self.setTitle(_("Favorites"))
 		self["version"] = Label(VERSION)
-		self["curr_date"] = Label()
+		self["curr_date"] = Label(datetime.now().strftime("%x"))
 		self["platinfo"] = Label()
 		self["key_red"] = Label(_("remove box from favorites"))
 		self["key_blue"] = Label(_("Images list"))
+		self["key_ok"] = Label(_("Boxdetails"))
 		self["menu"] = List([])
 		self["actions"] = ActionMap(["WizardActions",
 				   					 "DirectionActions",
 									 "MenuActions",
-									"ColorActions"], {"ok": self.keyBlue,
+									"ColorActions"], {"ok": self.keyOk,
 			   											"back": self.exit,
-														'cancel': self.exit,
+														"cancel": self.exit,
 														"red": self.keyRed,
 														"blue": self.keyBlue,
 														"up": self.keyUp,
@@ -191,11 +194,10 @@ class ATVfavorites(Screen, HelpableScreen):
 														"menu": self.openConfig,
 													}, -1)
 		self.onLayoutFinish.append(self.onLayoutFinished)
-#		self.onClose.append(self.cleanup)
 		makedirs(TMPPATH, exist_ok=True)
 
 	def onLayoutFinished(self):
-		self["curr_date"].setText(datetime.now().strftime('%x'))
+		self["menu"].setList([])
 		self.createMenulist()
 		self.refreshstatus()
 
@@ -205,7 +207,6 @@ class ATVfavorites(Screen, HelpableScreen):
 		baselist = []
 		piclist = []
 		menulist = []
-		self["menu"].setList([])
 		if FAVLIST:
 			self["menu"].style = "default"
 			for favorite in FAVLIST:
@@ -256,11 +257,11 @@ class ATVfavorites(Screen, HelpableScreen):
 		except exceptions.RequestException as error:
 			print("[%s] ERROR in module 'imageDownload': %s" % (MODULE_NAME, str(error)))
 		else:
-			with open(join(TMPPATH, "%s.png" % boxname), 'wb') as f:
+			with open(join(TMPPATH, "%s.png" % boxname), "wb") as f:
 				f.write(response.content)
-		self.refreshMenulist()
+		self.downloadCallback()
 
-	def refreshMenulist(self):
+	def downloadCallback(self):
 		menulist = []
 		for textlist in self.baselist:
 			menulist.append(tuple(textlist + [LoadPixmap(cached=True, path=join(TMPPATH, "%s.png" % textlist[0]))]))
@@ -278,11 +279,13 @@ class ATVfavorites(Screen, HelpableScreen):
 			FAVLIST.remove(self.foundFavs[0])
 			config.plugins.OpenATVstatus.favboxes.value = ";".join("(%s)" % ",".join(item) for item in FAVLIST) if FAVLIST else ""
 			config.plugins.OpenATVstatus.favboxes.save()
-			self.session.open(MessageBox, text=_("Box '%s-%s' was sucessfully removed from favorites!") % self.boxlist[self.currindex], type=MessageBox.TYPE_INFO, timeout=2, close_on_any_key=True)
 			self.createMenulist()
+			self.session.open(MessageBox, text=_("Box '%s-%s' was sucessfully removed from favorites!") % self.boxlist[self.currindex], type=MessageBox.TYPE_INFO, timeout=2, close_on_any_key=True)
 
 	def keyOk(self):
-		pass
+		currbox = self.boxlist[self.currindex] if self.boxlist else None
+		if currbox:
+			self.session.open(ATVboxdetails, currbox)
 
 	def keyRed(self):
 		self.foundFavs = [item for item in FAVLIST if item == self.boxlist[self.currindex]]
@@ -290,12 +293,12 @@ class ATVfavorites(Screen, HelpableScreen):
 			self.session.openWithCallback(self.msgboxReturn, MessageBox, _("Do you really want to remove Box '%s-%s' from favorites?") % self.boxlist[self.currindex], MessageBox.TYPE_YESNO, default=False)
 
 	def keyBlue(self):
-		favarch = config.plugins.OpenATVstatus.favarch.value
-		currarch = favarch if favarch in BS.archlist or not self.boxlist else self.boxlist[self.currindex][1]
-		currbox = self.boxlist[self.currindex] if self.boxlist else ""
-		if currarch not in BS.archlist:
-			currarch = BS.archlist[0]
-		self.session.openWithCallback(self.createMenulist, ATVimageslist, (currbox, currarch))
+		currbox = self.boxlist[self.currindex] if self.boxlist else None
+		if currbox:
+			self.session.openWithCallback(self.createMenulist, ATVimageslist, currbox)
+		else:
+			currarch = BS.archlist[0] if config.plugins.OpenATVstatus.favarch.value == "current" else config.plugins.OpenATVstatus.favarch.value
+			self.session.openWithCallback(self.createMenulist, ATVimageslist, ("", currarch))
 
 	def keyUp(self):
 		self["menu"].up()
@@ -326,22 +329,22 @@ class ATVfavorites(Screen, HelpableScreen):
 		self.close()
 
 	def openConfig(self):
-		self.session.open(BSconfig)
+		self.session.open(ATVconfig)
 
 
-class ATVimageslist(Screen, HelpableScreen):
+class ATVimageslist(Screen):
 	def __init__(self, session, box):
 		self.session = session
 		self.currarch = box[1]
 		self.currfav = box[0]
 		self.skin = readSkin("ATVimageslist")
 		Screen.__init__(self, session, self.skin)
+		self.setTitle(_("Images list"))
 		self.boxlist = []
 		self.platidx = BS.archlist.index(self.currarch)
 		self.currindex = 0
 		self.favindex = 0
 		self.foundFavs = []
-		self.setTitle(_("Images list"))
 		self["prev_plat"] = Label()
 		self["curr_plat"] = Label()
 		self["next_plat"] = Label()
@@ -349,13 +352,14 @@ class ATVimageslist(Screen, HelpableScreen):
 		self["curr_label"] = Label()
 		self["next_label"] = Label()
 		self["version"] = Label(VERSION)
-		self["curr_date"] = Label()
+		self["curr_date"] = Label(datetime.now().strftime("%x"))
 		self["boxinfo"] = Label()
 		self["platinfo"] = Label()
 		self["menu"] = List([])
 		self["key_red"] = Label()
 		self["key_green"] = Label(_("jump to construction site"))
 		self["key_yellow"] = Label(_("jump to favorite(s)"))
+		self["key_ok"] = Label(_("Boxdetails"))
 		self["key_menu"] = Label(_("Settings"))
 		self["actions"] = ActionMap(["WizardActions",
 				   					 "DirectionActions",
@@ -371,8 +375,8 @@ class ATVimageslist(Screen, HelpableScreen):
 														"down": self.keyDown,
 														"right": self.keyPageDown,
 														"left": self.keyPageUp,
-														"nextBouquet": self.keyPageDown,
-														"prevBouquet": self.keyPageUp,
+														"nextBouquet": self.keyPageUp,
+														"prevBouquet": self.keyPageDown,
 														"nextMarker": self.nextPlatform,
 														"prevMarker": self.prevPlatform,
 														"menu": self.openConfig,
@@ -382,6 +386,7 @@ class ATVimageslist(Screen, HelpableScreen):
 		self.onLayoutFinish.append(self.onLayoutFinished)
 
 	def onLayoutFinished(self):
+		self["menu"].setList([])
 		self.setPlatformStatic()
 		self.refreshplatlist()
 
@@ -393,7 +398,6 @@ class ATVimageslist(Screen, HelpableScreen):
 		self["prev_label"].setText(_("previous"))
 		self["curr_label"].setText(_("current platform"))
 		self["next_label"].setText(_("next"))
-		self["curr_date"].setText(datetime.now().strftime('%x'))
 		menulist = []
 		boxlist = []
 		if BS.htmldict:
@@ -405,10 +409,12 @@ class ATVimageslist(Screen, HelpableScreen):
 				buildtime = bd["BuildTime"].strip()
 				buildtime = "%sh" % buildtime if buildtime else ""
 				menulist.append(tuple([boxname, bd["BuildStatus"], bd["StartBuild"], bd["StartFeedSync"], bd["EndBuild"], bd["SyncTime"], buildtime, color]))
-			self["menu"].setList(menulist)
+			self["menu"].updateList(menulist)
 			self.boxlist = boxlist
 		if self.currfav:
-			self["menu"].setIndex(self.boxlist.index(self.currfav))
+			foundbox = [item for item in boxlist if item[0] == self.currfav]
+			if foundbox:
+				self["menu"].setIndex(self.boxlist.index(foundbox[0]))
 			self.currfav = None
 		self.refreshstatus()
 
@@ -457,7 +463,9 @@ class ATVimageslist(Screen, HelpableScreen):
 		self["next_plat"].setText(rotated[2])
 
 	def keyOk(self):
-		pass
+		currbox = self.boxlist[self.currindex] if self.boxlist else None
+		if currbox:
+			self.session.open(ATVboxdetails, currbox)
 
 	def msgboxReturn(self, answer):
 		if answer is True:
@@ -485,7 +493,7 @@ class ATVimageslist(Screen, HelpableScreen):
 				self["menu"].setIndex(self.boxlist.index(findbuildbox))
 				self.refreshstatus()
 			else:
-				self.session.open(MessageBox, text=_("At the moment no image is built on the platform '%s'!") % BS.getplatform(self.currarch), type=MessageBox.TYPE_INFO, timeout=2, close_on_any_key=True)
+				self.session.open(MessageBox, text=_("At the moment no image is built on the platform '%s'!") % BS.getplatform(self.currarch), type=MessageBox.TYPE_INFO, timeout=5, close_on_any_key=True)
 
 	def keyYellow(self):
 		if self.boxlist and FAVLIST:
@@ -530,60 +538,119 @@ class ATVimageslist(Screen, HelpableScreen):
 		self.close()
 
 	def openConfig(self):
-		self.session.open(BSconfig)
+		self.session.open(ATVconfig)
 
 
-class ATVboxdetails(Screen, HelpableScreen):
-	def __init__(self, session):
+class ATVboxdetails(Screen):
+	def __init__(self, session, box):
 		self.session = session
+		self.box = box
 		self.skin = readSkin("ATVboxdetails")
 		Screen.__init__(self, session, self.skin)
 		self.setTitle(_("Boxdetails"))
-		self["actions"] = ActionMap(["WizardActions",
-				   					 "DirectionActions",
-									 "MenuActions"], {"ok": self.keyOk,
-			   											"back": self.exit,
-														'cancel': self.exit,
-														"red": self.keyRed,
-														"up": self.keyUp,
-														"down": self.keyDown,
-														"right": self.keyPageDown,
-														"left": self.keyPageUp,
-														"nextBouquet": self.keyPageDown,
-														"prevBouquet": self.keyPageUp,
-														#"menu": self.openMainMenu,
-													}, -1)
+		self["version"] = Label(VERSION)
+		self["curr_date"] = Label(datetime.now().strftime("%x"))
+		self["status"] = Label()
+		self["picture"] = Pixmap()
+		self["details"] = Label()
+		self["key_red"] = Label(_("Cancel"))
+		self["actions"] = ActionMap(["OkCancelActions",
+				   						"ColorActions"], {"ok": self.exit,
+															"back": self.exit,
+											   				"cancel": self.exit,
+															"red": self.exit,
+															}, -1)
 		self.onLayoutFinish.append(self.onLayoutFinished)
-#		self.onClose.append(self.cleanup)
 
 	def onLayoutFinished(self):
-		self["menu"].setList(FAVLIST)
+		self["picture"].hide()
+		self.picfile = join(TMPPATH, "%s.png" % self.box[0])
+		if exists(self.picfile):
+			self.downloadCallback()
+		else:
+			callInThread(self.imageDownload, self.box[0])
+		status = "offline"
+		details = ""
+		if self.box[0] == BoxInfo.getItem("BoxName"):
+			status = "online"
+			details += "%s:\t%s\n" % (_("Brand"), BoxInfo.getItem("displaybrand"))
+			details += "%s:\t%s\n" % (_("Model"), BoxInfo.getItem("displaymodel"))
+			details += "%s:\t%s\n" % (_("Image"), BoxInfo.getItem("displaydistro"))
+			details += "%s:\t%s.%s\n" % (_("Version"), BoxInfo.getItem("imageversion"), BoxInfo.getItem("imgrevision"))
+			details += "%s:\t%s\n" % (_("Chipset"), BoxInfo.getItem("socfamily"))
+			self["details"].setText(details)
+		else:
+			streamurls = getPeerStreamingBoxes()
+			if streamurls:
+				streamurl = [x for x in streamurls if self.box[0] in x]  # example streamurls: ['http://gbue4k.local:8001', 'http://sf8008.local:8001']
+				bd = self.getAPIdata("%s:80/api/about" % streamurl[0][:streamurl[0].rfind(":")]) if streamurl else None
+				if bd and bd["info"]:
+					status = "online"
+					details += "%s:\t%s\n" % (_("Brand"), bd.get("info", {}).get("brand", ""))
+					details += "%s:\t%s\n" % (_("Model"), bd.get("info", {}).get("model", ""))
+					details += "%s:\t%s\n" % (_("Image"), bd.get("info", {}).get("friendlyimagedistro", ""))
+					details += "%s:\t%s\n" % (_("Version"), bd.get("info", {}).get("imagever", ""))
+					details += "%s:\t%s\n" % (_("Chipset"), "%sh" % bd.get("info", {}).get("chipset", ""))
+					self["status"].setText("online")
+				else:
+					details += "\n%s" % (_("Box is OFFLINE! No current details available"))
+		self["status"].setText(status)
+		self["details"].setText(details)
+
+	def getAPIdata(self, apiurl):
+		try:
+			response = get(apiurl, timeout=(3.05, 6))
+			response.raise_for_status()
+			return loads(response.content)
+		except exceptions.RequestException as error:
+			print("[OpenATVstatus] ERROR in module 'getAPIdata': %s" % str(error))
+
+	def imageDownload(self, boxname):
+		try:
+			response = get(("%s%s.png" % (PICURL, boxname)).encode(), timeout=(3.05, 6))
+			response.raise_for_status()
+		except exceptions.RequestException as error:
+			print("[%s] ERROR in module 'imageDownload': %s" % (MODULE_NAME, str(error)))
+		else:
+			with open(join(TMPPATH, "%s.png" % boxname), "wb") as f:
+				f.write(response.content)
+		self.downloadCallback()
+
+	def downloadCallback(self):
+		self["picture"].instance.setPixmapScaleFlags(BT_SCALE | BT_KEEP_ASPECT_RATIO | BT_HALIGN_CENTER | BT_VALIGN_CENTER)
+		self["picture"].instance.setPixmapFromFile(self.picfile)
+		self["picture"].show()
+
+	def exit(self):
+		self.close()
 
 
-class BSconfig(ConfigListScreen, Screen):
+class ATVconfig(ConfigListScreen, Screen):
 	def __init__(self, session):
-		skin = readSkin("BSconfig")
+		skin = readSkin("ATVconfig")
 		self.skin = skin
 		Screen.__init__(self, session, skin)
 		self.setTitle(_("Settings"))
-		self['actions'] = ActionMap(['OkCancelActions', 'ColorActions'], {'cancel': self.keyCancel,
-																		  'red': self.keyCancel,
-																		  'green': self.keyGreen
-																		  }, -2)
-		clist = []
-		ConfigListScreen.__init__(self, clist)
-		clist.append(getConfigListEntry(_("Preferred box architecture for images list:"), config.plugins.OpenATVstatus.favarch, _("Specify which box architecture should be preferred when images list will be called. If option 'current' is selected, the architecture of the selected box is taken.")))
-		clist.append(getConfigListEntry(_("Animation for change of platform:"), config.plugins.OpenATVstatus.animate, _("Sets the animation speed for the carousel function when changing platforms.")))
-		self["config"].setList(clist)
-		self["key_red"] = Label(_("cancel"))
-		self["key_green"] = Label(_("save settings"))
+		self["version"] = Label(VERSION)
+		self["curr_date"] = Label(datetime.now().strftime("%x"))
+		self["key_red"] = Label(_("Cancel"))
+		self["key_green"] = Label(_("Save settings"))
+		self["actions"] = ActionMap(["OkCancelActions", "ColorActions"], {"cancel": self.keyCancel,
+																		  "red": self.keyCancel,
+																		  "green": self.keyGreen
+																		  }, -1)
+		self.clist = []
+		ConfigListScreen.__init__(self, self.clist)
+		self.clist.append(getConfigListEntry(_("Preferred box architecture for images list:"), config.plugins.OpenATVstatus.favarch, _("Specify which box architecture should be preferred when images list will be called. If option 'current' is selected, the architecture of the selected box is taken.")))
+		self.clist.append(getConfigListEntry(_("Animation for change of platform:"), config.plugins.OpenATVstatus.animate, _("Sets the animation speed for the carousel function when changing platforms.")))
+		self["config"].setList(self.clist)
 
 	def keyGreen(self):
 		config.plugins.OpenATVstatus.save()
 		self.close()
 
 	def keyCancel(self):
-		for x in self['config'].list:
+		for x in self["config"].list:
 			x[1].cancel()
 		self.close()
 
@@ -597,4 +664,4 @@ def autostart(reason, **kwargs):
 
 
 def Plugins(**kwargs):
-	return PluginDescriptor(name="OpenATV Status", icon='plugin.png', description=_("Current overview of the OpenATV images building servers"), where=PluginDescriptor.WHERE_PLUGINMENU, fnc=main)
+	return PluginDescriptor(name="OpenATV Status", icon="plugin.png", description=_("Current overview of the OpenATV images building servers"), where=PluginDescriptor.WHERE_PLUGINMENU, fnc=main)

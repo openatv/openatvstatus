@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2023-07-14 23:36+0200\n"
+"POT-Creation-Date: 2023-07-24 19:33+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Mr.Servo <mrservo via GitHub.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -14,150 +14,174 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: pygettext.py 1.5\n"
 
-#: ..\plugin.py:42
+#: ..\plugin.py:45
 msgid "faster"
 msgstr ""
 
-#: ..\plugin.py:42
+#: ..\plugin.py:45
 msgid "normal"
 msgstr ""
 
-#: ..\plugin.py:42
+#: ..\plugin.py:45
 msgid "off"
 msgstr ""
 
-#: ..\plugin.py:42
+#: ..\plugin.py:45
 msgid "slower"
 msgstr ""
 
-#: ..\plugin.py:43
+#: ..\plugin.py:46
 msgid "selected box"
 msgstr ""
 
-#: ..\plugin.py:162
+#: ..\plugin.py:177
 msgid "Favorites"
 msgstr ""
 
-#: ..\plugin.py:164 ..\plugin.py:405
+#: ..\plugin.py:185 ..\plugin.py:433
 msgid "remove box from favorites"
 msgstr ""
 
-#: ..\plugin.py:165 ..\plugin.py:335
+#: ..\plugin.py:186 ..\plugin.py:351
 msgid "Images list"
 msgstr ""
 
-#: ..\plugin.py:241
-msgid "No favorites (box, platform) set yet."
-msgstr ""
-
-#: ..\plugin.py:241
-msgid "Please select favorite(s) in the image lists."
-msgstr ""
-
-#: ..\plugin.py:265
-msgid "platform"
-msgstr ""
-
-#: ..\plugin.py:265 ..\plugin.py:416
-msgid "boxes"
-msgstr ""
-
-#: ..\plugin.py:265 ..\plugin.py:416
-msgid "failed"
-msgstr ""
-
-#: ..\plugin.py:265 ..\plugin.py:416
-msgid "last build cycle"
-msgstr ""
-
-#: ..\plugin.py:272 ..\plugin.py:456
-msgid "Box '%s-%s' was sucessfully removed from favorites!"
-msgstr ""
-
-#: ..\plugin.py:281 ..\plugin.py:462
-msgid "Do you really want to remove Box '%s-%s' from favorites?"
-msgstr ""
-
-#: ..\plugin.py:346
-msgid "jump to construction site"
-msgstr ""
-
-#: ..\plugin.py:347
-msgid "jump to favorite(s)"
-msgstr ""
-
-#: ..\plugin.py:348 ..\plugin.py:556
-msgid "Settings"
-msgstr ""
-
-#: ..\plugin.py:383
-msgid "previous"
-msgstr ""
-
-#: ..\plugin.py:384
-msgid "current platform"
-msgstr ""
-
-#: ..\plugin.py:385
-msgid "next"
-msgstr ""
-
-#: ..\plugin.py:407
-msgid "add box to favorites"
-msgstr ""
-
-#: ..\plugin.py:412
-msgid "next build ends in %sh, still %s boxes before"
-msgstr ""
-
-#: ..\plugin.py:414
-msgid "image is under construction or failed, duration is unclear..."
-msgstr ""
-
-#: ..\plugin.py:418
-msgid "no box found in this platform!"
-msgstr ""
-
-#: ..\plugin.py:419
-msgid "nothing to do - no build cycle"
-msgstr ""
-
-#: ..\plugin.py:467
-msgid "Box '%s-%s' was sucessfully added to favorites!"
-msgstr ""
-
-#: ..\plugin.py:477
-msgid "At the moment no image is built on the platform '%s'!"
-msgstr ""
-
-#: ..\plugin.py:529
+#: ..\plugin.py:187 ..\plugin.py:371 ..\plugin.py:559
 msgid "Boxdetails"
 msgstr ""
 
-#: ..\plugin.py:563
+#: ..\plugin.py:259
+msgid "No favorites (box, platform) set yet."
+msgstr ""
+
+#: ..\plugin.py:259
+msgid "Please select favorite(s) in the image lists."
+msgstr ""
+
+#: ..\plugin.py:284
+msgid "platform"
+msgstr ""
+
+#: ..\plugin.py:284 ..\plugin.py:442
+msgid "boxes"
+msgstr ""
+
+#: ..\plugin.py:284 ..\plugin.py:442
+msgid "failed"
+msgstr ""
+
+#: ..\plugin.py:284 ..\plugin.py:442
+msgid "last build cycle"
+msgstr ""
+
+#: ..\plugin.py:292 ..\plugin.py:484
+msgid "Box '%s-%s' was sucessfully removed from favorites!"
+msgstr ""
+
+#: ..\plugin.py:302 ..\plugin.py:490
+msgid "Do you really want to remove Box '%s-%s' from favorites?"
+msgstr ""
+
+#: ..\plugin.py:369
+msgid "jump to construction site"
+msgstr ""
+
+#: ..\plugin.py:370
+msgid "jump to favorite(s)"
+msgstr ""
+
+#: ..\plugin.py:372 ..\plugin.py:634
+msgid "Settings"
+msgstr ""
+
+#: ..\plugin.py:407
+msgid "previous"
+msgstr ""
+
+#: ..\plugin.py:408
+msgid "current platform"
+msgstr ""
+
+#: ..\plugin.py:409
+msgid "next"
+msgstr ""
+
+#: ..\plugin.py:435
+msgid "add box to favorites"
+msgstr ""
+
+#: ..\plugin.py:438
+msgid "next build ends in %sh, still %s boxes before"
+msgstr ""
+
+#: ..\plugin.py:440
+msgid "image is under construction or failed, duration is unclear..."
+msgstr ""
+
+#: ..\plugin.py:444
+msgid "no box found in this platform!"
+msgstr ""
+
+#: ..\plugin.py:445
+msgid "nothing to do - no build cycle"
+msgstr ""
+
+#: ..\plugin.py:495
+msgid "Box '%s-%s' was sucessfully added to favorites!"
+msgstr ""
+
+#: ..\plugin.py:505
+msgid "At the moment no image is built on the platform '%s'!"
+msgstr ""
+
+#: ..\plugin.py:565 ..\plugin.py:637
+msgid "Cancel"
+msgstr ""
+
+#: ..\plugin.py:585 ..\plugin.py:598
+msgid "Brand"
+msgstr ""
+
+#: ..\plugin.py:586 ..\plugin.py:599
+msgid "Model"
+msgstr ""
+
+#: ..\plugin.py:587 ..\plugin.py:600
+msgid "Image"
+msgstr ""
+
+#: ..\plugin.py:588 ..\plugin.py:601
+msgid "Version"
+msgstr ""
+
+#: ..\plugin.py:589 ..\plugin.py:602
+msgid "Chipset"
+msgstr ""
+
+#: ..\plugin.py:605
+msgid "Box is OFFLINE! No current details available"
+msgstr ""
+
+#: ..\plugin.py:638
+msgid "Save settings"
+msgstr ""
+
+#: ..\plugin.py:645
 msgid "Preferred box architecture for images list:"
 msgstr ""
 
-#: ..\plugin.py:563
+#: ..\plugin.py:645
 msgid "Specify which box architecture should be preferred when images list will be called. If option 'current' is selected, the architecture of the selected box is taken."
 msgstr ""
 
-#: ..\plugin.py:564
+#: ..\plugin.py:646
 msgid "Animation for change of platform:"
 msgstr ""
 
-#: ..\plugin.py:564
+#: ..\plugin.py:646
 msgid "Sets the animation speed for the carousel function when changing platforms."
 msgstr ""
 
-#: ..\plugin.py:566
-msgid "cancel"
-msgstr ""
-
-#: ..\plugin.py:567
-msgid "save settings"
-msgstr ""
-
-#: ..\plugin.py:588
+#: ..\plugin.py:668
 msgid "Current overview of the OpenATV images building servers"
 msgstr ""
