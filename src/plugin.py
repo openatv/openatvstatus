@@ -573,8 +573,8 @@ class ATVboxdetails(Screen):
 		details = ""
 		if self.box[0] == BoxInfo.getItem("BoxName"):
 			status = "online"
-			details += "%s:\t%s\n" % (_("Brand"), BoxInfo.getItem("displaybrand"))
 			details += "%s:\t%s\n" % (_("Model"), BoxInfo.getItem("displaymodel"))
+			details += "%s:\t%s\n" % (_("Brand"), BoxInfo.getItem("displaybrand"))
 			details += "%s:\t%s\n" % (_("Image"), BoxInfo.getItem("displaydistro"))
 			details += "%s:\t%s.%s\n" % (_("Version"), BoxInfo.getItem("imageversion"), BoxInfo.getItem("imgrevision"))
 			details += "%s:\t%s\n" % (_("Chipset"), BoxInfo.getItem("socfamily"))
@@ -586,13 +586,14 @@ class ATVboxdetails(Screen):
 				bd = self.getAPIdata("%s:80/api/about" % streamurl[0][:streamurl[0].rfind(":")]) if streamurl else None
 				if bd and bd["info"]:
 					status = "online"
-					details += "%s:\t%s\n" % (_("Brand"), bd.get("info", {}).get("brand", ""))
 					details += "%s:\t%s\n" % (_("Model"), bd.get("info", {}).get("model", ""))
+					details += "%s:\t%s\n" % (_("Brand"), bd.get("info", {}).get("brand", ""))
 					details += "%s:\t%s\n" % (_("Image"), bd.get("info", {}).get("friendlyimagedistro", ""))
 					details += "%s:\t%s\n" % (_("Version"), bd.get("info", {}).get("imagever", ""))
 					details += "%s:\t%s\n" % (_("Chipset"), "%sh" % bd.get("info", {}).get("chipset", ""))
 					self["status"].setText("online")
 				else:
+					details += "%s:\t%s\n" % (_("Model"), self.box[0])
 					details += "\n%s" % (_("Box is OFFLINE! No current details available"))
 		self["status"].setText(status)
 		self["details"].setText(details)
