@@ -1,7 +1,7 @@
 <skin>
 	<screen name="ATVfavorites" position="center,center" size="800,653" title="" flags="wfNoBorder">
 		<ePixmap position="10,10" size="300,50" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/pic/openATV_HD.png" alphatest="blend" zPosition="1" />
-		<widget name="version" position="290,38" size="35,20" font="Regular;16" halign="left" valign="center" />
+		<widget name="version" position="290,40" size="35,20" font="Regular;16" halign="left" valign="center" />
 		<widget source="Title" position="340,16" size="326,48" font="Regular;36" halign="left" valign="bottom" render="Label" />
 		<widget name="curr_date" position="603,36" size="166,28" font="Regular;20" halign="right" valign="top" />
 		<widget source="menu" render="Listbox" position="10,70" size="780,500" enableWrapAround="1" scrollbarMode="showOnDemand">
@@ -42,9 +42,9 @@
 		<widget name="key_blue" position="326,620" size="255,28" font="Regular;20" foregroundColor="grey" />
 	</screen>
 
-	<screen name="ATVimageslist" position="center,center" size="1233,686" title="" flags="wfNoBorder">
+	<screen name="ATVimageslist" position="center,center" size="1233,706" title="" flags="wfNoBorder">
 		<ePixmap position="10,10" size="300,50" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/pic/openATV_HD.png" alphatest="blend" zPosition="1" />\
-		<widget name="version" position="290,38" size="35,20" font="Regular;16" halign="left" valign="center" />
+		<widget name="version" position="290,40" size="35,20" font="Regular;16" halign="left" valign="center" />
 		<widget source="Title" position="355,17" size="180,50" font="Regular;35" halign="left" valign="bottom" render="Label" />
 		<widget name="prev_label" position="530,10" size="167,24" font="Regular;16" halign="right" valign="top" />
 		<widget name="curr_label" position="723,10" size="276,24" font="Regular;16" halign="center" valign="top" />
@@ -57,13 +57,13 @@
 		<ePixmap position="1196,33" size="30,30" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/pic/bouquet_HD.png" alphatest="blend" zPosition="1" />
 		<widget name="curr_date" position="1103,6" size="120,28" font="Regular;20" halign="right" valign="top" />
 		<eLabel position="10,73" size="1213,30" backgroundColor="grey" zPosition="-1" />
-		<eLabel text="BoxName" position="13,76" size="200,28" font="Regular;20" halign="left" valign="center" foregroundColor="black" backgroundColor="grey" transparent="1" />
-		<eLabel text="BuildStatus" position="213,76" size="106,28" font="Regular;20" halign="right" valign="center" foregroundColor="black" backgroundColor="grey" transparent="1" />
-		<eLabel text="StartBuild" position="320,76" size="230,28" font="Regular;20" halign="right" valign="center" foregroundColor="black" backgroundColor="grey" transparent="1" />
-		<eLabel text="StartFeedSync" position="550,76" size="230,28" font="Regular;20" halign="right" valign="center" foregroundColor="black" backgroundColor="grey" transparent="1" />
-		<eLabel text="EndBuild" position="780,76" size="230,28" font="Regular;20" halign="right" valign="center" foregroundColor="black" backgroundColor="grey" transparent="1" />
-		<eLabel text="SyncTime" position="1010,76" size="100,28" font="Regular;20" halign="right" valign="center" foregroundColor="black" backgroundColor="grey" transparent="1" />
-		<eLabel text="BuildTime" position="1110,76" size="100,28" font="Regular;20" halign="right" valign="center" foregroundColor="black" backgroundColor="grey" transparent="1" />
+		<eLabel text="BoxName" position="13,76" size="200,28" font="Regular;20" halign="left" valign="center" foregroundColor="black" backgroundColor="grey" />
+		<eLabel text="BuildStatus" position="213,76" size="106,28" font="Regular;20" halign="right" valign="center" foregroundColor="black" backgroundColor="grey" />
+		<eLabel text="StartBuild" position="320,76" size="230,28" font="Regular;20" halign="right" valign="center" foregroundColor="black" backgroundColor="grey" />
+		<eLabel text="StartFeedSync" position="550,76" size="230,28" font="Regular;20" halign="right" valign="center" foregroundColor="black" backgroundColor="grey" />
+		<eLabel text="EndBuild" position="780,76" size="230,28" font="Regular;20" halign="right" valign="center" foregroundColor="black" backgroundColor="grey" />
+		<eLabel text="SyncTime" position="1010,76" size="100,28" font="Regular;20" halign="right" valign="center" foregroundColor="black" backgroundColor="grey" />
+		<eLabel text="BuildTime" position="1110,76" size="100,28" font="Regular;20" halign="right" valign="center" foregroundColor="black" backgroundColor="grey" />
 		<widget source="menu" render="Listbox" position="10,103" size="1213,494" scrollbarMode="showOnDemand">
 			<convert type="TemplatedMultiContent">
 				{"template": [
@@ -86,19 +86,37 @@
 		<eLabel name="red" position="33,643" size="6,43" backgroundColor="red" zPosition="1" />
 		<eLabel name="green" position="363,643" size="6,43" backgroundColor="green" zPosition="1" />
 		<eLabel name="yellow" position="693,643" size="6,43" backgroundColor="yellow" zPosition="1" />
-		<ePixmap position="1060,648" size="30,30" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/pic/key_menu_HD.png" alphatest="blend" zPosition="1" />\
-		<widget name="key_red" position="46,650" size="302,28" font="Regular;20" halign="left" foregroundColor="grey" />
-		<widget name="key_green" position="376,650" size="302,28" font="Regular;20" halign="left" foregroundColor="grey" />
-		<widget name="key_yellow" position="706,650" size="302,28" font="Regular;20" halign="left" foregroundColor="grey"/>
-		<widget name="key_menu" position="1096,650" size="252,28" font="Regular;20" halign="left" foregroundColor="grey" />
+		<ePixmap position="873,650" size="30,30" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/pic/key_ok_HD.png" alphatest="blend" zPosition="1" />\
+		<ePixmap position="1060,650" size="30,30" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/pic/key_menu_HD.png" alphatest="blend" zPosition="1" />\
+		<widget name="key_red" position="46,653" size="302,28" font="Regular;20" halign="left" foregroundColor="grey" />
+		<widget name="key_green" position="343,653" size="302,28" font="Regular;20" halign="left" foregroundColor="grey" />
+		<widget name="key_yellow" position="607,653" size="302,28" font="Regular;20" halign="left" foregroundColor="grey"/>
+		<widget name="key_ok" position="910,653" size="252,28" font="Regular;20" halign="left" foregroundColor="grey" />
+		<widget name="key_menu" position="1097,653" size="252,28" font="Regular;20" halign="left" foregroundColor="grey" />
 	</screen>
 
-	<screen name="BSconfig" position="center,center" size="666,400" title="" flags="wfNoBorder">
-		<widget source="Title" position="10,10" size="466,49" font="Regular;36" halign="left" valign="bottom" render="Label" />
-		<widget name="config" position="10,60" size="646,326" itemHeight="28" font="screen_text;21" halign="left" scrollbarMode="showOnDemand" enableWrapAround="1" />
+	<screen name="ATVboxdetails" position="center,center" size="666,486" title="" flags="wfNoBorder">
+		<ePixmap position="10,10" size="300,50" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/pic/openATV_HD.png" alphatest="blend" zPosition="1" />
+		<widget name="version" position="290,40" size="33,20" font="Regular;16" halign="left" valign="center" />
+		<widget source="Title" position="333,16" size="326,48" font="Regular;36" halign="left" valign="bottom" render="Label" />
+		<widget name="curr_date" position="536,6" size="120,26" font="Regular;20" halign="right" valign="top" />
+		<eLabel position="536,36" size="120,28" backgroundColor="grey" zPosition="-1" />
+		<widget name="status" position="556,33" size="100,26" font="Regular;20" halign="center" valign="center" foregroundColor="black" backgroundColor="grey" />
+		<widget name="picture" position="10,70" size="646,233" alphatest="blend" />
+		<widget name="details" position="20,310" size="626,133" font="Regular;20" halign="left" valign="top" />
+		<eLabel name="red" position="33,446" size="6,43" backgroundColor="red" zPosition="1" />
+		<widget name="key_red" position="46,453" size="253,28" font="Regular;20" halign="left" foregroundColor="grey" />
+	</screen>
+
+	<screen name="ATVconfig" position="center,center" size="666,400" title="" flags="wfNoBorder">
+		<ePixmap position="10,10" size="300,50" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/pic/openATV_HD.png" alphatest="blend" zPosition="1" />
+		<widget name="version" position="290,40" size="33,20" font="Regular;16" halign="left" valign="center" />
+		<widget source="Title" position="333,16" size="327,48" font="Regular;36" halign="left" valign="bottom" render="Label" />
+		<widget name="curr_date" position="536,6" size="120,28" font="Regular;20" halign="right" valign="top" />
+		<widget name="config" position="10,70" size="646,280" itemHeight="28" font="screen_text;21" halign="left" scrollbarMode="showOnDemand" enableWrapAround="1" />
 		<eLabel name="red" position="33,360" size="6,43" backgroundColor="red" zPosition="1" />
 		<eLabel name="green" position="313,360" size="6,43" backgroundColor="green" zPosition="1" />
-		<widget name="key_red" position="46,363" size="253,28" font="Regular;20" halign="left" foregroundColor="grey" />
-		<widget name="key_green" position="326,363" size="253,28" font="Regular;20" halign="left" foregroundColor="grey" />
+		<widget name="key_red" position="46,366" size="253,28" font="Regular;20" halign="left" foregroundColor="grey" />
+		<widget name="key_green" position="326,366" size="253,28" font="Regular;20" halign="left" foregroundColor="grey" />
 	</screen>
 </skin>
