@@ -98,7 +98,7 @@
 	</screen>
 
 	<screen name="ATVboxdetails" position="center,center" size="1000,730" title="" flags="wfNoBorder">
-		<ePixmap position="15,15" size="450,75" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/pic/openATV_HD.png" alphatest="blend" zPosition="1" />
+		<ePixmap position="15,15" size="450,75" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/pic/openATV_fHD.png" alphatest="blend" zPosition="1" />
 		<widget name="version" position="435,60" size="50,30" font="Regular;24" halign="left" valign="center" />
 		<widget source="Title" position="500,25" size="490,72" font="Regular;54" halign="left" valign="bottom" render="Label" />
 		<widget name="curr_date" position="805,10" size="180,40" font="Regular;30" halign="right" valign="top" />
