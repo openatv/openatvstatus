@@ -1,7 +1,7 @@
 <skin>
 	<screen name="ATVfavorites" position="center,center" size="1200,980" title="" flags="wfNoBorder">
 		<ePixmap position="15,15" size="450,75" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/pic/openATV_fHD.png" alphatest="blend" zPosition="1" />
-		<widget name="version" position="435,57" size="50,30" font="Regular;24" halign="left" valign="center" />
+		<widget name="version" position="435,60" size="50,30" font="Regular;24" halign="left" valign="center" />
 		<widget source="Title" position="510,25" size="490,72" font="Regular;54" halign="left" valign="bottom" render="Label" />
 		<widget name="curr_date" position="905,55" size="250,42" font="Regular;30" halign="right" valign="top" />
 		<widget source="menu" render="Listbox" position="15,105" size="1170,750" enableWrapAround="1" scrollbarMode="showOnDemand">
@@ -46,7 +46,7 @@
 
 	<screen name="ATVimageslist" position="center,center" size="1850,1030" title="" flags="wfNoBorder">
 		<ePixmap position="15,15" size="450,75" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/pic/openATV_fHD.png" alphatest="blend" zPosition="1" />
-		<widget name="version" position="435,57" size="50,30" font="Regular;24" halign="left" valign="center" />
+		<widget name="version" position="435,60" size="50,30" font="Regular;24" halign="left" valign="center" />
 		<widget source="Title" position="530,25" size="260,72" font="Regular;54" halign="left" valign="bottom" render="Label" />
 		<widget name="prev_label" position="800,15" size="250,36" font="Regular;24" halign="right" valign="top" />
 		<widget name="curr_label" position="1085,15" size="415,36" font="Regular;24" halign="center" valign="top" />
@@ -99,7 +99,7 @@
 
 	<screen name="ATVboxdetails" position="center,center" size="1000,730" title="" flags="wfNoBorder">
 		<ePixmap position="15,15" size="450,75" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/pic/openATV_HD.png" alphatest="blend" zPosition="1" />
-		<widget name="version" position="435,57" size="50,30" font="Regular;24" halign="left" valign="center" />
+		<widget name="version" position="435,60" size="50,30" font="Regular;24" halign="left" valign="center" />
 		<widget source="Title" position="500,25" size="490,72" font="Regular;54" halign="left" valign="bottom" render="Label" />
 		<widget name="curr_date" position="805,10" size="180,40" font="Regular;30" halign="right" valign="top" />
 		<eLabel position="805,55" size="180,42" backgroundColor="grey" zPosition="-1" />
@@ -112,7 +112,7 @@
 
 	<screen name="ATVconfig" position="center,center" size="1000,600" title="" flags="wfNoBorder">
 		<ePixmap position="15,15" size="450,75" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/pic/openATV_fHD.png" alphatest="blend" zPosition="1" />
-		<widget name="version" position="435,57" size="50,30" font="Regular;24" halign="left" valign="center" />
+		<widget name="version" position="435,60" size="50,30" font="Regular;24" halign="left" valign="center" />
 		<widget source="Title" position="500,25" size="490,72" font="Regular;54" halign="left" valign="bottom" render="Label" />
 		<widget name="curr_date" position="805,10" size="180,42" font="Regular;30" halign="right" valign="top" />
 		<widget name="config" position="15,105" size="970,420" itemHeight="42" font="screen_text;32" halign="left" scrollbarMode="showOnDemand" enableWrapAround="1" />
