@@ -1,0 +1,249 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2023-07-24 19:33+0200\n"
+"PO-Revision-Date: 2023-07-26 22:53+0200\n"
+"Last-Translator: endriu <mrservo via GitHub.com>\n"
+"Language-Team: endriu\n"
+"Language: pl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+"X-Generator: Poedit 3.3.2\n"
+
+#: ..\plugin.py:45
+msgid "faster"
+msgstr "szybciej"
+
+#: ..\plugin.py:45
+msgid "normal"
+msgstr "normalnie"
+
+#: ..\plugin.py:45
+msgid "off"
+msgstr "wyłącz"
+
+#: ..\plugin.py:45
+msgid "slower"
+msgstr "wolniej"
+
+#: ..\plugin.py:46
+msgid "selected box"
+msgstr "wybrany Box"
+
+#: ..\plugin.py:177
+msgid "Favorites"
+msgstr "Ulubione"
+
+#: ..\plugin.py:185 ..\plugin.py:433
+msgid "remove box from favorites"
+msgstr "usuń Box z ulubionych"
+
+#: ..\plugin.py:186 ..\plugin.py:351
+msgid "Images list"
+msgstr "Lista obrazów"
+
+#: ..\plugin.py:187 ..\plugin.py:371 ..\plugin.py:559
+msgid "Boxdetails"
+msgstr "Szczegóły Boxa"
+
+#: ..\plugin.py:259
+msgid "No favorites (box, platform) set yet."
+msgstr "Nie ustawiono jeszcze ulubionych (box, platforma)."
+
+#: ..\plugin.py:259
+msgid "Please select favorite(s) in the image lists."
+msgstr "Wybierz ulubione z list obrazów."
+
+#: ..\plugin.py:284
+msgid "platform"
+msgstr "Platforma"
+
+#: ..\plugin.py:284 ..\plugin.py:442
+msgid "boxes"
+msgstr "Boxy"
+
+#: ..\plugin.py:284 ..\plugin.py:442
+msgid "failed"
+msgstr "błąd"
+
+#: ..\plugin.py:284 ..\plugin.py:442
+msgid "last build cycle"
+msgstr "ostatni cykl budowy"
+
+#: ..\plugin.py:292 ..\plugin.py:484
+msgid "Box '%s-%s' was sucessfully removed from favorites!"
+msgstr "Box „%s-%s” został pomyślnie usunięty z ulubionych!"
+
+#: ..\plugin.py:302 ..\plugin.py:490
+msgid "Do you really want to remove Box '%s-%s' from favorites?"
+msgstr "Na pewno chcesz usunąć Box „%s-%s” z ulubionych?"
+
+#: ..\plugin.py:369
+msgid "jump to construction site"
+msgstr "skocz do strony budowy"
+
+#: ..\plugin.py:370
+msgid "jump to favorite(s)"
+msgstr "skocz do ulubionych"
+
+#: ..\plugin.py:372 ..\plugin.py:634
+msgid "Settings"
+msgstr "Ustawienia"
+
+#: ..\plugin.py:407
+msgid "previous"
+msgstr "poprzedni"
+
+#: ..\plugin.py:408
+msgid "current platform"
+msgstr "aktualna platforma"
+
+#: ..\plugin.py:409
+msgid "next"
+msgstr "następny"
+
+#: ..\plugin.py:435
+msgid "add box to favorites"
+msgstr "dodaj Box do ulubionych"
+
+#: ..\plugin.py:438
+msgid "next build ends in %sh, still %s boxes before"
+msgstr "następna kompilacja kończy się za %sh, nadal %s boxy wcześniej"
+
+#: ..\plugin.py:440
+msgid "image is under construction or failed, duration is unclear..."
+msgstr "obraz jest w budowie lub nie działa, czas trwania jest niejasny..."
+
+#: ..\plugin.py:444
+msgid "no box found in this platform!"
+msgstr "nie znaleziono boxa na tej platformie!"
+
+#: ..\plugin.py:445
+msgid "nothing to do - no build cycle"
+msgstr "nic do zrobienia - brak cyklu budowania"
+
+#: ..\plugin.py:495
+msgid "Box '%s-%s' was sucessfully added to favorites!"
+msgstr "Box „%s-%s” został pomyślnie dodany do ulubionych!"
+
+#: ..\plugin.py:505
+msgid "At the moment no image is built on the platform '%s'!"
+msgstr "W tej chwili żaden obraz nie jest tworzony na platformie „%s”!"
+
+#: ..\plugin.py:565 ..\plugin.py:637
+msgid "Cancel"
+msgstr "Anuluj"
+
+#: ..\plugin.py:585 ..\plugin.py:598
+msgid "Brand"
+msgstr "Producent"
+
+#: ..\plugin.py:586 ..\plugin.py:599
+msgid "Model"
+msgstr "Model"
+
+#: ..\plugin.py:587 ..\plugin.py:600
+msgid "Image"
+msgstr "Obraz"
+
+#: ..\plugin.py:588 ..\plugin.py:601
+msgid "Version"
+msgstr "Wersja"
+
+#: ..\plugin.py:589 ..\plugin.py:602
+msgid "Chipset"
+msgstr "Chipset"
+
+#: ..\plugin.py:605
+msgid "Box is OFFLINE! No current details available"
+msgstr "Box jest OFFLINE! Brak aktualnych szczegółów"
+
+#: ..\plugin.py:638
+msgid "Save settings"
+msgstr "Zapisz ustawienia"
+
+#: ..\plugin.py:645
+msgid "Preferred box architecture for images list:"
+msgstr "Preferowana architektura boxa dla listy obrazów:"
+
+#: ..\plugin.py:645
+msgid ""
+"Specify which box architecture should be preferred when images list will be "
+"called. If option 'current' is selected, the architecture of the selected "
+"box is taken."
+msgstr ""
+"Określ, która architektura boxa ma być preferowana, gdy zostanie wywołana "
+"lista obrazów. Jeżeli wybrana jest opcja 'bieżąca', przyjmowana jest "
+"architektura wybranego boxa."
+
+#: ..\plugin.py:646
+msgid "Animation for change of platform:"
+msgstr "Animacja w czasie zmiany platformy:"
+
+#: ..\plugin.py:646
+msgid ""
+"Sets the animation speed for the carousel function when changing platforms."
+msgstr "Ustaw prędkość animacji dla funkcji karuzeli podczas zmiany platform."
+
+#: ..\plugin.py:668
+msgid "Current overview of the OpenATV images building servers"
+msgstr "Bieżący przegląd serwerów do tworzenia obrazów OATV"
+
+#~ msgid "Use images list for box selection"
+#~ msgstr "Nutze Imagelisten für Boxauswahl"
+
+#~ msgid ""
+#~ "Box '%s' is not in current platform! Please change to another platform."
+#~ msgstr ""
+#~ "Box '%s' ist nicht in aktueller Plattform! Bitte Plattform wechseln."
+
+#~ msgid "last build cycles"
+#~ msgstr "letzter Bauzyklus"
+
+#~ msgid "last build cycle: %sh, %s boxes, failed: %s"
+#~ msgstr "letzter Bauzyklus: %sh, %s Boxen, fehlgeschlagen: %s"
+
+#~ msgid "Open images list"
+#~ msgstr "Öffne Imagelisten"
+
+#~ msgid ""
+#~ "Specify which view you would like to see when when the plugin is started."
+#~ msgstr ""
+#~ "Legen Sie fest, welche Ansicht beim Starten des Plugins aufgerufen werden "
+#~ "soll."
+
+#~ msgid "View for plugin start:"
+#~ msgstr "Ansicht bei Plugin Start:"
+
+#~ msgid "imagelist"
+#~ msgstr "Imageliste"
+
+#~ msgid "complete platform lists"
+#~ msgstr "komplette Plattformliste"
+
+#~ msgid "Favorites view"
+#~ msgstr "Favoriten"
+
+#~ msgid "Buildserver"
+#~ msgstr "Bauserver"
+
+#~ msgid "Large font size in overview:"
+#~ msgstr "Große Schriftgröße in der Übersicht:"
+
+#~ msgid "Shows image build status overview in larger letters."
+#~ msgstr "Zeigt die Imagebau Statusübersicht in großen Buchstaben."
+
+#~ msgid "jump to currently built box"
+#~ msgstr "springe zur aktuell gebauter Box"
+
+#~ msgid "image is being built..."
+#~ msgstr "Image wird gerade gebaut..."
+
+#~ msgid "Shows which image currently is under construction and more"
+#~ msgstr "Zeigt welche Images gerade gebaut werden und mehr"
