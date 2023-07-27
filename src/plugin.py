@@ -335,8 +335,8 @@ class ATVfavorites(Screen):
 class ATVimageslist(Screen):
 	def __init__(self, session, box):
 		self.session = session
+		self.currbox = box
 		self.currarch = box[1]
-		self.currfav = box[0]
 		self.skin = readSkin("ATVimageslist")
 		Screen.__init__(self, session, self.skin)
 		self.setTitle(_("Images list"))
@@ -386,6 +386,9 @@ class ATVimageslist(Screen):
 		self.onLayoutFinish.append(self.onLayoutFinished)
 
 	def onLayoutFinished(self):
+		self["prev_label"].setText(_("previous"))
+		self["curr_label"].setText(_("current platform"))
+		self["next_label"].setText(_("next"))
 		self["menu"].setList([])
 		self.setPlatformStatic()
 		self.refreshplatlist()
@@ -395,9 +398,6 @@ class ATVimageslist(Screen):
 		BS.getbuildinfos(BS.platlist[self.platidx], self.makeimagelist)
 
 	def makeimagelist(self):
-		self["prev_label"].setText(_("previous"))
-		self["curr_label"].setText(_("current platform"))
-		self["next_label"].setText(_("next"))
 		menulist = []
 		boxlist = []
 		if BS.htmldict:
@@ -411,11 +411,11 @@ class ATVimageslist(Screen):
 				menulist.append(tuple([boxname, bd["BuildStatus"], bd["StartBuild"], bd["StartFeedSync"], bd["EndBuild"], bd["SyncTime"], buildtime, color]))
 			self["menu"].updateList(menulist)
 			self.boxlist = boxlist
-		if self.currfav:
-			foundbox = [item for item in boxlist if item[0] == self.currfav]
+		if self.currbox:
+			foundbox = [item for item in boxlist if item == self.currbox]
 			if foundbox:
 				self["menu"].setIndex(self.boxlist.index(foundbox[0]))
-			self.currfav = None
+			self.currbox = None
 		self.refreshstatus()
 
 	def refreshstatus(self):
@@ -498,12 +498,12 @@ class ATVimageslist(Screen):
 	def keyYellow(self):
 		if self.boxlist and FAVLIST:
 			self.favindex = (self.favindex + 1) % len(FAVLIST)
-			self.currfav = FAVLIST[self.favindex]
-			if self.currfav in self.boxlist:
-				self["menu"].setIndex(self.boxlist.index(self.currfav))
+			self.currbox = FAVLIST[self.favindex]
+			if self.currbox in self.boxlist:
+				self["menu"].setIndex(self.boxlist.index(self.currbox))
 				self.refreshstatus()
 			else:
-				self.platidx = BS.archlist.index(self.currfav[1])
+				self.platidx = BS.archlist.index(self.currbox[1])
 				self.CS.moveToIndex(self.platidx)
 				self.setPlatformStatic()
 				self.refreshplatlist()
