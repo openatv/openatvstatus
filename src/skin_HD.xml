@@ -57,13 +57,13 @@
 		<ePixmap position="1196,33" size="30,30" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/pic/bouquet_HD.png" alphatest="blend" zPosition="1" />
 		<widget name="curr_date" position="1103,6" size="120,28" font="Regular;20" halign="right" valign="top" />
 		<eLabel position="10,73" size="1213,30" backgroundColor="grey" zPosition="-1" />
-		<eLabel text="BoxName" position="13,76" size="200,28" font="Regular;20" halign="left" valign="center" foregroundColor="black" backgroundColor="grey" />
-		<eLabel text="BuildStatus" position="213,76" size="106,28" font="Regular;20" halign="right" valign="center" foregroundColor="black" backgroundColor="grey" />
-		<eLabel text="StartBuild" position="320,76" size="230,28" font="Regular;20" halign="right" valign="center" foregroundColor="black" backgroundColor="grey" />
-		<eLabel text="StartFeedSync" position="550,76" size="230,28" font="Regular;20" halign="right" valign="center" foregroundColor="black" backgroundColor="grey" />
-		<eLabel text="EndBuild" position="780,76" size="230,28" font="Regular;20" halign="right" valign="center" foregroundColor="black" backgroundColor="grey" />
-		<eLabel text="SyncTime" position="1010,76" size="100,28" font="Regular;20" halign="right" valign="center" foregroundColor="black" backgroundColor="grey" />
-		<eLabel text="BuildTime" position="1110,76" size="100,28" font="Regular;20" halign="right" valign="center" foregroundColor="black" backgroundColor="grey" />
+		<eLabel text="BoxName" position="13,75" size="200,28" font="Regular;20" halign="left" valign="center" foregroundColor="black" backgroundColor="grey" />
+		<eLabel text="BuildStatus" position="213,75" size="106,28" font="Regular;20" halign="right" valign="center" foregroundColor="black" backgroundColor="grey" />
+		<eLabel text="StartBuild" position="320,75" size="230,28" font="Regular;20" halign="right" valign="center" foregroundColor="black" backgroundColor="grey" />
+		<eLabel text="StartFeedSync" position="550,75" size="230,28" font="Regular;20" halign="right" valign="center" foregroundColor="black" backgroundColor="grey" />
+		<eLabel text="EndBuild" position="780,75" size="230,28" font="Regular;20" halign="right" valign="center" foregroundColor="black" backgroundColor="grey" />
+		<eLabel text="SyncTime" position="1010,75" size="100,28" font="Regular;20" halign="right" valign="center" foregroundColor="black" backgroundColor="grey" />
+		<eLabel text="BuildTime" position="1110,75" size="100,28" font="Regular;20" halign="right" valign="center" foregroundColor="black" backgroundColor="grey" />
 		<widget source="menu" render="Listbox" position="10,103" size="1213,494" scrollbarMode="showOnDemand">
 			<convert type="TemplatedMultiContent">
 				{"template": [
@@ -85,12 +85,12 @@
 		<widget name="platinfo" position="566,597" size="640,28" font="Regular;20" halign="right" valign="center" foregroundColor="black" backgroundColor="grey" />
 		<eLabel name="red" position="33,643" size="6,43" backgroundColor="red" zPosition="1" />
 		<eLabel name="green" position="363,643" size="6,43" backgroundColor="green" zPosition="1" />
-		<eLabel name="yellow" position="693,643" size="6,43" backgroundColor="yellow" zPosition="1" />
-		<ePixmap position="873,650" size="30,30" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/pic/key_ok_HD.png" alphatest="blend" zPosition="1" />\
-		<ePixmap position="1060,650" size="30,30" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/pic/key_menu_HD.png" alphatest="blend" zPosition="1" />\
+		<eLabel name="yellow" position="593,643" size="6,43" backgroundColor="yellow" zPosition="1" />
+		<ePixmap position="873,651" size="30,30" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/pic/key_ok_HD.png" alphatest="blend" zPosition="1" />\
+		<ePixmap position="1060,651" size="30,30" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/pic/key_menu_HD.png" alphatest="blend" zPosition="1" />\
 		<widget name="key_red" position="46,653" size="302,28" font="Regular;20" halign="left" foregroundColor="grey" />
-		<widget name="key_green" position="343,653" size="302,28" font="Regular;20" halign="left" foregroundColor="grey" />
-		<widget name="key_yellow" position="607,653" size="302,28" font="Regular;20" halign="left" foregroundColor="grey"/>
+		<widget name="key_green" position="376,653" size="302,28" font="Regular;20" halign="left" foregroundColor="grey" />
+		<widget name="key_yellow" position="606,653" size="302,28" font="Regular;20" halign="left" foregroundColor="grey"/>
 		<widget name="key_ok" position="910,653" size="252,28" font="Regular;20" halign="left" foregroundColor="grey" />
 		<widget name="key_menu" position="1097,653" size="252,28" font="Regular;20" halign="left" foregroundColor="grey" />
 	</screen>
