@@ -279,8 +279,9 @@ class ATVfavorites(Screen):
 			FAVLIST.remove(self.foundFavs[0])
 			config.plugins.OpenATVstatus.favboxes.value = ";".join("(%s)" % ",".join(item) for item in FAVLIST) if FAVLIST else ""
 			config.plugins.OpenATVstatus.favboxes.save()
+			removedbox = self.boxlist[self.currindex]
 			self.createMenulist()
-			self.session.open(MessageBox, text=_("Box '%s-%s' was sucessfully removed from favorites!") % self.boxlist[self.currindex], type=MessageBox.TYPE_INFO, timeout=2, close_on_any_key=True)
+			self.session.open(MessageBox, text=_("Box '%s-%s' was sucessfully removed from favorites!") % removedbox, type=MessageBox.TYPE_INFO, timeout=2, close_on_any_key=True)
 
 	def keyOk(self):
 		currbox = self.boxlist[self.currindex] if self.boxlist else None

@@ -59,13 +59,13 @@
 		<ePixmap position="1790,50" size="45,45" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/pic/bouquet_fHD.png" alphatest="blend" zPosition="1" />
 		<widget name="curr_date" position="1655,10" size="180,42" font="Regular;30" halign="right" valign="top" />
 		<eLabel position="15,110" size="1820,45" backgroundColor="grey" zPosition="-1" />
-		<eLabel text="BoxName" position="20,114" size="300,42" font="Regular;30" halign="left" valign="center" foregroundColor="black" backgroundColor="grey" />
-		<eLabel text="BuildStatus" position="320,115" size="159,42" font="Regular;30" halign="right" valign="center" foregroundColor="black" backgroundColor="grey" />
-		<eLabel text="StartBuild" position="480,115" size="345,42" font="Regular;30" halign="right" valign="center" foregroundColor="black" backgroundColor="grey" />
-		<eLabel text="StartFeedSync" position="825,115" size="345,42" font="Regular;30" halign="right" valign="center" foregroundColor="black" backgroundColor="grey" />
-		<eLabel text="EndBuild" position="1170,115" size="345,42" font="Regular;30" halign="right" valign="center" foregroundColor="black" backgroundColor="grey" />
-		<eLabel text="SyncTime" position="1515,115" size="150,42" font="Regular;30" halign="right" valign="center" foregroundColor="black" backgroundColor="grey" />
-		<eLabel text="BuildTime" position="1665,115" size="150,42" font="Regular;30" halign="right" valign="center" foregroundColor="black" backgroundColor="grey" />
+		<eLabel text="BoxName" position="20,112" size="300,42" font="Regular;30" halign="left" valign="center" foregroundColor="black" backgroundColor="grey" />
+		<eLabel text="BuildStatus" position="320,112" size="159,42" font="Regular;30" halign="right" valign="center" foregroundColor="black" backgroundColor="grey" />
+		<eLabel text="StartBuild" position="480,112" size="345,42" font="Regular;30" halign="right" valign="center" foregroundColor="black" backgroundColor="grey" />
+		<eLabel text="StartFeedSync" position="825,112" size="345,42" font="Regular;30" halign="right" valign="center" foregroundColor="black" backgroundColor="grey" />
+		<eLabel text="EndBuild" position="1170,112" size="345,42" font="Regular;30" halign="right" valign="center" foregroundColor="black" backgroundColor="grey" />
+		<eLabel text="SyncTime" position="1515,112" size="150,42" font="Regular;30" halign="right" valign="center" foregroundColor="black" backgroundColor="grey" />
+		<eLabel text="BuildTime" position="1665,112" size="150,42" font="Regular;30" halign="right" valign="center" foregroundColor="black" backgroundColor="grey" />
 		<widget source="menu" render="Listbox" position="15,155" size="1820,741" scrollbarMode="showOnDemand">
 			<convert type="TemplatedMultiContent">
 				{"template": [
