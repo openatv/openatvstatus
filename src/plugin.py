@@ -198,8 +198,7 @@ class ATVfavorites(Screen):
 
 	def onLayoutFinished(self):
 		self["menu"].setList([])
-		self.createMenulist()
-		self.refreshstatus()
+		callInThread(self.createMenulist)
 
 	def createMenulist(self):
 		boxlist = []
@@ -249,6 +248,7 @@ class ATVfavorites(Screen):
 			self["menu"].style = "emptylist"
 			self["menu"].updateList([(_("No favorites (box, platform) set yet."), _("Please select favorite(s) in the image lists."))])
 		self["menu"].setIndex(self.currindex)
+		self.refreshstatus()
 
 	def imageDownload(self, boxname):
 		try:
