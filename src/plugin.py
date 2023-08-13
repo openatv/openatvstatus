@@ -46,7 +46,7 @@ config.plugins.OpenATVstatus.animate = ConfigSelection(default="50", choices=[("
 config.plugins.OpenATVstatus.favarch = ConfigSelection(default="current", choices=[("current", _("selected box"))] + BS.archlist)
 config.plugins.OpenATVstatus.favboxes = ConfigText(default="", fixed_size=False)
 
-VERSION = "V1.3"
+VERSION = "V1.4"
 MODULE_NAME = __name__.split(".")[-1]
 FAVLIST = [tuple(atom.strip() for atom in item.replace("(", "").replace(")", "").split(",")) for item in config.plugins.OpenATVstatus.favboxes.value.split(";")] if config.plugins.OpenATVstatus.favboxes.value else []
 PICURL = "https://raw.githubusercontent.com/oe-alliance/remotes/master/boxes/"
@@ -206,7 +206,7 @@ class ATVfavorites(Screen):
 		baselist = []
 		piclist = []
 		menulist = []
-		if FAVLIST:
+		if FAVLIST and BS.platlist:
 			self["menu"].style = "default"
 			for favorite in FAVLIST:
 				if favorite[1] not in usedarchs:
@@ -429,7 +429,7 @@ class ATVimageslist(Screen):
 		if nextbuild:
 			self["boxinfo"].setText(_("next build ends in %sh, still %s boxes before") % (BS.strf_delta(nextbuild), boxesahead))
 		else:
-			self["boxinfo"].setText(_("image is under construction or failed, duration is unclear..."))
+			self["boxinfo"].setText(_("image is under construction, the duration is unclear..."))
 		if cycletime:
 			self["platinfo"].setText("%s: %sh, %s %s, %s: %s" % (_("last build cycle"), BS.strf_delta(cycletime), counter, _("boxes"), _("failed"), failed))
 		else:
