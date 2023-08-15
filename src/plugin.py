@@ -46,7 +46,7 @@ config.plugins.OpenATVstatus.animate = ConfigSelection(default="50", choices=[("
 config.plugins.OpenATVstatus.favarch = ConfigSelection(default="current", choices=[("current", _("selected box"))] + BS.archlist)
 config.plugins.OpenATVstatus.favboxes = ConfigText(default="", fixed_size=False)
 
-VERSION = "V1.4"
+VERSION = "V1.5"
 MODULE_NAME = __name__.split(".")[-1]
 FAVLIST = [tuple(atom.strip() for atom in item.replace("(", "").replace(")", "").split(",")) for item in config.plugins.OpenATVstatus.favboxes.value.split(";")] if config.plugins.OpenATVstatus.favboxes.value else []
 PICURL = "https://raw.githubusercontent.com/oe-alliance/remotes/master/boxes/"
@@ -270,9 +270,10 @@ class ATVfavorites(Screen):
 	def refreshstatus(self):
 		if FAVLIST:
 			self.currindex = self["menu"].getSelectedIndex()
-			currplat = BS.getplatform(self.boxlist[self.currindex][1])
-			platdict = self.platdict[currplat]
-			self["platinfo"].setText("%s: %s, %s: %sh, %s %s, %s: %s" % (_("platform"), currplat, _("last build cycle"), platdict["cycletime"], platdict["boxcounter"], _("boxes"), _("failed"), platdict["boxfailed"]))
+			if self.currindex:
+				currplat = BS.getplatform(self.boxlist[self.currindex][1])
+				platdict = self.platdict[currplat]
+				self["platinfo"].setText("%s: %s, %s: %sh, %s %s, %s: %s" % (_("platform"), currplat, _("last build cycle"), platdict["cycletime"], platdict["boxcounter"], _("boxes"), _("failed"), platdict["boxfailed"]))
 
 	def msgboxReturn(self, answer):
 		if answer is True:
@@ -289,17 +290,19 @@ class ATVfavorites(Screen):
 			self.session.open(ATVboxdetails, currbox)
 
 	def keyRed(self):
-		self.foundFavs = [item for item in FAVLIST if item == self.boxlist[self.currindex]]
-		if self.foundFavs:
-			self.session.openWithCallback(self.msgboxReturn, MessageBox, _("Do you really want to remove Box '%s-%s' from favorites?") % self.boxlist[self.currindex], MessageBox.TYPE_YESNO, default=False)
+		if self.boxlist:
+			self.foundFavs = [item for item in FAVLIST if item == self.boxlist[self.currindex]]
+			if self.foundFavs:
+				self.session.openWithCallback(self.msgboxReturn, MessageBox, _("Do you really want to remove Box '%s-%s' from favorites?") % self.boxlist[self.currindex], MessageBox.TYPE_YESNO, default=False)
 
 	def keyBlue(self):
 		currbox = self.boxlist[self.currindex] if self.boxlist else None
 		if currbox:
 			self.session.openWithCallback(self.createMenulist, ATVimageslist, currbox)
 		else:
-			currarch = BS.archlist[0] if config.plugins.OpenATVstatus.favarch.value == "current" else config.plugins.OpenATVstatus.favarch.value
-			self.session.openWithCallback(self.createMenulist, ATVimageslist, ("", currarch))
+			if BS.archlist:
+				currarch = BS.archlist[0] if config.plugins.OpenATVstatus.favarch.value == "current" else config.plugins.OpenATVstatus.favarch.value
+				self.session.openWithCallback(self.createMenulist, ATVimageslist, ("", currarch))
 
 	def keyUp(self):
 		self["menu"].up()
