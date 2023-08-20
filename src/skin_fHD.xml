@@ -38,7 +38,7 @@
 		<widget name="platinfo" position="25,855" size="1160,42" font="Regular;30" halign="left" valign="center" foregroundColor="black" backgroundColor="grey" />
 		<eLabel name="red" position="50,915" size="10,65" backgroundColor="red" zPosition="1" />
 		<eLabel name="blue" position="470,915" size="10,65" backgroundColor="blue" zPosition="1" />
-		<ePixmap position="890,920" size="45,45" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/pic/key_ok_fHD.png" alphatest="blend" zPosition="1" />\
+		<ePixmap position="890,925" size="45,45" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/pic/key_ok_fHD.png" alphatest="blend" zPosition="1" />\
 		<widget name="key_red" position="70,925" size="380,42" font="Regular;30" foregroundColor="grey" />
 		<widget name="key_blue" position="490,925" size="380,42" font="Regular;30" foregroundColor="grey" />
 		<widget name="key_ok" position="945,925" size="252,42" font="Regular;30" halign="left" foregroundColor="grey" />
@@ -90,11 +90,11 @@
 		<eLabel name="yellow" position="890,965" size="9,65" backgroundColor="yellow" zPosition="1" />
 		<ePixmap position="1310,975" size="45,45" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/pic/key_ok_fHD.png" alphatest="blend" zPosition="1" />\
 		<ePixmap position="1590,975" size="45,45" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/pic/key_menu_fHD.png" alphatest="blend" zPosition="1" />
-		<widget name="key_red" position="69,980" size="454,42" font="Regular;30" halign="left" foregroundColor="grey" />
-		<widget name="key_green" position="515,980" size="454,42" font="Regular;30" halign="left" foregroundColor="grey" />
-		<widget name="key_yellow" position="910,980" size="454,42" font="Regular;30" halign="left" foregroundColor="grey" />
-		<widget name="key_ok" position="1365,980" size="252,42" font="Regular;30" halign="left" foregroundColor="grey" />
-		<widget name="key_menu" position="1645,980" size="379,42" font="Regular;30" halign="left" foregroundColor="grey" />
+		<widget name="key_red" position="69,975" size="454,42" font="Regular;30" halign="left" foregroundColor="grey" />
+		<widget name="key_green" position="515,975" size="454,42" font="Regular;30" halign="left" foregroundColor="grey" />
+		<widget name="key_yellow" position="910,975" size="454,42" font="Regular;30" halign="left" foregroundColor="grey" />
+		<widget name="key_ok" position="1365,975" size="252,42" font="Regular;30" halign="left" foregroundColor="grey" />
+		<widget name="key_menu" position="1645,975" size="379,42" font="Regular;30" halign="left" foregroundColor="grey" />
 	</screen>
 
 	<screen name="ATVboxdetails" position="center,center" size="1000,730" title="" flags="wfNoBorder">
