@@ -270,7 +270,7 @@ class ATVfavorites(Screen):
 	def refreshstatus(self):
 		if FAVLIST:
 			self.currindex = self["menu"].getSelectedIndex()
-			if self.currindex:
+			if self.currindex is not None:
 				currplat = BS.getplatform(self.boxlist[self.currindex][1])
 				platdict = self.platdict[currplat]
 				self["platinfo"].setText("%s: %s, %s: %sh, %s %s, %s: %s" % (_("platform"), currplat, _("last build cycle"), platdict["cycletime"], platdict["boxcounter"], _("boxes"), _("failed"), platdict["boxfailed"]))
@@ -608,7 +608,7 @@ class ATVboxdetails(Screen):
 			response.raise_for_status()
 			return loads(response.content)
 		except exceptions.RequestException as error:
-			print("[OpenATVstatus] ERROR in module 'getAPIdata': %s" % str(error))
+			print("[%s] ERROR in module 'getAPIdata': %s" % (MODULE_NAME, str(error)))
 
 	def imageDownload(self, boxname):
 		try:
