@@ -16,6 +16,7 @@ from json import loads
 from os import makedirs
 from os.path import join, exists
 from requests import get, exceptions
+from twisted.internet.reactor import callInThread
 from xml.etree.ElementTree import tostring, parse
 
 # ENIGMA IMPORTS
@@ -31,7 +32,6 @@ from Plugins.Plugin import PluginDescriptor
 from Screens.Screen import Screen
 from Screens.MessageBox import MessageBox
 from Tools.LoadPixmap import LoadPixmap
-from twisted.internet.reactor import callInThread
 
 # PLUGIN IMPORTS
 from . import PLUGINPATH, _  # for localized messages
@@ -39,16 +39,15 @@ from .Buildstatus import Buildstatus
 
 # PLUGIN GLOBALS
 BS = Buildstatus()
-BS.start()
 
 config.plugins.OpenATVstatus = ConfigSubsection()
 config.plugins.OpenATVstatus.animate = ConfigSelection(default="50", choices=[("off", _("off")), ("70", _("slower")), ("50", _("normal")), ("30", _("faster"))])
 config.plugins.OpenATVstatus.favarch = ConfigSelection(default="current", choices=[("current", _("selected box"))] + BS.archlist)
 config.plugins.OpenATVstatus.favboxes = ConfigText(default="", fixed_size=False)
 
-VERSION = "V1.5"
+VERSION = "V1.6"
 MODULE_NAME = __name__.split(".")[-1]
-FAVLIST = [tuple(atom.strip() for atom in item.replace("(", "").replace(")", "").split(",")) for item in config.plugins.OpenATVstatus.favboxes.value.split(";")] if config.plugins.OpenATVstatus.favboxes.value else []
+FAVLIST = [tuple(x.strip() for x in item.replace("(", "").replace(")", "").split(",")) for item in config.plugins.OpenATVstatus.favboxes.value.split(";")] if config.plugins.OpenATVstatus.favboxes.value else []
 PICURL = "https://raw.githubusercontent.com/oe-alliance/remotes/master/boxes/"
 TMPPATH = "/tmp/boxpictures/"
 
@@ -163,6 +162,7 @@ class Carousel():
 class ATVfavorites(Screen):
 	def __init__(self, session):
 		self.session = session
+		BS.start()
 		self.skin = readSkin("ATVfavorites")
 		Screen.__init__(self, session, self.skin)
 		self.setTitle(_("Favorites"))
@@ -270,13 +270,13 @@ class ATVfavorites(Screen):
 	def refreshstatus(self):
 		if FAVLIST:
 			self.currindex = self["menu"].getSelectedIndex()
-			if self.currindex is not None:
+			if self.boxlist and self.currindex is not None:
 				currplat = BS.getplatform(self.boxlist[self.currindex][1])
 				platdict = self.platdict[currplat]
 				self["platinfo"].setText("%s: %s, %s: %sh, %s %s, %s: %s" % (_("platform"), currplat, _("last build cycle"), platdict["cycletime"], platdict["boxcounter"], _("boxes"), _("failed"), platdict["boxfailed"]))
 
 	def msgboxReturn(self, answer):
-		if answer is True:
+		if answer is True and self.boxlist and self.currindex is not None:
 			FAVLIST.remove(self.foundFavs[0])
 			config.plugins.OpenATVstatus.favboxes.value = ";".join("(%s)" % ",".join(item) for item in FAVLIST) if FAVLIST else ""
 			config.plugins.OpenATVstatus.favboxes.save()
@@ -285,24 +285,26 @@ class ATVfavorites(Screen):
 			self.session.open(MessageBox, text=_("Box '%s-%s' was sucessfully removed from favorites!") % removedbox, type=MessageBox.TYPE_INFO, timeout=2, close_on_any_key=True)
 
 	def keyOk(self):
-		currbox = self.boxlist[self.currindex] if self.boxlist else None
-		if currbox:
-			self.session.open(ATVboxdetails, currbox)
+		if self.boxlist and self.currindex is not None:
+			currbox = self.boxlist[self.currindex] if self.boxlist else None
+			if currbox:
+				self.session.open(ATVboxdetails, currbox)
 
 	def keyRed(self):
-		if self.boxlist:
+		if self.boxlist and self.currindex is not None:
 			self.foundFavs = [item for item in FAVLIST if item == self.boxlist[self.currindex]]
 			if self.foundFavs:
 				self.session.openWithCallback(self.msgboxReturn, MessageBox, _("Do you really want to remove Box '%s-%s' from favorites?") % self.boxlist[self.currindex], MessageBox.TYPE_YESNO, default=False)
 
 	def keyBlue(self):
-		currbox = self.boxlist[self.currindex] if self.boxlist else None
-		if currbox:
-			self.session.openWithCallback(self.createMenulist, ATVimageslist, currbox)
-		else:
-			if BS.archlist:
-				currarch = BS.archlist[0] if config.plugins.OpenATVstatus.favarch.value == "current" else config.plugins.OpenATVstatus.favarch.value
-				self.session.openWithCallback(self.createMenulist, ATVimageslist, ("", currarch))
+		if self.boxlist and self.currindex is not None:
+			currbox = self.boxlist[self.currindex] if self.boxlist else None
+			if currbox:
+				self.session.openWithCallback(self.createMenulist, ATVimageslist, currbox)
+			else:
+				if BS.archlist:
+					currarch = BS.archlist[0] if config.plugins.OpenATVstatus.favarch.value == "current" else config.plugins.OpenATVstatus.favarch.value
+					self.session.openWithCallback(self.createMenulist, ATVimageslist, ("", currarch))
 
 	def keyUp(self):
 		self["menu"].up()
@@ -424,21 +426,22 @@ class ATVimageslist(Screen):
 
 	def refreshstatus(self):
 		self.currindex = self["menu"].getSelectedIndex()
-		if [item for item in FAVLIST if item == self.boxlist[self.currindex]]:
-			self["key_red"].setText(_("remove box from favorites"))
-		else:
-			self["key_red"].setText(_("add box to favorites"))
-		nextbuild, boxesahead, cycletime, counter, failed = BS.evaluate(self.boxlist[self.currindex][0])
-		if nextbuild:
-			self["boxinfo"].setText(_("next build ends in %sh, still %s boxes before") % (BS.strf_delta(nextbuild), boxesahead))
-		else:
-			self["boxinfo"].setText(_("image is under construction, the duration is unclear..."))
-		if cycletime:
-			self["platinfo"].setText("%s: %sh, %s %s, %s: %s" % (_("last build cycle"), BS.strf_delta(cycletime), counter, _("boxes"), _("failed"), failed))
-		else:
-			self["boxinfo"].setText(_("no box found in this platform!"))
-			self["platinfo"].setText(_("nothing to do - no build cycle"))
-			self["menu"].setList([])
+		if self.boxlist and self.currindex is not None:
+			if [item for item in FAVLIST if item == self.boxlist[self.currindex]]:
+				self["key_red"].setText(_("remove box from favorites"))
+			else:
+				self["key_red"].setText(_("add box to favorites"))
+			nextbuild, boxesahead, cycletime, counter, failed = BS.evaluate(self.boxlist[self.currindex][0])
+			if nextbuild:
+				self["boxinfo"].setText(_("next build ends in %sh, still %s boxes before") % (BS.strf_delta(nextbuild), boxesahead))
+			else:
+				self["boxinfo"].setText(_("image is under construction, the duration is unclear..."))
+			if cycletime:
+				self["platinfo"].setText("%s: %sh, %s %s, %s: %s" % (_("last build cycle"), BS.strf_delta(cycletime), counter, _("boxes"), _("failed"), failed))
+			else:
+				self["boxinfo"].setText(_("no box found in this platform!"))
+				self["platinfo"].setText(_("nothing to do - no build cycle"))
+				self["menu"].setList([])
 
 	def nextPlatform(self):
 		self.platidx = (self.platidx + 1) % len(BS.platlist)
@@ -467,12 +470,13 @@ class ATVimageslist(Screen):
 		self["next_plat"].setText(rotated[2])
 
 	def keyOk(self):
-		currbox = self.boxlist[self.currindex] if self.boxlist else None
-		if currbox:
-			self.session.open(ATVboxdetails, currbox)
+		if self.boxlist and self.currindex is not None:
+			currbox = self.boxlist[self.currindex] if self.boxlist else None
+			if currbox:
+				self.session.open(ATVboxdetails, currbox)
 
 	def msgboxReturn(self, answer):
-		if answer is True:
+		if answer is True and self.boxlist and self.currindex is not None:
 			FAVLIST.remove(self.foundFavs[0])
 			config.plugins.OpenATVstatus.favboxes.value = ";".join("(%s)" % ",".join(item) for item in FAVLIST) if FAVLIST else ""
 			config.plugins.OpenATVstatus.favboxes.save()
@@ -480,15 +484,16 @@ class ATVimageslist(Screen):
 			self.refreshplatlist()
 
 	def keyRed(self):
-		self.foundFavs = [item for item in FAVLIST if item == self.boxlist[self.currindex]]
-		if self.foundFavs:
-			self.session.openWithCallback(self.msgboxReturn, MessageBox, _("Do you really want to remove Box '%s-%s' from favorites?") % self.boxlist[self.currindex], MessageBox.TYPE_YESNO, default=False)
-		else:
-			FAVLIST.append(self.boxlist[self.currindex])
-			config.plugins.OpenATVstatus.favboxes.value = ";".join("(%s)" % ",".join(item) for item in FAVLIST) if FAVLIST else ""
-			config.plugins.OpenATVstatus.favboxes.save()
-			self.session.open(MessageBox, text=_("Box '%s-%s' was sucessfully added to favorites!") % self.boxlist[self.currindex], type=MessageBox.TYPE_INFO, timeout=2, close_on_any_key=True)
-			self.refreshplatlist()
+		if self.boxlist and self.currindex is not None:
+			self.foundFavs = [item for item in FAVLIST if item == self.boxlist[self.currindex]]
+			if self.foundFavs:
+				self.session.openWithCallback(self.msgboxReturn, MessageBox, _("Do you really want to remove Box '%s-%s' from favorites?") % self.boxlist[self.currindex], MessageBox.TYPE_YESNO, default=False)
+			else:
+				FAVLIST.append(self.boxlist[self.currindex])
+				config.plugins.OpenATVstatus.favboxes.value = ";".join("(%s)" % ",".join(item) for item in FAVLIST) if FAVLIST else ""
+				config.plugins.OpenATVstatus.favboxes.save()
+				self.session.open(MessageBox, text=_("Box '%s-%s' was sucessfully added to favorites!") % self.boxlist[self.currindex], type=MessageBox.TYPE_INFO, timeout=2, close_on_any_key=True)
+				self.refreshplatlist()
 
 	def keyGreen(self):
 		if self.boxlist:
