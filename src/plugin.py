@@ -45,7 +45,7 @@ config.plugins.OpenATVstatus.animate = ConfigSelection(default="50", choices=[("
 config.plugins.OpenATVstatus.favarch = ConfigSelection(default="current", choices=[("current", _("selected box"))] + BS.archlist)
 config.plugins.OpenATVstatus.favboxes = ConfigText(default="", fixed_size=False)
 
-VERSION = "V1.6"
+VERSION = "V1.7"
 MODULE_NAME = __name__.split(".")[-1]
 FAVLIST = [tuple(x.strip() for x in item.replace("(", "").replace(")", "").split(",")) for item in config.plugins.OpenATVstatus.favboxes.value.split(";")] if config.plugins.OpenATVstatus.favboxes.value else []
 PICURL = "https://raw.githubusercontent.com/oe-alliance/remotes/master/boxes/"
@@ -297,14 +297,14 @@ class ATVfavorites(Screen):
 				self.session.openWithCallback(self.msgboxReturn, MessageBox, _("Do you really want to remove Box '%s-%s' from favorites?") % self.boxlist[self.currindex], MessageBox.TYPE_YESNO, default=False)
 
 	def keyBlue(self):
-		if self.boxlist and self.currindex is not None:
-			currbox = self.boxlist[self.currindex] if self.boxlist else None
-			if currbox:
-				self.session.openWithCallback(self.createMenulist, ATVimageslist, currbox)
+		if BS.archlist:
+			if self.boxlist and self.currindex is not None:
+				currbox = self.boxlist[self.currindex]
+				if currbox:
+					self.session.openWithCallback(self.createMenulist, ATVimageslist, currbox)
 			else:
-				if BS.archlist:
-					currarch = BS.archlist[0] if config.plugins.OpenATVstatus.favarch.value == "current" else config.plugins.OpenATVstatus.favarch.value
-					self.session.openWithCallback(self.createMenulist, ATVimageslist, ("", currarch))
+				currarch = BS.archlist[0] if config.plugins.OpenATVstatus.favarch.value == "current" else config.plugins.OpenATVstatus.favarch.value
+				self.session.openWithCallback(self.createMenulist, ATVimageslist, ("", currarch))
 
 	def keyUp(self):
 		self["menu"].up()

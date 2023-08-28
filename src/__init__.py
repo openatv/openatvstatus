@@ -16,7 +16,6 @@ def localeInit():
 def _(txt):
     t = dgettext("OpenATVstatus", txt)
     if t == txt:
-        print("[OpenATVstatus] fallback to default translation for %s" % txt)
         t = gettext(txt)
     return t
 
