@@ -390,7 +390,8 @@ class ATVimageslist(Screen):
 														"prevMarker": self.prevPlatform,
 														"menu": self.openConfig,
 													}, -1)
-		self.CS = Carousel(delay=int(config.plugins.OpenATVstatus.animate.value))
+		delay=int(config.plugins.OpenATVstatus.animate.value)
+		self.CS = Carousel(delay if delay else 50)
 		self.CS.start(BS.platlist, self.platidx, self.CarouselCallback)
 		self.onLayoutFinish.append(self.onLayoutFinished)
 
