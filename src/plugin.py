@@ -41,11 +41,11 @@ from .Buildstatus import Buildstatus
 BS = Buildstatus()
 
 config.plugins.OpenATVstatus = ConfigSubsection()
-config.plugins.OpenATVstatus.animate = ConfigSelection(default="50", choices=[("off", _("off")), ("70", _("slower")), ("50", _("normal")), ("30", _("faster"))])
+config.plugins.OpenATVstatus.animate = ConfigSelection(default="50", choices=[("0", _("off")), ("70", _("slower")), ("50", _("normal")), ("30", _("faster"))])
 config.plugins.OpenATVstatus.favarch = ConfigSelection(default="current", choices=[("current", _("selected box"))] + BS.archlist)
 config.plugins.OpenATVstatus.favboxes = ConfigText(default="", fixed_size=False)
 
-VERSION = "V1.7"
+VERSION = "V1.8"
 MODULE_NAME = __name__.split(".")[-1]
 FAVLIST = [tuple(x.strip() for x in item.replace("(", "").replace(")", "").split(",")) for item in config.plugins.OpenATVstatus.favboxes.value.split(";")] if config.plugins.OpenATVstatus.favboxes.value else []
 PICURL = "https://raw.githubusercontent.com/oe-alliance/remotes/master/boxes/"
@@ -103,6 +103,9 @@ class Carousel():
 		self.callactive = False
 		if self.carouselTimer:
 			self.carouselTimer.stop()
+
+	def setDelay(self, delay=50):
+		self.delay = delay
 
 	def buildRotateList(self):
 		self.rlist = self.choicelist.copy()
@@ -445,18 +448,22 @@ class ATVimageslist(Screen):
 
 	def nextPlatform(self):
 		self.platidx = (self.platidx + 1) % len(BS.platlist)
-		if config.plugins.OpenATVstatus.animate.value == "off":
-			self.setPlatformStatic()
-		else:
+		delay = int(config.plugins.OpenATVstatus.animate.value)
+		if delay:
+			self.CS.setDelay(delay)  # in case it has changed
 			self.CS.turnForward()
+		else:
+			self.setPlatformStatic()
 		self.refreshplatlist()
 
 	def prevPlatform(self):
 		self.platidx = (self.platidx - 1) % len(BS.platlist)
-		if config.plugins.OpenATVstatus.animate.value == "off":
-			self.setPlatformStatic()
-		else:
+		delay = int(config.plugins.OpenATVstatus.animate.value)
+		if delay:
+			self.CS.setDelay(delay)  # in case it has changed
 			self.CS.turnBackward()
+		else:
+			self.setPlatformStatic()
 		self.refreshplatlist()
 
 	def setPlatformStatic(self):
