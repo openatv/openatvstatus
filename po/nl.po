@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2023-08-13 17:12+0200\n"
-"PO-Revision-Date: 2023-08-13 17:25+0200\n"
+"POT-Creation-Date: 2023-07-24 19:33+0200\n"
+"PO-Revision-Date: 2023-09-02 14:19+0200\n"
 "Last-Translator: Mr.Servo <mrservo via GitHub.com>\n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -36,143 +36,143 @@ msgstr "langzaam"
 msgid "selected box"
 msgstr "geselecteerde ontvanger"
 
-#: ..\plugin.py:168
+#: ..\plugin.py:177
 msgid "Favorites"
 msgstr "Favorieten"
 
-#: ..\plugin.py:176 ..\plugin.py:425
+#: ..\plugin.py:185 ..\plugin.py:433
 msgid "remove box from favorites"
 msgstr "verwijder ontvanger"
 
-#: ..\plugin.py:177 ..\plugin.py:343
+#: ..\plugin.py:186 ..\plugin.py:351
 msgid "Images list"
 msgstr "Image overzicht"
 
-#: ..\plugin.py:178 ..\plugin.py:363 ..\plugin.py:551
+#: ..\plugin.py:187 ..\plugin.py:371 ..\plugin.py:559
 msgid "Boxdetails"
 msgstr "Details"
 
-#: ..\plugin.py:249
+#: ..\plugin.py:259
 msgid "No favorites (box, platform) set yet."
 msgstr "Nog geen favoriet ingesteld."
 
-#: ..\plugin.py:249
+#: ..\plugin.py:259
 msgid "Please select favorite(s) in the image lists."
 msgstr "Favoriet(en) selecteren in het Image overzicht."
 
-#: ..\plugin.py:275
+#: ..\plugin.py:284
 msgid "platform"
 msgstr "platform"
 
-#: ..\plugin.py:275 ..\plugin.py:434
+#: ..\plugin.py:284 ..\plugin.py:442
 msgid "boxes"
 msgstr "ontvangers"
 
-#: ..\plugin.py:275 ..\plugin.py:434
+#: ..\plugin.py:284 ..\plugin.py:442
 msgid "failed"
 msgstr "mislukt"
 
-#: ..\plugin.py:275 ..\plugin.py:434
+#: ..\plugin.py:284 ..\plugin.py:442
 msgid "last build cycle"
 msgstr "laatste build cycle"
 
-#: ..\plugin.py:284 ..\plugin.py:476
+#: ..\plugin.py:292 ..\plugin.py:484
 msgid "Box '%s-%s' was sucessfully removed from favorites!"
 msgstr "%s-%s is verwijderd uit de favorieten!"
 
-#: ..\plugin.py:294 ..\plugin.py:482
+#: ..\plugin.py:302 ..\plugin.py:490
 msgid "Do you really want to remove Box '%s-%s' from favorites?"
 msgstr "Wilt u de ontvanger '%s-%s' verwijderen uit de favorieten?"
 
-#: ..\plugin.py:361
+#: ..\plugin.py:369
 msgid "jump to construction site"
-msgstr "ontvanger die nu wordt gebouwd"
+msgstr "naar bouwsite"
 
-#: ..\plugin.py:362
+#: ..\plugin.py:370
 msgid "jump to favorite(s)"
 msgstr "naar favoriet(en)"
 
-#: ..\plugin.py:364 ..\plugin.py:635
+#: ..\plugin.py:372 ..\plugin.py:634
 msgid "Settings"
 msgstr "Instellingen"
 
-#: ..\plugin.py:390
+#: ..\plugin.py:407
 msgid "previous"
 msgstr "vorige"
 
-#: ..\plugin.py:391
+#: ..\plugin.py:408
 msgid "current platform"
 msgstr "huidig platform"
 
-#: ..\plugin.py:392
+#: ..\plugin.py:409
 msgid "next"
 msgstr "volgende"
 
-#: ..\plugin.py:427
+#: ..\plugin.py:435
 msgid "add box to favorites"
 msgstr "Aan favorieten toevoegen"
 
-#: ..\plugin.py:430
+#: ..\plugin.py:438
 msgid "next build ends in %sh, still %s boxes before"
 msgstr "volgende build eindigt %sh, nog %s ontvanger(s) te gaan"
 
-#: ..\plugin.py:432
-msgid "image is under construction, the duration is unclear..."
-msgstr "image wordt nog gebouwd, de duur is onbekend..."
+#: ..\plugin.py:440
+msgid "image is under construction or failed, duration is unclear..."
+msgstr "image wordt nog gebouwd, tijdsduur onbekend..."
 
-#: ..\plugin.py:436
+#: ..\plugin.py:444
 msgid "no box found in this platform!"
 msgstr "geen ontvanger gevonden voor dit platform!"
 
-#: ..\plugin.py:437
+#: ..\plugin.py:445
 msgid "nothing to do - no build cycle"
 msgstr "geen gegevens - Geen build cycle"
 
-#: ..\plugin.py:487
+#: ..\plugin.py:495
 msgid "Box '%s-%s' was sucessfully added to favorites!"
 msgstr "%s-%s is toegevoegd aan de favorieten!"
 
-#: ..\plugin.py:497
+#: ..\plugin.py:505
 msgid "At the moment no image is built on the platform '%s'!"
 msgstr "Op dit moment wordt er geen image gebouwd voor het platform '%s'!"
 
-#: ..\plugin.py:557 ..\plugin.py:638
+#: ..\plugin.py:565 ..\plugin.py:637
 msgid "Cancel"
 msgstr "Annuleren"
 
-#: ..\plugin.py:577 ..\plugin.py:590 ..\plugin.py:597
-msgid "Model"
-msgstr "Model"
-
-#: ..\plugin.py:578 ..\plugin.py:591
+#: ..\plugin.py:585 ..\plugin.py:598
 msgid "Brand"
 msgstr "Fabrikant"
 
-#: ..\plugin.py:579 ..\plugin.py:592
+#: ..\plugin.py:586 ..\plugin.py:599
+msgid "Model"
+msgstr "Model"
+
+#: ..\plugin.py:587 ..\plugin.py:600
 msgid "Image"
 msgstr "Image"
 
-#: ..\plugin.py:580 ..\plugin.py:593
+#: ..\plugin.py:588 ..\plugin.py:601
 msgid "Version"
 msgstr "Versie"
 
-#: ..\plugin.py:581 ..\plugin.py:594
+#: ..\plugin.py:589 ..\plugin.py:602
 msgid "Chipset"
 msgstr "Chipset"
 
-#: ..\plugin.py:598
+#: ..\plugin.py:605
 msgid "Box is OFFLINE! No current details available"
 msgstr "Box is OFFLINE! Geen actuele gegevens beschikbaar"
 
-#: ..\plugin.py:639
+#: ..\plugin.py:638
 msgid "Save settings"
 msgstr "Bevestigen"
 
-#: ..\plugin.py:646
+#: ..\plugin.py:645
 msgid "Preferred box architecture for images list:"
 msgstr "Voorkeur voor platform in het image overzicht:"
 
-#: ..\plugin.py:646
+#: ..\plugin.py:645
 msgid ""
 "Specify which box architecture should be preferred when images list will be "
 "called. If option 'current' is selected, the architecture of the selected "
@@ -182,16 +182,16 @@ msgstr ""
 "wordt geopend. Wanneer u 'Huidig platform' selecteert, wordt het platform "
 "van de geselecteerde ontvanger gebruikt."
 
-#: ..\plugin.py:647
+#: ..\plugin.py:646
 msgid "Animation for change of platform:"
 msgstr "Animatie bij het wisselen van een platform:"
 
-#: ..\plugin.py:647
+#: ..\plugin.py:646
 msgid ""
 "Sets the animation speed for the carousel function when changing platforms."
 msgstr ""
 "De animatie snelheid instellen wanneer er van platform wordt gewisseld."
 
-#: ..\plugin.py:669
+#: ..\plugin.py:668
 msgid "Current overview of the OpenATV images building servers"
 msgstr "Actueel overzicht van de openATV image bouwservers"
