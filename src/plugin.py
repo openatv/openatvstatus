@@ -39,6 +39,7 @@ from .Buildstatus import Buildstatus
 
 # PLUGIN GLOBALS
 BS = Buildstatus()
+BS.start()
 
 config.plugins.OpenATVstatus = ConfigSubsection()
 config.plugins.OpenATVstatus.animate = ConfigSelection(default="50", choices=[("0", _("off")), ("70", _("slower")), ("50", _("normal")), ("30", _("faster"))])
@@ -300,14 +301,16 @@ class ATVfavorites(Screen):
 				self.session.openWithCallback(self.msgboxReturn, MessageBox, _("Do you really want to remove Box '%s-%s' from favorites?") % self.boxlist[self.currindex], MessageBox.TYPE_YESNO, default=False)
 
 	def keyBlue(self):
-		if BS.archlist:
+		if config.plugins.OpenATVstatus.favarch.value == "current":
 			if self.boxlist and self.currindex is not None:
 				currbox = self.boxlist[self.currindex]
-				if currbox:
-					self.session.openWithCallback(self.createMenulist, ATVimageslist, currbox)
+			elif BS.archlist:
+				currbox = ("", BS.archlist[0])
 			else:
-				currarch = BS.archlist[0] if config.plugins.OpenATVstatus.favarch.value == "current" else config.plugins.OpenATVstatus.favarch.value
-				self.session.openWithCallback(self.createMenulist, ATVimageslist, ("", currarch))
+				return
+		else:
+			currbox = ("", config.plugins.OpenATVstatus.favarch.value)
+		self.session.openWithCallback(self.createMenulist, ATVimageslist, currbox)
 
 	def keyUp(self):
 		self["menu"].up()
@@ -390,7 +393,7 @@ class ATVimageslist(Screen):
 														"prevMarker": self.prevPlatform,
 														"menu": self.openConfig,
 													}, -1)
-		delay=int(config.plugins.OpenATVstatus.animate.value)
+		delay = int(config.plugins.OpenATVstatus.animate.value)
 		self.CS = Carousel(delay if delay else 50)
 		self.CS.start(BS.platlist, self.platidx, self.CarouselCallback)
 		self.onLayoutFinish.append(self.onLayoutFinished)
