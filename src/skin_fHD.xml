@@ -1,10 +1,10 @@
 <skin>
-	<screen name="ATVfavorites" position="center,center" size="1200,980" title="" flags="wfNoBorder">
-		<ePixmap position="15,15" size="450,75" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/pic/openATV_fHD.png" alphatest="blend" zPosition="1" />
+	<screen name="ATVfavorites" position="center,center" size="1230,980" title="" flags="wfNoBorder">
+		<ePixmap position="15,15" size="450,75" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/icons/openATV_fHD.png" alphatest="blend" zPosition="1" />
 		<widget name="version" position="435,60" size="60,30" font="Regular;24" halign="left" valign="center" />
-		<widget source="Title" position="510,25" size="490,72" font="Regular;54" halign="left" valign="bottom" render="Label" />
-		<widget name="curr_date" position="905,55" size="250,42" font="Regular;30" halign="right" valign="top" />
-		<widget source="menu" render="Listbox" position="15,105" size="1170,750" enableWrapAround="1" scrollbarMode="showOnDemand">
+		<widget source="Title" position="615,25" size="490,72" font="Regular;54" halign="left" valign="bottom" render="Label" />
+		<widget name="curr_date" position="960,55" size="250,42" font="Regular;30" halign="right" valign="top" />
+		<widget source="menu" render="Listbox" position="15,105" size="1200,750" enableWrapAround="1" scrollbarMode="showOnDemand">
 			<convert type="TemplatedMultiContent">
 				{"templates":
 					{"default": (150, [
@@ -14,19 +14,20 @@
 						MultiContentEntryText(text="StartBuild:", pos=(660, 10), size=(150, 40), font=0, color=0xB0B0B0, color_sel=0xB0B0B0, flags=RT_HALIGN_LEFT|RT_VALIGN_CENTER),
 						MultiContentEntryText(text="EndBuild:", pos=(660, 55), size=(150, 40), font=0, color=0xB0B0B0, color_sel=0xB0B0B0, flags=RT_HALIGN_LEFT|RT_VALIGN_CENTER),
 						MultiContentEntryText(text="BuildTime:", pos=(660, 100), size=(150, 40), font=0, color=0xB0B0B0, color_sel=0xB0B0B0, flags=RT_HALIGN_LEFT|RT_VALIGN_CENTER),
-						MultiContentEntryPixmapAlphaTest(pos=(23, 15), size=(250, 64), png=9, flags=BT_SCALE), # index 9 is the box picture
-						MultiContentEntryText(pos=(15, 75), size=(275, 40), font=0, color=0xFFFFFF, color_sel=0xFFFFFF, flags=RT_HALIGN_CENTER|RT_VALIGN_CENTER, text=0), # index 0 is the boxname
-						MultiContentEntryText(pos=(15, 105), size=(275, 40), font=1, color=0xB0B0B0, color_sel=0xB0B0B0, flags=RT_HALIGN_CENTER|RT_VALIGN_CENTER, text=1), # index 1 is the architecture
-						MultiContentEntryText(pos=(500, 10), size=(490, 40), font=0, color=MultiContentTemplateColor(8), color_sel=MultiContentTemplateColor(8), flags=RT_HALIGN_LEFT|RT_VALIGN_CENTER, text=2), # index 2 is the Build Status
-						MultiContentEntryText(pos=(500, 55), size=(490, 40), font=0, color=0xFFFFFF, color_sel=0xFFFFFF, flags=RT_HALIGN_LEFT|RT_VALIGN_CENTER, text=3), # index 3 is estimated
-						MultiContentEntryText(pos=(500, 100), size=(490, 40), font=0, color=0xFFFFFF, color_sel=0xFFFFFF, flags=RT_HALIGN_LEFT|RT_VALIGN_CENTER, text=4), # index 4 is boxesahead
-						MultiContentEntryText(pos=(830, 10), size=(320, 40), font=0, color=0xFFFFFF, color_sel=0xFFFFFF, flags=RT_HALIGN_LEFT|RT_VALIGN_CENTER, text=5), # index 5 is the Start Build
-						MultiContentEntryText(pos=(830, 55), size=(320, 40), font=0, color=0xFFFFFF, color_sel=0xFFFFFF, flags=RT_HALIGN_LEFT|RT_VALIGN_CENTER, text=6), # index 6 is the End Build
-						MultiContentEntryText(pos=(830, 100), size=(320, 40), font=0, color=0xFFFFFF, color_sel=0xFFFFFF, flags=RT_HALIGN_LEFT|RT_VALIGN_CENTER, text=7) # index 7 is the Build Time
+						MultiContentEntryPixmapAlphaTest(pos=(23, 15), size=(250, 64), png=9, flags=BT_SCALE),  # Boxpicture
+						MultiContentEntryText(pos=(15, 75), size=(275, 40), font=0, color=0xFFFFFF, color_sel=0xFFFFFF, flags=RT_HALIGN_CENTER|RT_VALIGN_CENTER, text=0),  # boxname
+						MultiContentEntryText(pos=(15, 105), size=(275, 40), font=1, color=0xB0B0B0, color_sel=0xB0B0B0, flags=RT_HALIGN_CENTER|RT_VALIGN_CENTER, text=1),  # architecture
+						MultiContentEntryText(pos=(500, 10), size=(490, 40), font=0, color=MultiContentTemplateColor(8), color_sel=MultiContentTemplateColor(8), flags=RT_HALIGN_LEFT|RT_VALIGN_CENTER, text=2),  # BuildStatus
+						MultiContentEntryText(pos=(500, 55), size=(490, 40), font=0, color=0xFFFFFF, color_sel=0xFFFFFF, flags=RT_HALIGN_LEFT|RT_VALIGN_CENTER, text=3),  # Estimated
+						MultiContentEntryText(pos=(500, 100), size=(490, 40), font=0, color=0xFFFFFF, color_sel=0xFFFFFF, flags=RT_HALIGN_LEFT|RT_VALIGN_CENTER, text=4),  # BoxesAhead
+						MultiContentEntryText(pos=(830, 10), size=(320, 40), font=0, color=0xFFFFFF, color_sel=0xFFFFFF, flags=RT_HALIGN_LEFT|RT_VALIGN_CENTER, text=5),  # StartBuild
+						MultiContentEntryText(pos=(830, 55), size=(320, 40), font=0, color=0xFFFFFF, color_sel=0xFFFFFF, flags=RT_HALIGN_LEFT|RT_VALIGN_CENTER, text=6),  # EndBuild
+						MultiContentEntryText(pos=(830, 100), size=(320, 40), font=0, color=0xFFFFFF, color_sel=0xFFFFFF, flags=RT_HALIGN_LEFT|RT_VALIGN_CENTER, text=7),  # BuildTime
+						MultiContentEntryPixmapAlphaTest(pos=(1140, 11), size=(52, 128), png=10, flags=BT_SCALE)  # ServerStatus
 						]),
 						"emptylist": (330, [
-						MultiContentEntryText(pos=(15, 215), size=(1160, 60), font=2, flags=RT_HALIGN_CENTER|RT_VALIGN_CENTER, border_width=0, text=0), # index 0: text in upper line
-						MultiContentEntryText(pos=(15, 275), size=(1160, 60), font=2, flags=RT_HALIGN_CENTER|RT_VALIGN_CENTER, color=0xf47d19,color_sel=0xf47d19, border_width=0, text=1) # index 1: text in lower line
+						MultiContentEntryText(pos=(15, 215), size=(1160, 60), font=2, flags=RT_HALIGN_CENTER|RT_VALIGN_CENTER, border_width=0, text=0),  # text in upper line
+						MultiContentEntryText(pos=(15, 275), size=(1160, 60), font=2, flags=RT_HALIGN_CENTER|RT_VALIGN_CENTER, color=0xf47d19,color_sel=0xf47d19, border_width=0, text=1)  # text in lower line
 						],False)
 					},
 				"fonts": [gFont("Regular",32),gFont("Regular",24),gFont("Regular",40)],
@@ -35,28 +36,28 @@
 			</convert>
 		</widget>
 		<eLabel position="15,855" size="1170,42" backgroundColor="grey" zPosition="-1" />
-		<widget name="platinfo" position="25,855" size="1160,42" font="Regular;30" halign="left" valign="center" foregroundColor="black" backgroundColor="grey" />
+		<widget name="platinfo" position="25,855" size="1190,42" font="Regular;30" halign="center" valign="center" foregroundColor="black" backgroundColor="grey" />
 		<eLabel name="red" position="50,915" size="10,65" backgroundColor="red" zPosition="1" />
-		<eLabel name="blue" position="470,915" size="10,65" backgroundColor="blue" zPosition="1" />
-		<ePixmap position="890,925" size="45,45" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/pic/key_ok_fHD.png" alphatest="blend" zPosition="1" />\
+		<eLabel name="blue" position="610,915" size="10,65" backgroundColor="blue" zPosition="1" />
+		<ePixmap position="990,925" size="45,45" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/icons/key_ok_fHD.png" alphatest="blend" zPosition="1" />\
 		<widget name="key_red" position="70,925" size="380,42" font="Regular;30" foregroundColor="grey" />
-		<widget name="key_blue" position="490,925" size="380,42" font="Regular;30" foregroundColor="grey" />
-		<widget name="key_ok" position="945,925" size="252,42" font="Regular;30" halign="left" foregroundColor="grey" />
+		<widget name="key_blue" position="630,925" size="380,42" font="Regular;30" foregroundColor="grey" />
+		<widget name="key_ok" position="1038,925" size="252,42" font="Regular;30" halign="left" foregroundColor="grey" />
 	</screen>
 
 	<screen name="ATVimageslist" position="center,center" size="1850,1030" title="" flags="wfNoBorder">
-		<ePixmap position="15,15" size="450,75" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/pic/openATV_fHD.png" alphatest="blend" zPosition="1" />
+		<ePixmap position="15,15" size="450,75" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/icons/openATV_fHD.png" alphatest="blend" zPosition="1" />
 		<widget name="version" position="435,60" size="60,30" font="Regular;24" halign="left" valign="center" />
 		<widget source="Title" position="530,25" size="260,72" font="Regular;54" halign="left" valign="bottom" render="Label" />
 		<widget name="prev_label" position="800,15" size="250,36" font="Regular;24" halign="right" valign="top" />
 		<widget name="curr_label" position="1085,15" size="415,36" font="Regular;24" halign="center" valign="top" />
 		<widget name="next_label" position="1545,15" size="250,36" font="Regular;24" halign="left" valign="top" />
-		<ePixmap position="1070,50" size="45,45" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/pic/key_left_fHD.png" alphatest="blend" zPosition="1" />
-		<ePixmap position="1480,50" size="45,45" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/pic/key_right_fHD.png" alphatest="blend" zPosition="1" />
+		<ePixmap position="1070,50" size="45,45" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/icons/key_left_fHD.png" alphatest="blend" zPosition="1" />
+		<ePixmap position="1480,50" size="45,45" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/icons/key_right_fHD.png" alphatest="blend" zPosition="1" />
 		<widget name="prev_plat" position="800,25" size="250,72" font="Regular;36" halign="right" valign="bottom" />
 		<widget name="curr_plat" position="1085,30" size="415,72" font="Regular;50" halign="center" valign="bottom" foregroundColor="green" />
 		<widget name="next_plat" position="1545,25" size="250,72" font="Regular;36" halign="left" valign="bottom" />
-		<ePixmap position="1790,50" size="45,45" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/pic/bouquet_fHD.png" alphatest="blend" zPosition="1" />
+		<ePixmap position="1790,50" size="45,45" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/icons/bouquet_fHD.png" alphatest="blend" zPosition="1" />
 		<widget name="curr_date" position="1655,10" size="180,42" font="Regular;30" halign="right" valign="top" />
 		<eLabel position="15,110" size="1820,45" backgroundColor="grey" zPosition="-1" />
 		<eLabel text="BoxName" position="20,112" size="300,42" font="Regular;30" halign="left" valign="center" foregroundColor="black" backgroundColor="grey" />
@@ -69,13 +70,13 @@
 		<widget source="menu" render="Listbox" position="15,155" size="1820,741" scrollbarMode="showOnDemand">
 			<convert type="TemplatedMultiContent">
 				{"template": [
-				MultiContentEntryText(pos=(4,0), size=(319,39), font=0, color=MultiContentTemplateColor(7), color_sel=MultiContentTemplateColor(7), flags=RT_HALIGN_LEFT|RT_VALIGN_CENTER, text=0), # index 0 is the BoxName
-				MultiContentEntryText(pos=(304,0), size=(159,39), font=0, color=MultiContentTemplateColor(7), color_sel=MultiContentTemplateColor(7), flags=RT_HALIGN_RIGHT|RT_VALIGN_CENTER, text=1), # index 1 is the Build Status
-				MultiContentEntryText(pos=(465,0), size=(345,39), font=0, color=MultiContentTemplateColor(7), color_sel=MultiContentTemplateColor(7), flags=RT_HALIGN_RIGHT|RT_VALIGN_CENTER, text=2), # index 2 is the Start Build
-				MultiContentEntryText(pos=(810,0), size=(345,39), font=0, color=MultiContentTemplateColor(7), color_sel=MultiContentTemplateColor(7), flags=RT_HALIGN_RIGHT|RT_VALIGN_CENTER, text=3), # index 3 is the Start Feed Sync
-				MultiContentEntryText(pos=(1155,0), size=(345,39), font=0, color=MultiContentTemplateColor(7), color_sel=MultiContentTemplateColor(7), flags=RT_HALIGN_RIGHT|RT_VALIGN_CENTER, text=4), # index 4 is the End Build
-				MultiContentEntryText(pos=(1500,0), size=(150,39), font=0, color=MultiContentTemplateColor(7), color_sel=MultiContentTemplateColor(7), flags=RT_HALIGN_RIGHT|RT_VALIGN_CENTER, text=5), # index 5 is the Sync Time
-				MultiContentEntryText(pos=(1642,0), size=(150,39), font=0, color=MultiContentTemplateColor(7), color_sel=MultiContentTemplateColor(7), flags=RT_HALIGN_RIGHT|RT_VALIGN_CENTER, text=6) # index 6 is the Build Time
+				MultiContentEntryText(pos=(4,0), size=(319,39), font=0, color=MultiContentTemplateColor(7), color_sel=MultiContentTemplateColor(7), flags=RT_HALIGN_LEFT|RT_VALIGN_CENTER, text=0),  # BoxName
+				MultiContentEntryText(pos=(304,0), size=(159,39), font=0, color=MultiContentTemplateColor(7), color_sel=MultiContentTemplateColor(7), flags=RT_HALIGN_RIGHT|RT_VALIGN_CENTER, text=1),  # BuildStatus
+				MultiContentEntryText(pos=(465,0), size=(345,39), font=0, color=MultiContentTemplateColor(7), color_sel=MultiContentTemplateColor(7), flags=RT_HALIGN_RIGHT|RT_VALIGN_CENTER, text=2),  # StartBuild
+				MultiContentEntryText(pos=(810,0), size=(345,39), font=0, color=MultiContentTemplateColor(7), color_sel=MultiContentTemplateColor(7), flags=RT_HALIGN_RIGHT|RT_VALIGN_CENTER, text=3),  # StartFeedSync
+				MultiContentEntryText(pos=(1155,0), size=(345,39), font=0, color=MultiContentTemplateColor(7), color_sel=MultiContentTemplateColor(7), flags=RT_HALIGN_RIGHT|RT_VALIGN_CENTER, text=4),  # EndBuild
+				MultiContentEntryText(pos=(1500,0), size=(150,39), font=0, color=MultiContentTemplateColor(7), color_sel=MultiContentTemplateColor(7), flags=RT_HALIGN_RIGHT|RT_VALIGN_CENTER, text=5),  # SyncTime
+				MultiContentEntryText(pos=(1642,0), size=(150,39), font=0, color=MultiContentTemplateColor(7), color_sel=MultiContentTemplateColor(7), flags=RT_HALIGN_RIGHT|RT_VALIGN_CENTER, text=6)  # BuildTime
 				],
 				"fonts": [gFont("Regular",31), gFont("Regular",19)],
 				"itemHeight":39
@@ -88,8 +89,8 @@
 		<eLabel name="red" position="50,965" size="9,65" backgroundColor="red" zPosition="1" />
 		<eLabel name="green" position="495,965" size="9,65" backgroundColor="green" zPosition="1" />
 		<eLabel name="yellow" position="890,965" size="9,65" backgroundColor="yellow" zPosition="1" />
-		<ePixmap position="1310,975" size="45,45" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/pic/key_ok_fHD.png" alphatest="blend" zPosition="1" />\
-		<ePixmap position="1590,975" size="45,45" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/pic/key_menu_fHD.png" alphatest="blend" zPosition="1" />
+		<ePixmap position="1310,975" size="45,45" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/icons/key_ok_fHD.png" alphatest="blend" zPosition="1" />\
+		<ePixmap position="1590,975" size="45,45" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/icons/key_menu_fHD.png" alphatest="blend" zPosition="1" />
 		<widget name="key_red" position="69,975" size="454,42" font="Regular;30" halign="left" foregroundColor="grey" />
 		<widget name="key_green" position="515,975" size="454,42" font="Regular;30" halign="left" foregroundColor="grey" />
 		<widget name="key_yellow" position="910,975" size="454,42" font="Regular;30" halign="left" foregroundColor="grey" />
@@ -98,7 +99,7 @@
 	</screen>
 
 	<screen name="ATVboxdetails" position="center,center" size="1000,730" title="" flags="wfNoBorder">
-		<ePixmap position="15,15" size="450,75" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/pic/openATV_fHD.png" alphatest="blend" zPosition="1" />
+		<ePixmap position="15,15" size="450,75" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/icons/openATV_fHD.png" alphatest="blend" zPosition="1" />
 		<widget name="version" position="435,60" size="60,30" font="Regular;24" halign="left" valign="center" />
 		<widget source="Title" position="500,25" size="490,72" font="Regular;54" halign="left" valign="bottom" render="Label" />
 		<widget name="curr_date" position="805,10" size="180,40" font="Regular;30" halign="right" valign="top" />
@@ -111,7 +112,7 @@
 	</screen>
 
 	<screen name="ATVconfig" position="center,center" size="1000,600" title="" flags="wfNoBorder">
-		<ePixmap position="15,15" size="450,75" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/pic/openATV_fHD.png" alphatest="blend" zPosition="1" />
+		<ePixmap position="15,15" size="450,75" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/icons/openATV_fHD.png" alphatest="blend" zPosition="1" />
 		<widget name="version" position="435,60" size="60,30" font="Regular;24" halign="left" valign="center" />
 		<widget source="Title" position="500,25" size="490,72" font="Regular;54" halign="left" valign="bottom" render="Label" />
 		<widget name="curr_date" position="805,10" size="180,42" font="Regular;30" halign="right" valign="top" />

@@ -1,7 +1,7 @@
 Package: enigma2-plugin-extensions-openatvstatus
-Version: 1.0
+Version: 1.9
 Section: extra
 Architecture: all
 Maintainer: Mr.Servo
 Source: https://github.com/openatv/openatvstatus
-Description: openATV Status v1.0
+Description: openATV Status v1.9 - view status of OpenATV-buildserver
