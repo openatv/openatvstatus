@@ -217,7 +217,6 @@ def main(argv):  # shell interface
 	counter = 0
 	failed = 0
 	helpstring = "Buildstatus v1.2: try 'python Buildstatus.py -h' for more information"
-
 	BS = Buildstatus()
 	BS.start()  # interactive call without threading
 	if BS.error:
