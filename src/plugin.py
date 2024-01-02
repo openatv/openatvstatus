@@ -1,14 +1,14 @@
-#########################################################################################################
-#                                                                                                       #
-#  OpenATVbuildstatus: shows current build status of images and estimates time to next image build      #
-#  Coded by Mr.Servo @ OpenATV (c) 2023                                                                 #
-#  -----------------------------------------------------------------------------------------------------#
-#  This plugin is licensed under the GNU version 3.0 <https://www.gnu.org/licenses/gpl-3.0.en.html>.    #
-#  This plugin is NOT free software. It is open source, you are allowed to modify it (if you keep       #
-#  the license), but it may not be commercially distributed. Advertise with this tool is not allowed.   #
-#  For other uses, permission from the authors is necessary.                                            #
-#                                                                                                       #
-#########################################################################################################
+########################################################################################################
+#                                                                                                      #
+#  OpenATVstatus: shows current build status of images and estimates time to next image build          #
+#  Coded by Mr.Servo @ OpenATV (c) 2023                                                                #
+#  ----------------------------------------------------------------------------------------------------#
+#  This plugin is licensed under the GNU version 3.0 <https://www.gnu.org/licenses/gpl-3.0.en.html>.   #
+#  This plugin is NOT free software. It is open source, you are allowed to modify it (if you keep      #
+#  the license), but it may not be commercially distributed. Advertise with this tool is not allowed.  #
+#  For other uses, permission from the authors is necessary.                                           #
+#                                                                                                      #
+########################################################################################################
 
 # PYTHON IMPORTS
 from datetime import datetime
@@ -43,15 +43,24 @@ from .Buildstatus import Buildstatus
 # PLUGIN GLOBALS
 BS = Buildstatus()
 BS.start()
-
+helplist = [x.split(" ")[0] for x in BS.archlist]
+archlist = []
+for arch in helplist:
+	archparts = arch.split("_")
+	version = _("oldest available version") if archparts[1] == "oldest" else _("latest available version")
+	archlist.append((arch, "%s (%s)" % (archparts[0].upper(), version)))
+archlist = sorted(list(set(archlist)))
 config.plugins.OpenATVstatus = ConfigSubsection()
 config.plugins.OpenATVstatus.animate = ConfigSelection(default="50", choices=[("0", _("off")), ("70", _("slower")), ("50", _("normal")), ("30", _("faster"))])
-config.plugins.OpenATVstatus.favarch = ConfigSelection(default="current", choices=[("current", _("selected box"))] + BS.archlist)
+config.plugins.OpenATVstatus.favarch = ConfigSelection(default="current", choices=[("current", _("selected box"))] + archlist)
 config.plugins.OpenATVstatus.favboxes = ConfigText(default="", fixed_size=False)
 
-VERSION = "V1.9"
+VERSION = "V2.0"
 MODULE_NAME = __name__.split(".")[-2]
-FAVLIST = [tuple(x.strip() for x in item.replace("(", "").replace(")", "").split(",")) for item in config.plugins.OpenATVstatus.favboxes.value.split(";")] if config.plugins.OpenATVstatus.favboxes.value else []
+FAVLIST = []
+templist = [list(x.strip() for x in item.replace("(", "").replace(")", "").split(",")) for item in config.plugins.OpenATVstatus.favboxes.value.split(";")] if config.plugins.OpenATVstatus.favboxes.value else []
+for tempfav in templist:
+	FAVLIST.append((tempfav[0], BS.getplatform(tempfav[1])))
 PICURL = "https://raw.githubusercontent.com/oe-alliance/remotes/master/boxes/"
 TEMPPATH = "/tmp/OpenATVstatus/"
 ICONPATH = resolveFilename(SCOPE_PLUGINS, "Extensions/OpenATVstatus/icons/")
@@ -77,6 +86,7 @@ def readSkin(skin):
 
 
 class Carousel():
+
 	def __init__(self, delay=50):
 		self.delay = delay
 		self.error = None
@@ -87,6 +97,8 @@ class Carousel():
 		self.prevstr = ""
 		self.currstr = ""
 		self.nextstr = ""
+		self.carouselTimer = eTimer()
+		self.carouselTimer.callback.append(self.turn)
 
 	def start(self, choicelist, index, callback):
 		if not choicelist:
@@ -99,7 +111,7 @@ class Carousel():
 		self.prevstr = self.rlist[0]
 		self.currstr = self.rlist[1]
 		self.nextstr = self.rlist[2]
-		self.maxlen = max(len(self.prevstr), len(self.currstr), len(self.nextstr))
+		self.maxlen = max([len(item) for item in self.rlist])
 
 	def stop(self):
 		self.callback = None
@@ -150,11 +162,10 @@ class Carousel():
 		self.setTimer()
 
 	def setTimer(self):
-		self.stepcount = 0
-		self.callactive = True
-		self.carouselTimer = eTimer()
-		self.carouselTimer.callback.append(self.turn)
-		self.carouselTimer.start(self.delay, False)
+		if self.carouselTimer:
+			self.stepcount = 0
+			self.callactive = True
+			self.carouselTimer.start(self.delay, False)
 
 	def turn(self):  # rotates letters
 		self.stepcount += 1
@@ -171,7 +182,6 @@ class Carousel():
 class ATVfavorites(Screen):
 	def __init__(self, session):
 		self.session = session
-		BS.start()
 		self.skin = readSkin("ATVfavorites")
 		Screen.__init__(self, session, self.skin)
 		self.setTitle(_("Favorites"))
@@ -182,9 +192,11 @@ class ATVfavorites(Screen):
 		self["version"] = Label(VERSION)
 		self["curr_date"] = Label(datetime.now().strftime("%x"))
 		self["platinfo"] = Label()
+		self["red"] = Label("")
 		self["key_red"] = Label(_("remove box from favorites"))
 		self["key_blue"] = Label(_("Images list"))
 		self["key_ok"] = Label(_("Boxdetails"))
+		self["key_menu"] = Label(_("Settings"))
 		self["menu"] = List([])
 		self["actions"] = ActionMap(["WizardActions",
 									 "DirectionActions",
@@ -200,7 +212,7 @@ class ATVfavorites(Screen):
 														"left": self.keyPageUp,
 														"nextBouquet": self.keyPageDown,
 														"prevBouquet": self.keyPageUp,
-														"menu": self.openConfig,
+														"menu": self.openConfig
 													}, -1)
 		self.onLayoutFinish.append(self.onLayoutFinished)
 		try:
@@ -210,23 +222,25 @@ class ATVfavorites(Screen):
 			self.session.open(MessageBox, "Dateipfad für Boxbilder konnte nicht neu angelegt werden:\n'%s'" % error, type=MessageBox.TYPE_INFO, timeout=2, close_on_any_key=True)
 
 	def onLayoutFinished(self):
-		self["menu"].setList([])
 		callInThread(self.createMenulist)
 
 	def createMenulist(self):
 		boxlist = []
-		usedarchs = []
 		baselist = []
 		boxpiclist = []
 		statuslist = []
-		menulist = []
+		self.currindex = 0
+		self["menu"].setList([])
 		if FAVLIST and BS.platlist:
 			self["menu"].style = "default"
+			usedarchs = []
 			for favorite in FAVLIST:
-				if favorite[1] not in usedarchs:
-					usedarchs.append(favorite[1])
+				currfav = favorite[1]
+				if currfav not in usedarchs:
+					usedarchs.append(currfav)
+			menulist = []
 			for currarch in usedarchs:
-				currplat = [plat for plat in BS.platlist if currarch.upper() in plat][0]
+				currplat = [plat for plat in BS.platlist if currarch.split("_")[0].upper() in plat][0]
 				BS.getbuildinfos(currplat)
 				if BS.htmldict:
 					for box in [item for item in FAVLIST if item[1] in set([item[1]])]:
@@ -253,8 +267,10 @@ class ATVfavorites(Screen):
 							else:
 								boxpix = None
 								boxpiclist.append(box[0])  # collect missing box pictures (avoids flickering in menu)
-							menulist.append(tuple(textlist[:-1] + [boxpix] + [None]))  # remove last entry 'serverstatus' from textlist (no need for skin)
-							self["menu"].updateList(menulist)
+							menulist.append((textlist[:-1] + [boxpix] + [None]))  # remove last entry 'serverstatus' from textlist (no need for skin)
+					self["menu"].updateList(menulist)
+			self["red"].show()
+			self["key_red"].show()
 			self.baselist = baselist
 			self.boxlist = boxlist
 			for box in statuslist:  # download missing server status
@@ -262,10 +278,12 @@ class ATVfavorites(Screen):
 			for boxname in boxpiclist:  # download missing box pictures
 				callInThread(self.imageDownload, boxname)
 		else:
+			self["red"].hide()
+			self["key_red"].hide()
 			self["menu"].style = "emptylist"
 			self["menu"].updateList([(_("No favorites (box, platform) set yet."), _("Please select favorite(s) in the image lists."))])
 		self["menu"].setIndex(self.currindex)
-		self.refreshstatus()
+		self.updateStatus()
 
 	def imageDownload(self, boxname):
 		try:
@@ -277,13 +295,15 @@ class ATVfavorites(Screen):
 			if exists(TEMPPATH):
 				with open(join(TEMPPATH, "%s.png" % boxname), "wb") as f:
 					f.write(response.content)
-		self.refreshMenulist()
+		self.updateMenulist()
 
-	def refreshMenulist(self):
+	def updateMenulist(self):
 		menulist = []
 		for textlist in self.baselist:
-			boxpix = LoadPixmap(cached=True, path=join(TEMPPATH, "%s.png" % textlist[0]))
-			statuspix = LoadPixmap(cached=True, path=join(ICONPATH, textlist[9])) if textlist[9] else None
+			picfile = join(TEMPPATH, "%s.png" % textlist[0])
+			boxpix = LoadPixmap(cached=True, path=picfile) if exists(picfile) else None
+			picfile = join(ICONPATH, textlist[9]) if textlist[9] else None
+			statuspix = LoadPixmap(cached=True, path=picfile) if picfile and exists(picfile) else None
 			menulist.append(tuple(textlist[:-1] + [boxpix] + [statuspix]))  # remove last entry 'serverstatus' from textlist (no need for skin)
 		self["menu"].updateList(menulist)
 
@@ -305,22 +325,22 @@ class ATVfavorites(Screen):
 							for idx in range(len(self.baselist)):
 								if box == self.baselist[idx][:2]:
 									self.baselist[idx][9] = server.group(1)  # replace last entry 'serverstatus'
-									self.refreshMenulist()
+									self.updateMenulist()
 					self.error = "[%s] ERROR in module 'getstatus': server access failed." % MODULE_NAME
 				except Exception as err:
 					self.error = "[%s] ERROR in module 'getstatus': invalid data from server %s" % (MODULE_NAME, str(err))
 		else:
 			self.error = "[%s] ERROR in module 'getstatus': missing boxname" % MODULE_NAME
 
-	def refreshstatus(self):
+	def updateStatus(self):
 		if FAVLIST:
 			self.currindex = self["menu"].getSelectedIndex()
 			if self.boxlist and self.currindex is not None:
-				currplat = BS.getplatform(self.boxlist[self.currindex][1])
+				currplat = self.boxlist[self.currindex][1]
 				platdict = self.platdict[currplat]
 				self["platinfo"].setText("%s: %s, %s: %sh, %s %s, %s: %s" % (_("platform"), currplat, _("last build cycle"), platdict["cycletime"], platdict["boxcounter"], _("boxes"), _("failed"), platdict["boxfailed"]))
 
-	def msgboxReturn(self, answer):
+	def msgboxCB(self, answer):
 		if answer is True and self.boxlist and self.currindex is not None:
 			FAVLIST.remove(self.foundFavs[0])
 			config.plugins.OpenATVstatus.favboxes.value = ";".join("(%s)" % ",".join(item) for item in FAVLIST) if FAVLIST else ""
@@ -339,43 +359,48 @@ class ATVfavorites(Screen):
 		if self.boxlist and self.currindex is not None:
 			self.foundFavs = [item for item in FAVLIST if item == self.boxlist[self.currindex]]
 			if self.foundFavs:
-				self.session.openWithCallback(self.msgboxReturn, MessageBox, _("Do you really want to remove Box '%s-%s' from favorites?") % self.boxlist[self.currindex], MessageBox.TYPE_YESNO, timeout=20, default=False)
+				self.session.openWithCallback(self.msgboxCB, MessageBox, _("Do you really want to remove Box '%s-%s' from favorites?") % self.boxlist[self.currindex], MessageBox.TYPE_YESNO, timeout=20, default=False)
 
 	def keyBlue(self):
 		if config.plugins.OpenATVstatus.favarch.value == "current":
 			if self.boxlist and self.currindex is not None:
 				currbox = self.boxlist[self.currindex]
-			elif BS.archlist:
-				currbox = ("", BS.archlist[0])
+			elif BS.platlist:
+				currbox = ("", BS.platlist[0])
 			else:
 				return
 		else:
-			currbox = ("", config.plugins.OpenATVstatus.favarch.value)
-		self.session.openWithCallback(self.createMenulist, ATVimageslist, currbox)
+			currbox = ("", BS.getplatform(config.plugins.OpenATVstatus.favarch.value))
+		self.oldfavlist = FAVLIST[:]
+		self.session.openWithCallback(self.ATVimageslistCB, ATVimageslist, currbox)
+
+	def ATVimageslistCB(self):
+		if self.oldfavlist != FAVLIST:  # any changes when running 'ATVimageslist'?
+			self.createMenulist()
 
 	def keyUp(self):
 		self["menu"].up()
-		self.refreshstatus()
+		self.updateStatus()
 
 	def keyDown(self):
 		self["menu"].down()
-		self.refreshstatus()
+		self.updateStatus()
 
 	def keyPageUp(self):
 		self["menu"].pageUp()
-		self.refreshstatus()
+		self.updateStatus()
 
 	def keyPageDown(self):
 		self["menu"].pageDown()
-		self.refreshstatus()
+		self.updateStatus()
 
 	def keyTop(self):
 		self["menu"].top()
-		self.refreshstatus()
+		self.updateStatus()
 
 	def keyBottom(self):
 		self["menu"].bottom()
-		self.refreshstatus()
+		self.updateStatus()
 
 	def exit(self):
 		BS.stop()
@@ -391,12 +416,12 @@ class ATVimageslist(Screen):
 	def __init__(self, session, box):
 		self.session = session
 		self.currbox = box
-		self.currarch = box[1]
+		self.currplat = box[1]
 		self.skin = readSkin("ATVimageslist")
 		Screen.__init__(self, session, self.skin)
 		self.setTitle(_("Images list"))
 		self.boxlist = []
-		self.platidx = BS.archlist.index(self.currarch)
+		self.platidx = BS.platlist.index(self.currplat)
 		self.currindex = 0
 		self.favindex = 0
 		self.foundFavs = []
@@ -416,29 +441,26 @@ class ATVimageslist(Screen):
 		self["key_yellow"] = Label(_("jump to favorite(s)"))
 		self["key_ok"] = Label(_("Boxdetails"))
 		self["key_menu"] = Label(_("Settings"))
-		self["actions"] = ActionMap(["WizardActions",
-				   					 "DirectionActions",
-									 "MenuActions",
-									 "ChannelSelectBaseActions",
-									 "ColorActions"], {"ok": self.keyOk,
-														"back": self.exit,
-														"cancel": self.exit,
-														"red": self.keyRed,
-														"green": self.keyGreen,
-														"yellow": self.keyYellow,
-														"up": self.keyUp,
-														"down": self.keyDown,
-														"right": self.keyPageDown,
-														"left": self.keyPageUp,
-														"nextBouquet": self.keyPageUp,
-														"prevBouquet": self.keyPageDown,
-														"nextMarker": self.nextPlatform,
-														"prevMarker": self.prevPlatform,
-														"menu": self.openConfig,
-													}, -1)
+		self["actions"] = ActionMap(["WizardActions", "DirectionActions", "MenuActions", "ChannelSelectBaseActions", "ColorActions"],
+							{"ok": self.keyOk,
+							"back": self.exit,
+							"cancel": self.exit,
+							"red": self.keyRed,
+							"green": self.keyGreen,
+							"yellow": self.keyYellow,
+							"up": self.keyUp,
+							"down": self.keyDown,
+							"right": self.keyPageDown,
+							"left": self.keyPageUp,
+							"nextBouquet": self.keyPageUp,
+							"prevBouquet": self.keyPageDown,
+							"nextMarker": self.nextPlatform,
+							"prevMarker": self.prevPlatform,
+							"menu": self.openConfig
+							}, -1)
 		delay = int(config.plugins.OpenATVstatus.animate.value)
 		self.CS = Carousel(delay if delay else 50)
-		self.CS.start(BS.platlist, self.platidx, self.CarouselCallback)
+		self.CS.start(BS.platlist, self.platidx, self.CarouselCB)
 		self.onLayoutFinish.append(self.onLayoutFinished)
 
 	def onLayoutFinished(self):
@@ -450,18 +472,18 @@ class ATVimageslist(Screen):
 		self.refreshplatlist()
 
 	def refreshplatlist(self):
-		self.currarch = BS.archlist[self.platidx]
-		BS.getbuildinfos(BS.platlist[self.platidx], self.makeimagelist)
+		self.currplat = BS.platlist[self.platidx]
+		BS.getbuildinfos(BS.platlist[self.platidx], callback=self.makeimagelist)
 
 	def makeimagelist(self):
 		menulist = []
 		boxlist = []
 		if BS.htmldict:
 			for boxname in BS.htmldict["boxinfo"]:
-				boxlist.append((boxname, self.currarch))
+				boxlist.append((boxname, self.currplat))
 				bd = BS.htmldict["boxinfo"][boxname]
 				palette = {"Building": 0x00B028, "Failed": 0xFF0400, "Complete": 0xB0B0B0, "Waiting": 0xFFAE00}
-				color = 0xFDFf00 if [item for item in FAVLIST if item == (boxname, self.currarch)] else palette.get(bd["BuildStatus"], 0xB0B0B0)
+				color = 0xFDFf00 if [item for item in FAVLIST if item == (boxname, self.currplat)] else palette.get(bd["BuildStatus"], 0xB0B0B0)
 				buildtime = bd["BuildTime"].strip()
 				buildtime = "%sh" % buildtime if buildtime else ""
 				menulist.append(tuple([boxname, bd["BuildStatus"], bd["StartBuild"], bd["StartFeedSync"], bd["EndBuild"], bd["SyncTime"], buildtime, color]))
@@ -472,9 +494,9 @@ class ATVimageslist(Screen):
 			if foundbox:
 				self["menu"].setIndex(self.boxlist.index(foundbox[0]))
 			self.currbox = None
-		self.refreshstatus()
+		self.updateStatus()
 
-	def refreshstatus(self):
+	def updateStatus(self):
 		self.currindex = self["menu"].getSelectedIndex()
 		if self.boxlist and self.currindex is not None:
 			if [item for item in FAVLIST if item == self.boxlist[self.currindex]]:
@@ -522,7 +544,7 @@ class ATVimageslist(Screen):
 		self["curr_plat"].setText(BS.platlist[self.platidx])
 		self["next_plat"].setText(BS.platlist[self.platidx + 1] if self.platidx < len(BS.platlist) - 1 else BS.platlist[0])
 
-	def CarouselCallback(self, rotated):
+	def CarouselCB(self, rotated):
 		self["prev_plat"].setText(rotated[0])
 		self["curr_plat"].setText(rotated[1])
 		self["next_plat"].setText(rotated[2])
@@ -533,7 +555,7 @@ class ATVimageslist(Screen):
 			if currbox:
 				self.session.open(ATVboxdetails, currbox)
 
-	def msgboxReturn(self, answer):
+	def msgboxCB(self, answer):
 		if answer is True and self.boxlist and self.currindex is not None:
 			FAVLIST.remove(self.foundFavs[0])
 			config.plugins.OpenATVstatus.favboxes.value = ";".join("(%s)" % ",".join(item) for item in FAVLIST) if FAVLIST else ""
@@ -545,7 +567,7 @@ class ATVimageslist(Screen):
 		if self.boxlist and self.currindex is not None:
 			self.foundFavs = [item for item in FAVLIST if item == self.boxlist[self.currindex]]
 			if self.foundFavs:
-				self.session.openWithCallback(self.msgboxReturn, MessageBox, _("Do you really want to remove Box '%s-%s' from favorites?") % self.boxlist[self.currindex], MessageBox.TYPE_YESNO, timeout=20, default=False)
+				self.session.openWithCallback(self.msgboxCB, MessageBox, _("Do you really want to remove Box '%s-%s' from favorites?") % self.boxlist[self.currindex], MessageBox.TYPE_YESNO, timeout=20, default=False)
 			else:
 				FAVLIST.append(self.boxlist[self.currindex])
 				config.plugins.OpenATVstatus.favboxes.value = ";".join("(%s)" % ",".join(item) for item in FAVLIST) if FAVLIST else ""
@@ -555,12 +577,12 @@ class ATVimageslist(Screen):
 
 	def keyGreen(self):
 		if self.boxlist:
-			findbuildbox = (BS.findbuildbox(), self.currarch)
+			findbuildbox = (BS.findbuildbox(), self.currplat)
 			if findbuildbox[0]:
 				self["menu"].setIndex(self.boxlist.index(findbuildbox))
-				self.refreshstatus()
+				self.updateStatus()
 			else:
-				self.session.open(MessageBox, text=_("At the moment no image is built on the platform '%s'!") % BS.getplatform(self.currarch), type=MessageBox.TYPE_INFO, timeout=5, close_on_any_key=True)
+				self.session.open(MessageBox, text=_("At the moment no image is built on the platform '%s'!") % self.currplat, type=MessageBox.TYPE_INFO, timeout=5, close_on_any_key=True)
 
 	def keyYellow(self):
 		if self.boxlist and FAVLIST:
@@ -568,39 +590,38 @@ class ATVimageslist(Screen):
 			self.currbox = FAVLIST[self.favindex]
 			if self.currbox in self.boxlist:
 				self["menu"].setIndex(self.boxlist.index(self.currbox))
-				self.refreshstatus()
+				self.updateStatus()
 			else:
-				self.platidx = BS.archlist.index(self.currbox[1])
+				self.platidx = BS.platlist.index(self.currbox[1])
 				self.CS.moveToIndex(self.platidx)
 				self.setPlatformStatic()
 				self.refreshplatlist()
 
 	def keyUp(self):
 		self["menu"].up()
-		self.refreshstatus()
+		self.updateStatus()
 
 	def keyDown(self):
 		self["menu"].down()
-		self.refreshstatus()
+		self.updateStatus()
 
 	def keyPageUp(self):
 		self["menu"].pageUp()
-		self.refreshstatus()
+		self.updateStatus()
 
 	def keyPageDown(self):
 		self["menu"].pageDown()
-		self.refreshstatus()
+		self.updateStatus()
 
 	def keyTop(self):
 		self["menu"].top()
-		self.refreshstatus()
+		self.updateStatus()
 
 	def keyBottom(self):
 		self["menu"].bottom()
-		self.refreshstatus()
+		self.updateStatus()
 
 	def exit(self):
-		BS.stop()
 		self.CS.stop()
 		self.close()
 
@@ -621,12 +642,12 @@ class ATVboxdetails(Screen):
 		self["picture"] = Pixmap()
 		self["details"] = Label()
 		self["key_red"] = Label(_("Cancel"))
-		self["actions"] = ActionMap(["OkCancelActions",
-				   						"ColorActions"], {"ok": self.exit,
-															"back": self.exit,
-											   				"cancel": self.exit,
-															"red": self.exit,
-															}, -1)
+		self["actions"] = ActionMap(["OkCancelActions", "ColorActions"],
+							{"ok": self.exit,
+							"back": self.exit,
+							"cancel": self.exit,
+							"red": self.exit,
+							}, -1)
 		self.onLayoutFinish.append(self.onLayoutFinished)
 
 	def onLayoutFinished(self):
@@ -709,8 +730,8 @@ class ATVconfig(ConfigListScreen, Screen):
 																		  "green": self.keyGreen
 																		  }, -1)
 		clist = []
-		clist.append(getConfigListEntry(_("Preferred box architecture for images list:"), config.plugins.OpenATVstatus.favarch, _("Specify which box architecture should be preferred when images list will be called. If option 'current' is selected, the architecture of the selected box is taken.")))
-		clist.append(getConfigListEntry(_("Animation for change of platform:"), config.plugins.OpenATVstatus.animate, _("Sets the animation speed for the carousel function when changing platforms.")))
+		clist.append(getConfigListEntry(_("Preferred box architecture:"), config.plugins.OpenATVstatus.favarch, _("Specify which box architecture should be preferred when the images list will be called.")))
+		clist.append(getConfigListEntry(_("Animation for change of platform:"), config.plugins.OpenATVstatus.animate, _("Sets the animation speed for the carousel function when changing platforms in images list.")))
 		self["config"].setList(clist)
 
 	def keyGreen(self):

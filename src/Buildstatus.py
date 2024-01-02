@@ -25,12 +25,12 @@ MODULE_NAME = __name__.split(".")[-1]
 
 class Buildstatus():
 	def __init__(self):
-		self.error = None
 		self.url = None
+		self.error = None
 		self.htmldict = None
 		self.callback = None
-		self.archlist = []  # list of available architectures (=shortnames of plattforms)
-		self.platlist = []  # list of available platforms (=longnames of platforms)
+		self.archlist = []  # list of available architectures with extension '_oldest' or '_latest'
+		self.platlist = []  # list of available platforms
 		self.platdict = {}  # dict of available platforms and relating urls
 
 	def start(self):  # loads json-platformdata from build server
@@ -44,8 +44,16 @@ class Buildstatus():
 			dictdata = loads(response.content)
 			if dictdata:
 				self.platdict = dictdata
-				self.platlist = list(self.platdict["versionurls"].keys())
-				self.archlist = [x.split(" ")[0].upper() for x in self.platlist]  # get architecture (=shortname) from platform (=keyname)
+				self.platlist = sorted(list(self.platdict["versionurls"].keys()))
+				helplist = [x.split(" ")[0].lower() for x in self.platlist]
+				archlist = []
+				for arch in helplist:  # separate dupes in platforms in "latest" and "oldest"
+					if helplist.count(arch) > 1:
+						release = "oldest" if "%s_latest" % arch in archlist else "latest"
+					else:
+						release = "latest"
+					archlist.append("%s_%s" % (arch.lower(), release))
+				self.archlist = sorted(list(set(archlist)))
 				return dictdata
 			self.error = "[%s] ERROR in module 'start': server access failed." % MODULE_NAME
 		except Exception as err:
@@ -81,7 +89,7 @@ class Buildstatus():
 		self.callback = callback
 		self.error = None
 		if not platform:
-			self.error = "[%s] ERROR in module 'start': '%s" % (MODULE_NAME, "platform is None")
+			self.error = "[%s] ERROR in module 'getbuildinfos': '%s" % (MODULE_NAME, "platform is None")
 		self.url = self.platdict["versionurls"][platform]["url"]
 		if callback:
 			if self.error:
@@ -91,12 +99,18 @@ class Buildstatus():
 		else:
 			return None if self.error else self.createdict()
 
-	def getplatform(self, currarch):  # get platform (=keyname) from currarch (=shortname)
+	def getplatform(self, currarch):  # get platform from architecture
+		archparts = currarch.split("_")
+		if len(archparts) == 1:  # old shortnames with missing extension? (for compatibiliy reasons only)
+			archparts.append("oldest")
 		platform = None
-		if self.platdict and currarch in self.archlist:
-			for platform in self.platlist:
-				if currarch.upper() in platform:
-					break
+		if self.platdict and archparts[1] in ["oldest", "latest"]:
+			hitlist = []
+			for tempplat in self.platlist:
+				if archparts[0].upper() in tempplat:
+					hitlist.append(tempplat)  # add current platforms to hitlist
+			if hitlist:
+				platform = hitlist[-1] if archparts[1] == "latest" else hitlist[0]
 		return platform
 
 	def createdict(self, callback=None):  # coordinates 'get html-imagesdata & create imagesdict'
@@ -210,7 +224,7 @@ def main(argv):  # shell interface
 	verbose = False
 	architectures = False
 	platforms = False
-	currarch = "ARM"
+	currarch = "arm_latest"
 	filename = None
 	boxname = None
 	cycletime = None
@@ -244,7 +258,7 @@ def main(argv):  # shell interface
 			"-j, --json <filename>\t\tFile output formatted in JSON" % ", ".join(BS.archlist))
 			exit()
 		elif opt in ("-a", "--architecture"):
-			currarch = arg.upper()
+			currarch = arg.lower()
 			verbose = True
 		elif opt in ("-j", "--json"):
 			filename = arg
@@ -263,7 +277,7 @@ def main(argv):  # shell interface
 			platforms = True
 	currplat = BS.getplatform(currarch)
 	if not currplat:
-		print("ERROR in module 'main': unknown architecture. Allowed is: %s" % ", ".join(x.split(" ")[0].upper() for x in BS.archlist))
+		print("ERROR in module 'main': Unknown architecture '%s'. Valid is: %s" % (currarch, ", ".join(x.split(" ")[0] for x in BS.archlist)))
 		exit()
 	BS.getbuildinfos(currplat)
 	if buildbox:
