@@ -10,19 +10,19 @@
 					{"default": (100, [
 						MultiContentEntryPixmapAlphaTest(pos=(14,10), size=(166,42), png=9, flags=BT_SCALE),  # Boxpicture
 						MultiContentEntryText(text="BuildStatus:" , pos=(200,6), size=(130,26), font=0, color=0x20B0B0B0, color_sel=0x20B0B0B0, flags=RT_HALIGN_LEFT|RT_VALIGN_CENTER),
-						MultiContentEntryText(text="NextBuild in:" , pos=(200,36), size=(130,26), font=0, color=0x20B0B0B0, color_sel=0x20B0B0B0, flags=RT_HALIGN_LEFT|RT_VALIGN_CENTER),
+						MultiContentEntryText(text="BuildTime:" , pos=(200,36), size=(130,26), font=0, color=0x20B0B0B0, color_sel=0x20B0B0B0, flags=RT_HALIGN_LEFT|RT_VALIGN_CENTER),
 						MultiContentEntryText(text="BoxesAhead:" , pos=(200,66), size=(130,26), font=0, color=0x20B0B0B0, color_sel=0x20B0B0B0, flags=RT_HALIGN_LEFT|RT_VALIGN_CENTER),
 						MultiContentEntryText(text="StartBuild:" , pos=(440,6), size=(110,26), font=0, color=0x20B0B0B0, color_sel=0x20B0B0B0, flags=RT_HALIGN_LEFT|RT_VALIGN_CENTER),
 						MultiContentEntryText(text="EndBuild:" , pos=(440,36), size=(110,26), font=0, color=0x20B0B0B0, color_sel=0x20B0B0B0, flags=RT_HALIGN_LEFT|RT_VALIGN_CENTER),
-						MultiContentEntryText(text="BuildTime:" , pos=(440,66), size=(110,26), font=0, color=0x20B0B0B0, color_sel=0x20B0B0B0, flags=RT_HALIGN_LEFT|RT_VALIGN_CENTER),
-						MultiContentEntryText(pos=(14,50), size=(166,26), font=0, color=0x20FFFFFF, color_sel=0x20FFFFFF, flags=RT_HALIGN_CENTER|RT_VALIGN_CENTER, text=0),  # boxname
-						MultiContentEntryText(pos=(14,70), size=(166,26), font=1, color=0x20B0B0B0, color_sel=0x20B0B0B0, flags=RT_HALIGN_CENTER|RT_VALIGN_CENTER, text=1),  # architecture
+						MultiContentEntryText(text="NextBuild:" , pos=(440,66), size=(110,26), font=0, color=0x20B0B0B0, color_sel=0x20B0B0B0, flags=RT_HALIGN_LEFT|RT_VALIGN_CENTER),
+						MultiContentEntryText(pos=(14,50), size=(166,26), font=0, color=0x20FFFFFF, color_sel=0x20FFFFFF, flags=RT_HALIGN_CENTER|RT_VALIGN_CENTER, text=0),  # Boxname
+						MultiContentEntryText(pos=(14,70), size=(166,26), font=1, color=0x20B0B0B0, color_sel=0x20B0B0B0, flags=RT_HALIGN_CENTER|RT_VALIGN_CENTER, text=1),  # Platform
 						MultiContentEntryText(pos=(330,6), size=(110,26), font=0, color=MultiContentTemplateColor(8), color_sel=MultiContentTemplateColor(8), flags=RT_HALIGN_LEFT|RT_VALIGN_CENTER, text=2),  # BuildStatus
-						MultiContentEntryText(pos=(330,36), size=(110,26), font=0, color=0x20FFFFFF, color_sel=0x20FFFFFF, flags=RT_HALIGN_LEFT|RT_VALIGN_CENTER, text=3),   # Estimated
-						MultiContentEntryText(pos=(330,66), size=(110,26), font=0, color=0x20FFFFFF, color_sel=0x20FFFFFF, flags=RT_HALIGN_LEFT|RT_VALIGN_CENTER, text=4), # BoxesAhead
+						MultiContentEntryText(pos=(330,36), size=(110,26), font=0, color=0x20FFFFFF, color_sel=0x20FFFFFF, flags=RT_HALIGN_LEFT|RT_VALIGN_CENTER, text=3),  # BuildTime
+						MultiContentEntryText(pos=(330,66), size=(110,26), font=0, color=0x20FFFFFF, color_sel=0x20FFFFFF, flags=RT_HALIGN_LEFT|RT_VALIGN_CENTER, text=4),  # BoxesAhead
 						MultiContentEntryText(pos=(550,6), size=(210,26), font=0, color=0x20FFFFFF, color_sel=0x20FFFFFF, flags=RT_HALIGN_LEFT|RT_VALIGN_CENTER, text=5),  # StartBuild
 						MultiContentEntryText(pos=(550,36), size=(210,26), font=0, color=0x20FFFFFF, color_sel=0x20FFFFFF, flags=RT_HALIGN_LEFT|RT_VALIGN_CENTER, text=6),  # EndBuild
-						MultiContentEntryText(pos=(550,66), size=(210,26), font=0, color=0x20FFFFFF, color_sel=0x20FFFFFF, flags=RT_HALIGN_LEFT|RT_VALIGN_CENTER, text=7),  # BuildTime
+						MultiContentEntryText(pos=(550,66), size=(210,26), font=0, color=0x20FFFFFF, color_sel=0x20FFFFFF, flags=RT_HALIGN_LEFT|RT_VALIGN_CENTER, text=7),  # NextBuild
 						MultiContentEntryPixmapAlphaTest(pos=(760,20), size=(24,60), png=10, flags=BT_SCALE)  # ServerStatus
 						]),
 						"emptylist": (220, [

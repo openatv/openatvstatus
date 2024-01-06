@@ -53,9 +53,10 @@ archlist = sorted(list(set(archlist)))
 config.plugins.OpenATVstatus = ConfigSubsection()
 config.plugins.OpenATVstatus.animate = ConfigSelection(default="50", choices=[("0", _("off")), ("70", _("slower")), ("50", _("normal")), ("30", _("faster"))])
 config.plugins.OpenATVstatus.favarch = ConfigSelection(default="current", choices=[("current", _("selected box"))] + archlist)
+config.plugins.OpenATVstatus.nextbuild = ConfigSelection(default="relative", choices=[("relative", _("relative time")), ("absolute", _("absolute time"))])
 config.plugins.OpenATVstatus.favboxes = ConfigText(default="", fixed_size=False)
 
-VERSION = "V2.0"
+VERSION = "V2.1"
 MODULE_NAME = __name__.split(".")[-2]
 FAVLIST = []
 templist = [list(x.strip() for x in item.replace("(", "").replace(")", "").split(",")) for item in config.plugins.OpenATVstatus.favboxes.value.split(";")] if config.plugins.OpenATVstatus.favboxes.value else []
@@ -255,11 +256,11 @@ class ATVfavorites(Screen):
 								self.platdict[currplat]["cycletime"] = BS.strf_delta(cycletime)
 								self.platdict[currplat]["boxcounter"] = "%s" % counter
 								self.platdict[currplat]["boxfailed"] = "%s" % failed
-							nextbuild = "%sh" % BS.strf_delta(nextbuild) if nextbuild else ""
+							nextbuild = (datetime.now() + nextbuild).strftime("%Y/%m/%d, %H:%M:%S") if config.plugins.OpenATVstatus.nextbuild.value == "absolute" and nextbuild else "%sh" % BS.strf_delta(nextbuild)
 							buildtime = bd["BuildTime"].strip()
 							buildtime = "%sh" % buildtime if buildtime else ""
 							statuslist.append(box)  # collect all server status (avoids flickering in menu)
-							textlist = [box[0], box[1], bd["BuildStatus"], nextbuild, "%s" % boxesahead, bd["StartBuild"], bd["EndBuild"], buildtime, color, None]
+							textlist = [box[0], box[1], bd["BuildStatus"], buildtime, "%s" % boxesahead, bd["StartBuild"], bd["EndBuild"], nextbuild, color, None]
 							baselist.append(textlist)
 							picfile = join(TEMPPATH, "%s.png" % box[0])
 							if exists(picfile):
@@ -409,7 +410,10 @@ class ATVfavorites(Screen):
 		self.close()
 
 	def openConfig(self):
-		self.session.open(ATVconfig)
+		self.session.openWithCallback(self.openConfigCB, ATVconfig)
+
+	def openConfigCB(self):
+			self.createMenulist()
 
 
 class ATVimageslist(Screen):
@@ -732,6 +736,7 @@ class ATVconfig(ConfigListScreen, Screen):
 		clist = []
 		clist.append(getConfigListEntry(_("Preferred box architecture:"), config.plugins.OpenATVstatus.favarch, _("Specify which box architecture should be preferred when the images list will be called.")))
 		clist.append(getConfigListEntry(_("Animation for change of platform:"), config.plugins.OpenATVstatus.animate, _("Sets the animation speed for the carousel function when changing platforms in images list.")))
+		clist.append(getConfigListEntry(_("Time indication of 'NextBuild':"), config.plugins.OpenATVstatus.nextbuild, _("Show 'NextBuild' as relative time in hours or as absolute time.")))
 		self["config"].setList(clist)
 
 	def keyGreen(self):
