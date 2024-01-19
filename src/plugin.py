@@ -56,7 +56,7 @@ config.plugins.OpenATVstatus.favarch = ConfigSelection(default="current", choice
 config.plugins.OpenATVstatus.nextbuild = ConfigSelection(default="relative", choices=[("relative", _("relative time")), ("absolute", _("absolute time"))])
 config.plugins.OpenATVstatus.favboxes = ConfigText(default="", fixed_size=False)
 
-VERSION = "V2.1"
+VERSION = "V2.2"
 MODULE_NAME = __name__.split(".")[-2]
 FAVLIST = []
 templist = [list(x.strip() for x in item.replace("(", "").replace(")", "").split(",")) for item in config.plugins.OpenATVstatus.favboxes.value.split(";")] if config.plugins.OpenATVstatus.favboxes.value else []
@@ -256,7 +256,10 @@ class ATVfavorites(Screen):
 								self.platdict[currplat]["cycletime"] = BS.strf_delta(cycletime)
 								self.platdict[currplat]["boxcounter"] = "%s" % counter
 								self.platdict[currplat]["boxfailed"] = "%s" % failed
-							nextbuild = (datetime.now() + nextbuild).strftime("%Y/%m/%d, %H:%M:%S") if config.plugins.OpenATVstatus.nextbuild.value == "absolute" and nextbuild else "%sh" % BS.strf_delta(nextbuild)
+							if BS.findbuildbox():
+								nextbuild = (datetime.now() + nextbuild).strftime("%Y/%m/%d, %H:%M:%S") if config.plugins.OpenATVstatus.nextbuild.value == "absolute" and nextbuild else "%sh" % BS.strf_delta(nextbuild)
+							else:
+								nextbuild, boxesahead = "server paused", "unclear"
 							buildtime = bd["BuildTime"].strip()
 							buildtime = "%sh" % buildtime if buildtime else ""
 							statuslist.append(box)  # collect all server status (avoids flickering in menu)
@@ -509,18 +512,22 @@ class ATVimageslist(Screen):
 				self["key_red"].setText(_("add box to favorites"))
 			currbox = self.boxlist[self.currindex][0]
 			nextbuild, boxesahead, cycletime, counter, failed = BS.evaluate(currbox)
+			if BS.findbuildbox():
+				boxinfo = _("Next build ends in %sh, still %s boxes ahead") % (BS.strf_delta(nextbuild), boxesahead)
+			else:
+				boxinfo = _("Server paused, unclear how many boxes are ahead...")
 			buildstatus = BS.htmldict["boxinfo"][self.boxlist[self.currindex][0]]["BuildStatus"] if BS.htmldict else ""
 			if nextbuild:
-				self["boxinfo"].setText(_("next build ends in %sh, still %s boxes before") % (BS.strf_delta(nextbuild), boxesahead))
+				self["boxinfo"].setText(boxinfo)
 			elif buildstatus == "Building":
-				self["boxinfo"].setText(_("image is under construction, the duration is unclear..."))
+				self["boxinfo"].setText(_("Image is under construction, the duration is unclear..."))
 			elif buildstatus == "Waiting":
-				self["boxinfo"].setText(_("image is waiting with priority, the duration is unclear..."))
+				self["boxinfo"].setText(_("Image is waiting with priority, the duration is unclear..."))
 			if cycletime:
 				self["platinfo"].setText("%s: %sh, %s %s, %s: %s" % (_("last build cycle"), BS.strf_delta(cycletime), counter, _("boxes"), _("failed"), failed))
 			else:
-				self["boxinfo"].setText(_("no box found in this platform!"))
-				self["platinfo"].setText(_("nothing to do - no build cycle"))
+				self["boxinfo"].setText(_("No box found in this platform!"))
+				self["platinfo"].setText(_("Nothing to do - no build cycle"))
 				self["menu"].setList([])
 
 	def nextPlatform(self):
