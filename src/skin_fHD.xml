@@ -86,8 +86,8 @@
 			</convert>
 		</widget>
 		<eLabel position="15,891" size="1830,45" backgroundColor="grey" zPosition="-1" />
-		<widget name="boxinfo" position="15,891" size="840,42" font="Regular;30" halign="left" valign="center" foregroundColor="black" backgroundColor="grey" />
-		<widget name="platinfo" position="850,891" size="960,42" font="Regular;30" halign="right" valign="center" foregroundColor="black" backgroundColor="grey" />
+		<widget name="boxinfo" position="15,891" size="855,42" font="Regular;30" halign="left" valign="center" foregroundColor="black" backgroundColor="grey" />
+		<widget name="platinfo" position="870,891" size="975,42" font="Regular;30" halign="right" valign="center" foregroundColor="black" backgroundColor="grey" />
 		<eLabel name="red" position="54,965" size="9,65" backgroundColor="red" zPosition="1" />
 		<eLabel name="green" position="474,965" size="9,65" backgroundColor="green" zPosition="1" />
 		<eLabel name="yellow" position="894,965" size="9,65" backgroundColor="yellow" zPosition="1" />

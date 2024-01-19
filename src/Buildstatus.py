@@ -12,7 +12,7 @@
 #########################################################################################################
 
 # PYTHON IMPORTS
-from datetime import timedelta
+from datetime import datetime, timedelta
 from getopt import getopt, GetoptError
 from json import loads, dump
 from re import search, findall, S, M
@@ -205,7 +205,7 @@ class Buildstatus():
 				failed += 1
 			boxcounter += 1
 		if box is not None and not foundbox:
-			print("[%s] WARNING in module 'evaluate': '%s" % (MODULE_NAME, "Box not found in this architecture. Try another architecture."))
+			self.error = "[%s] WARNING in module 'evaluate': '%s'" % (MODULE_NAME, "Box not found in this platform. Try another platform.")
 			return timedelta(), 0, cycletime, boxcounter, failed
 		return nextbuild, boxesahead - 1, cycletime, boxcounter, failed
 
@@ -222,24 +222,28 @@ def main(argv):  # shell interface
 	cycle = False
 	evaluate = False
 	verbose = False
-	architectures = False
-	platforms = False
-	currarch = "arm_latest"
+	architecture = False
+	supported = False
+	usable = False
 	filename = None
 	boxname = None
 	cycletime = None
+	currarch = "arm_latest"
+	currplat = ""
 	counter = 0
 	failed = 0
 	helpstring = "Buildstatus v1.2: try 'python Buildstatus.py -h' for more information"
 	BS = Buildstatus()
 	BS.start()  # interactive call without threading
 	if BS.error:
-		print(BS.error.replace(mainfmt, "").strip())
+		print("Error: %s" % BS.error.replace(mainfmt, "").strip())
 		exit()
+	archlist = BS.archlist
+	platlist = BS.platlist
 	try:
-		opts, args = getopt(argv, "a:j:e:bcvsph", ["architecture =", "json =", "evaluate =", "buildbox", "cycle", "verbose", "supported", "platforms", "help"])
-	except GetoptError:
-		print(helpstring)
+		opts, args = getopt(argv, "a:p:j:e:bcvsuh", ["architecture =", "platform=", "json =", "evaluate =", "buildbox", "cycle", "verbose", "supported", "usable", "help"])
+	except GetoptError as error:
+		print("Error: %s\n%s" % (error, helpstring))
 		exit(2)
 	if not opts:
 		verbose = True
@@ -247,19 +251,22 @@ def main(argv):  # shell interface
 		opt = opt.lower().strip()
 		arg = arg.lower().strip()
 		if opt == "-h":
-			print("Usage: python Buildstatus.py [options...] <data>\n"
-			"-a, --architecture <data>\tUse architecture: %s {'arm' is default}\n"
+			print("Usage  : python Buildstatus.py [options...] <data>\n"
+			"Example: python Buildstatus.py -a arm_latest -v -e gbue4k -s -u\n"
+			"-a, --architecture <data>\tUse architecture: %s\n"
+			"-p, --platform <data>\t\tUse platform: %s\n"
 			"-b, --buildbox\t\t\tShow the box for which currently built an image\n"
 			"-c, --cycle\t\t\tShow the estimated duration of a complete build cycle\n"
 			"-v, --verbose\t\t\tPerform with complete image build status overview\n"
-			"-e, --evaluate <boxname>\tevaluates time until image will be build for desired box\n"
+			"-e, --evaluate <boxname>\tEvaluates time until image will be build for desired box\n"
 			"-s, --supported\t\t\tShow all currently supported architectures\n"
-			"-p, --platforms\t\t\tShow all currently supported platforms\n"
-			"-j, --json <filename>\t\tFile output formatted in JSON" % ", ".join(BS.archlist))
+			"-u, --usable\t\t\tShow all currently usable platforms\n"
+			"-j, --json <filename>\t\tFile output formatted in JSON" % (", ".join(archlist), ", ".join([x.replace(" ", "_") for x in platlist])))
 			exit()
 		elif opt in ("-a", "--architecture"):
 			currarch = arg.lower()
-			verbose = True
+		elif opt in ("-p", "--platform"):
+			currplat = arg.upper().replace("_", " ")
 		elif opt in ("-j", "--json"):
 			filename = arg
 		elif opt in ("-b", "--buildbox"):
@@ -272,55 +279,24 @@ def main(argv):  # shell interface
 		elif opt in ("-v", "--verbose"):
 			verbose = True
 		elif opt in ("-s", "--supported"):
-			architectures = True
-		elif opt in ("-p", "--platforms"):
-			platforms = True
-	currplat = BS.getplatform(currarch)
+			supported = True
+		elif opt in ("-u", "--usable"):
+			usable = True
 	if not currplat:
-		print("ERROR in module 'main': Unknown architecture '%s'. Valid is: %s" % (currarch, ", ".join(x.split(" ")[0] for x in BS.archlist)))
+		currplat = BS.getplatform(currarch)
+		if BS.error:
+			print("Error: %s" % BS.error.replace(mainfmt, "").strip())
+			exit()
+	if not currarch:
+		print("Unknown architecture '%s'. Valid is: %s" % (currarch, ", ".join(x.split(" ")[0] for x in archlist)))
+		exit()
+	if not currplat:
+		print("Unknown platform '%s'. Valid is: %s" % (currarch, ", ".join(x.split(" ")[0] for x in archlist)))
 		exit()
 	BS.getbuildinfos(currplat)
-	if buildbox:
-		buildboxname = BS.findbuildbox()
-		if buildboxname:
-			print("Currently the image is built for: '%s'" % buildboxname)
-		if BS.error:
-			print(BS.error.replace(mainfmt, "").strip())
-			BS.error = None
-	if evaluate:
-		if boxname:
-			nextbuild, boxesahead, cycletime, counter, failed = BS.evaluate(boxname)
-			if nextbuild is not None:
-				print("estimated time for next image '%s': %s h (%s boxes ahead)" % (boxname, BS.strf_delta(nextbuild), boxesahead))
-			if BS.error:
-				print(BS.error.replace(mainfmt, "").strip())
-				BS.error = None
-		else:
-			print("ERROR in module 'main': missing boxname")
-			exit()
-	if cycle:
-		if not cycletime:
-			nextbuild, boxesahead, cycletime, counter, failed = BS.evaluate()
-		if cycletime:
-			print("estimated durance of complete cycle (%s): %s h" % (currplat, BS.strf_delta(cycletime)))
-		if BS.error:
-			print(BS.error.replace(mainfmt, "").strip())
-			BS.error = None
-	if architectures:
-		if BS.error:
-			print(BS.error.replace(mainfmt, "").strip())
-		if architectures:
-			print("available architectures: %s" % ", ".join(x for x in BS.archlist))
-		else:
-			print("ERROR in module 'main': no architectures found")
-	if platforms:
-		if BS.error:
-			print(BS.error.replace(mainfmt, "").strip())
-		if platforms:
-			print("available platforms: %s" % ", ".join(x for x in BS.platlist))
-		else:
-			print("ERROR in module 'main': no platforms found")
-
+	if BS.error:
+		print("Error: %s" % BS.error.replace(mainfmt, "").strip())
+		exit()
 	if BS.htmldict and verbose:
 		separator = "+--------------------+--------------+----------------------+----------------------+----------------------+-----------+------------+"
 		row = "| {0:<18} | {1:<12} | {2:<20} | {3:<20} | {4:<20} | {5:<9} | {6:<10} |"
@@ -339,6 +315,45 @@ def main(argv):  # shell interface
 		with open(filename, "w") as f:
 			dump(BS.htmldict, f)
 		print("File '%s' was successfully created." % filename)
+	if buildbox:
+		buildboxname = BS.findbuildbox()
+		if BS.error:
+			print("Error: %s" % BS.error.replace(mainfmt, "").strip())
+			exit()
+		if buildboxname:
+			print("Currently the image is built for: '%s'" % buildboxname)
+		else:
+			print("At the moment no image is built on the platform!")
+	if evaluate:
+		if boxname:
+			nextbuild, boxesahead, cycletime, counter, failed = BS.evaluate(boxname)
+			if BS.error:
+				print("Error: %s" % BS.error.replace(mainfmt, "").strip())
+				exit()
+			if nextbuild:
+				print("Estimated duration for next image for '%s' in %sh at %s (%s boxes ahead) " % (boxname, BS.strf_delta(nextbuild), (datetime.now() + nextbuild).strftime("%Y/%m/%d, %H:%M:%S"), boxesahead))
+			else:
+				print("Server paused, unclear how many boxes are ahead!")
+		else:
+			print("Missing boxname")
+			exit()
+	if cycle:
+		if not cycletime:
+			nextbuild, boxesahead, cycletime, counter, failed = BS.evaluate()
+			if BS.error:
+				print("Error: %s" % BS.error.replace(mainfmt, "").strip())
+				exit()
+		print("Estimated durance of complete cycle (%s): %s h" % (currplat, BS.strf_delta(cycletime)))
+	if supported:
+		if not architecture and archlist:
+			print("Available architectures: %s" % ", ".join(x for x in archlist))
+		else:
+			print("No architectures found")
+	if usable:
+		if platlist:
+			print("Available platforms: %s" % ", ".join(x.lower().replace(" ", "_") for x in platlist))
+		else:
+			print("No platforms found")
 
 
 if __name__ == "__main__":
