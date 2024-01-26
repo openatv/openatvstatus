@@ -3,7 +3,15 @@
 		<ePixmap position="10,10" size="300,50" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/icons/openATV_HD.png" alphatest="blend" zPosition="1" />
 		<widget name="version" position="290,40" size="40,20" font="Regular;16" halign="left" valign="center" />
 		<widget source="Title" render="Label" position="410,16" size="330,48" font="Regular;36" halign="left" valign="bottom" />
-		<widget name="curr_date" position="640,36" size="170,28" font="Regular;20" halign="right" valign="top" />
+		<widget source="global.CurrentTime" render="Label" position="680,10" size="140,60" font="Regular;50" noWrap="1" halign="center" valign="bottom" foregroundColor="#00FFFFFF" backgroundColor="#1A0F0F0F" transparent="1">
+			<convert type="ClockToText">Default</convert>
+		</widget>
+		<widget source="global.CurrentTime" render="Label" position="520,10" size="160,26" font="Regular;16" noWrap="1" halign="right" valign="bottom" foregroundColor="#00FFFFFF" backgroundColor="#1A0F0F0F" transparent="1">
+			<convert type="ClockToText">Format:%A</convert>
+		</widget>
+		<widget source="global.CurrentTime" render="Label" position="520,34" size="160,26" font="Regular;16" noWrap="1" halign="right" valign="bottom" foregroundColor="#00FFFFFF" backgroundColor="#1A0F0F0F" transparent="1">
+			<convert type="ClockToText">Format:%e. %B</convert>
+		</widget>
 		<widget source="menu" render="Listbox" position="10,70" size="800,500" enableWrapAround="1" scrollbarMode="showOnDemand">
 			<convert type="TemplatedMultiContent">
 				{"templates":
@@ -15,8 +23,8 @@
 						MultiContentEntryText(text="StartBuild:" , pos=(440,6), size=(110,26), font=0, color=0x20B0B0B0, color_sel=0x20B0B0B0, flags=RT_HALIGN_LEFT|RT_VALIGN_CENTER),
 						MultiContentEntryText(text="EndBuild:" , pos=(440,36), size=(110,26), font=0, color=0x20B0B0B0, color_sel=0x20B0B0B0, flags=RT_HALIGN_LEFT|RT_VALIGN_CENTER),
 						MultiContentEntryText(text="NextBuild:" , pos=(440,66), size=(110,26), font=0, color=0x20B0B0B0, color_sel=0x20B0B0B0, flags=RT_HALIGN_LEFT|RT_VALIGN_CENTER),
-						MultiContentEntryText(pos=(14,50), size=(166,26), font=0, color=0x20FFFFFF, color_sel=0x20FFFFFF, flags=RT_HALIGN_CENTER|RT_VALIGN_CENTER, text=0),  # Boxname
-						MultiContentEntryText(pos=(14,70), size=(166,26), font=1, color=0x20B0B0B0, color_sel=0x20B0B0B0, flags=RT_HALIGN_CENTER|RT_VALIGN_CENTER, text=1),  # Platform
+						MultiContentEntryText(pos=(14,50), size=(166,26), font=1, color=0x20FFFFFF, color_sel=0x20FFFFFF, flags=RT_HALIGN_CENTER|RT_VALIGN_CENTER, text=0),  # Boxname
+						MultiContentEntryText(pos=(14,70), size=(166,26), font=2, color=0x20B0B0B0, color_sel=0x20B0B0B0, flags=RT_HALIGN_CENTER|RT_VALIGN_CENTER, text=1),  # Platform
 						MultiContentEntryText(pos=(330,6), size=(110,26), font=0, color=MultiContentTemplateColor(8), color_sel=MultiContentTemplateColor(8), flags=RT_HALIGN_LEFT|RT_VALIGN_CENTER, text=2),  # BuildStatus
 						MultiContentEntryText(pos=(330,36), size=(110,26), font=0, color=0x20FFFFFF, color_sel=0x20FFFFFF, flags=RT_HALIGN_LEFT|RT_VALIGN_CENTER, text=3),  # BuildTime
 						MultiContentEntryText(pos=(330,66), size=(110,26), font=0, color=0x20FFFFFF, color_sel=0x20FFFFFF, flags=RT_HALIGN_LEFT|RT_VALIGN_CENTER, text=4),  # BoxesAhead
@@ -30,7 +38,7 @@
 						MultiContentEntryText(pos=(10,183), size=(773,40), font=2, flags=RT_HALIGN_CENTER|RT_VALIGN_CENTER, color=0x20F47D19, color_sel=0x2020F47D19, text=1)  # text in lower line
 						],False)
 					},
-				"fonts": [gFont("Regular",21), gFont("Regular",16), gFont("Regular",26)],
+				"fonts": [gFont("Regular",21), gFont("Regular",18), gFont("Regular",16)],
 				"itemHeight":100
 				}
 			</convert>
@@ -62,22 +70,22 @@
 		<ePixmap position="1193,33" size="30,30" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/icons/bouquet_HD.png" alphatest="blend" zPosition="1" />
 		<widget name="curr_date" position="1100,6" size="120,30" font="Regular;20" halign="right" valign="top" />
 		<eLabel position="10,70" size="1220,30" backgroundColor="grey" zPosition="-1" />
-		<eLabel text="BoxName" position="10,70" size="170,30" font="Regular;20" halign="left" valign="center" foregroundColor="black" backgroundColor="grey" />
-		<eLabel text="BuildStatus" position="180,70" size="110,30" font="Regular;20" halign="right" valign="center" foregroundColor="black" backgroundColor="grey" />
-		<eLabel text="StartBuild" position="290,70" size="230,30" font="Regular;20" halign="right" valign="center" foregroundColor="black" backgroundColor="grey" />
-		<eLabel text="StartFeedSync" position="520,70" size="230,30" font="Regular;20" halign="right" valign="center" foregroundColor="black" backgroundColor="grey" />
-		<eLabel text="EndBuild" position="750,70" size="230,30" font="Regular;20" halign="right" valign="center" foregroundColor="black" backgroundColor="grey" />
-		<eLabel text="SyncTime" position="990,70" size="100,30" font="Regular;20" halign="right" valign="center" foregroundColor="black" backgroundColor="grey" />
+		<eLabel text="BoxName" position="10,70" size="1903,30" font="Regular;20" halign="left" valign="center" foregroundColor="black" backgroundColor="grey" />
+		<eLabel text="BuildStatus" position="200,70" size="110,30" font="Regular;20" halign="right" valign="center" foregroundColor="black" backgroundColor="grey" />
+		<eLabel text="StartBuild" position="310,70" size="230,30" font="Regular;20" halign="right" valign="center" foregroundColor="black" backgroundColor="grey" />
+		<eLabel text="StartFeedSync" position="540,70" size="230,30" font="Regular;20" halign="right" valign="center" foregroundColor="black" backgroundColor="grey" />
+		<eLabel text="EndBuild" position="770,70" size="230,30" font="Regular;20" halign="right" valign="center" foregroundColor="black" backgroundColor="grey" />
+		<eLabel text="SyncTime" position="1000,70" size="100,30" font="Regular;20" halign="right" valign="center" foregroundColor="black" backgroundColor="grey" />
 		<eLabel text="BuildTime" position="1110,70" size="100,30" font="Regular;20" halign="right" valign="center" foregroundColor="black" backgroundColor="grey" />
 		<widget source="menu" render="Listbox" position="10,100" size="1220,494" scrollbarMode="showOnDemand">
 			<convert type="TemplatedMultiContent">
 				{"template": [
-				MultiContentEntryText(pos=(0,0), size=(170,26), font=0, color=MultiContentTemplateColor(7), color_sel=MultiContentTemplateColor(7), flags=RT_HALIGN_LEFT|RT_VALIGN_CENTER, text=0),  # BoxName
-				MultiContentEntryText(pos=(170,0), size=(110,26), font=0, color=MultiContentTemplateColor(7), color_sel=MultiContentTemplateColor(7), flags=RT_HALIGN_RIGHT|RT_VALIGN_CENTER, text=1),  # BuildStatus
-				MultiContentEntryText(pos=(280,0), size=(230,26), font=0, color=MultiContentTemplateColor(7), color_sel=MultiContentTemplateColor(7), flags=RT_HALIGN_RIGHT|RT_VALIGN_CENTER, text=2),  # StartBuild
-				MultiContentEntryText(pos=(510,0), size=(230,26), font=0, color=MultiContentTemplateColor(7), color_sel=MultiContentTemplateColor(7), flags=RT_HALIGN_RIGHT|RT_VALIGN_CENTER, text=3),  # StartFeedSync
-				MultiContentEntryText(pos=(740,0), size=(230,26), font=0, color=MultiContentTemplateColor(7), color_sel=MultiContentTemplateColor(7), flags=RT_HALIGN_RIGHT|RT_VALIGN_CENTER, text=4),  # EndBuild
-				MultiContentEntryText(pos=(980,0), size=(100,26), font=0, color=MultiContentTemplateColor(7), color_sel=MultiContentTemplateColor(7), flags=RT_HALIGN_RIGHT|RT_VALIGN_CENTER, text=5),  # SyncTime
+				MultiContentEntryText(pos=(0,0), size=(190,26), font=0, color=MultiContentTemplateColor(7), color_sel=MultiContentTemplateColor(7), flags=RT_HALIGN_LEFT|RT_VALIGN_CENTER, text=0),  # BoxName
+				MultiContentEntryText(pos=(190,0), size=(110,26), font=0, color=MultiContentTemplateColor(7), color_sel=MultiContentTemplateColor(7), flags=RT_HALIGN_RIGHT|RT_VALIGN_CENTER, text=1),  # BuildStatus
+				MultiContentEntryText(pos=(300,0), size=(230,26), font=0, color=MultiContentTemplateColor(7), color_sel=MultiContentTemplateColor(7), flags=RT_HALIGN_RIGHT|RT_VALIGN_CENTER, text=2),  # StartBuild
+				MultiContentEntryText(pos=(530,0), size=(230,26), font=0, color=MultiContentTemplateColor(7), color_sel=MultiContentTemplateColor(7), flags=RT_HALIGN_RIGHT|RT_VALIGN_CENTER, text=3),  # StartFeedSync
+				MultiContentEntryText(pos=(760,0), size=(230,26), font=0, color=MultiContentTemplateColor(7), color_sel=MultiContentTemplateColor(7), flags=RT_HALIGN_RIGHT|RT_VALIGN_CENTER, text=4),  # EndBuild
+				MultiContentEntryText(pos=(990,0), size=(100,26), font=0, color=MultiContentTemplateColor(7), color_sel=MultiContentTemplateColor(7), flags=RT_HALIGN_RIGHT|RT_VALIGN_CENTER, text=5),  # SyncTime
 				MultiContentEntryText(pos=(1100,0), size=(100,26), font=0, color=MultiContentTemplateColor(7), color_sel=MultiContentTemplateColor(7), flags=RT_HALIGN_RIGHT|RT_VALIGN_CENTER, text=6)  # BuildTime
 				],
 				"fonts": [gFont("Regular",20), gFont("Regular",12)],
