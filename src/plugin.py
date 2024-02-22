@@ -56,12 +56,9 @@ config.plugins.OpenATVstatus.favarch = ConfigSelection(default="current", choice
 config.plugins.OpenATVstatus.nextbuild = ConfigSelection(default="relative", choices=[("relative", _("relative time")), ("absolute", _("absolute time"))])
 config.plugins.OpenATVstatus.favboxes = ConfigText(default="", fixed_size=False)
 
-VERSION = "V2.2"
+VERSION = "V2.3"
 MODULE_NAME = __name__.split(".")[-2]
-FAVLIST = []
-templist = [list(x.strip() for x in item.replace("(", "").replace(")", "").split(",")) for item in config.plugins.OpenATVstatus.favboxes.value.split(";")] if config.plugins.OpenATVstatus.favboxes.value else []
-for tempfav in templist:
-	FAVLIST.append((tempfav[0], BS.getplatform(tempfav[1])))
+FAVLIST = [tuple(x.strip() for x in item.replace("(", "").replace(")", "").split(",")) for item in config.plugins.OpenATVstatus.favboxes.value.split(";")] if config.plugins.OpenATVstatus.favboxes.value else []
 PICURL = "https://raw.githubusercontent.com/oe-alliance/remotes/master/boxes/"
 TEMPPATH = "/tmp/OpenATVstatus/"
 ICONPATH = resolveFilename(SCOPE_PLUGINS, "Extensions/OpenATVstatus/icons/")
@@ -241,13 +238,14 @@ class ATVfavorites(Screen):
 					usedarchs.append(currfav)
 			menulist = []
 			for currarch in usedarchs:
-				currplat = [plat for plat in BS.platlist if currarch.split("_")[0].upper() in plat][0]
-				BS.getbuildinfos(currplat)
-				if BS.htmldict:
+				# for compatibility reasons: use oldest available platform if architecture version-no. is missing (older plugin releases)
+				currplat = [plat for plat in BS.platlist if currarch.split(" ")[0].upper() in plat][0] if len(currarch.split(" ")) == 1 else currarch
+				htmldict = BS.getbuildinfos(currplat)
+				if htmldict:  # favorites' platform found
 					for box in [item for item in FAVLIST if item[1] in set([item[1]])]:
-						if box[1] in currarch and box[0] in BS.htmldict["boxinfo"]:
+						if box[1] in currarch and box[0] in htmldict["boxinfo"]:
 							boxlist.append((box[0], currarch))
-							bd = BS.htmldict["boxinfo"][box[0]]
+							bd = htmldict["boxinfo"][box[0]]
 							palette = {"Building": 0x00B028, "Failed": 0xFF0400, "Complete": 0xFFFFFF, "Waiting": 0xFFAE00}
 							color = palette.get(bd["BuildStatus"], 0xB0B0B0)
 							nextbuild, boxesahead, cycletime, counter, failed = BS.evaluate(box[0])
@@ -265,14 +263,20 @@ class ATVfavorites(Screen):
 							statuslist.append(box)  # collect all server status (avoids flickering in menu)
 							textlist = [box[0], box[1], bd["BuildStatus"], buildtime, "%s" % boxesahead, bd["StartBuild"], bd["EndBuild"], nextbuild, color, None]
 							baselist.append(textlist)
-							picfile = join(TEMPPATH, "%s.png" % box[0])
-							if exists(picfile):
-								boxpix = LoadPixmap(cached=True, path=picfile)
-							else:
-								boxpix = None
+							boxpix = self.imageDisplay(box)
+							if not boxpix:
 								boxpiclist.append(box[0])  # collect missing box pictures (avoids flickering in menu)
-							menulist.append((textlist[:-1] + [boxpix] + [None]))  # remove last entry 'serverstatus' from textlist (no need for skin)
-					self["menu"].updateList(menulist)
+				else:  # favorites' platform not found
+					for box in FAVLIST:
+						if box[1] == currarch:
+							boxlist.append((box[0], currarch))
+							textlist = [box[0], box[1], "unclear", "no server", "no server", "no server found", "no server found", "no server found", 0xFF0400, None]
+							baselist.append(textlist)
+							boxpix = self.imageDisplay(box)
+							if not boxpix:
+								boxpiclist.append(box[0])  # collect missing box pictures (avoids flickering in menu)
+				menulist.append((textlist[:-1] + [boxpix] + [None]))  # remove last entry 'serverstatus' from textlist (no need for skin)
+			self["menu"].updateList(menulist)
 			self["red"].show()
 			self["key_red"].show()
 			self.baselist = baselist
@@ -300,6 +304,10 @@ class ATVfavorites(Screen):
 				with open(join(TEMPPATH, "%s.png" % boxname), "wb") as f:
 					f.write(response.content)
 		self.updateMenulist()
+
+	def imageDisplay(self, box):
+		picfile = join(TEMPPATH, "%s.png" % box[0])
+		return LoadPixmap(cached=True, path=picfile) if exists(picfile) else None
 
 	def updateMenulist(self):
 		menulist = []
@@ -341,8 +349,11 @@ class ATVfavorites(Screen):
 			self.currindex = self["menu"].getSelectedIndex()
 			if self.boxlist and self.currindex is not None:
 				currplat = self.boxlist[self.currindex][1]
-				platdict = self.platdict[currplat]
-				self["platinfo"].setText("%s: %s, %s: %sh, %s %s, %s: %s" % (_("platform"), currplat, _("last build cycle"), platdict["cycletime"], platdict["boxcounter"], _("boxes"), _("failed"), platdict["boxfailed"]))
+				if currplat in self.platdict.keys():
+					platdict = self.platdict[currplat]
+					self["platinfo"].setText("%s: %s, %s: %sh, %s %s, %s: %s" % (_("platform"), currplat, _("last build cycle"), platdict["cycletime"], platdict["boxcounter"], _("boxes"), _("failed"), platdict["boxfailed"]))
+				else:
+					self["platinfo"].setText("%s: %s, %s: %s, %s %s, %s: %s" % (_("platform"), _("invalid"), _("last build cycle"), _("unclear"), _("unclear"), _("boxes"), _("failed"), _("unclear")))
 
 	def msgboxCB(self, answer):
 		if answer is True and self.boxlist and self.currindex is not None:
@@ -376,7 +387,8 @@ class ATVfavorites(Screen):
 		else:
 			currbox = ("", BS.getplatform(config.plugins.OpenATVstatus.favarch.value))
 		self.oldfavlist = FAVLIST[:]
-		self.session.openWithCallback(self.ATVimageslistCB, ATVimageslist, currbox)
+		if currbox[1] in BS.platlist:
+			self.session.openWithCallback(self.ATVimageslistCB, ATVimageslist, currbox)
 
 	def ATVimageslistCB(self):
 		if self.oldfavlist != FAVLIST:  # any changes when running 'ATVimageslist'?
@@ -482,13 +494,13 @@ class ATVimageslist(Screen):
 		self.currplat = BS.platlist[self.platidx]
 		BS.getbuildinfos(BS.platlist[self.platidx], callback=self.makeimagelist)
 
-	def makeimagelist(self):
+	def makeimagelist(self, htmldict):
 		menulist = []
 		boxlist = []
-		if BS.htmldict:
-			for boxname in BS.htmldict["boxinfo"]:
+		if htmldict:
+			for boxname in htmldict["boxinfo"]:
 				boxlist.append((boxname, self.currplat))
-				bd = BS.htmldict["boxinfo"][boxname]
+				bd = htmldict["boxinfo"][boxname]
 				palette = {"Building": 0x00B028, "Failed": 0xFF0400, "Complete": 0xB0B0B0, "Waiting": 0xFFAE00}
 				color = 0xFDFf00 if [item for item in FAVLIST if item == (boxname, self.currplat)] else palette.get(bd["BuildStatus"], 0xB0B0B0)
 				buildtime = bd["BuildTime"].strip()
