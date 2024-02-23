@@ -88,16 +88,16 @@ class Buildstatus():
 	def getbuildinfos(self, platform, callback=None):  # loads imagesdata from build server
 		self.callback = callback
 		self.error = None
-		if not platform:
-			self.error = "[%s] ERROR in module 'getbuildinfos': '%s" % (MODULE_NAME, "platform is None")
-		self.url = self.platdict["versionurls"][platform]["url"]
-		if callback:
-			if self.error:
-				callback()
-			else:
-				callInThread(self.createdict, callback)
+		if platform in self.platlist:
+			self.url = self.platdict["versionurls"][platform]["url"]
 		else:
-			return None if self.error else self.createdict()
+			self.url = None
+			self.error = "[%s] ERROR in module 'getbuildinfos': '%s" % (MODULE_NAME, "invalid platform '%s'" % platform)
+			return None
+		if callback:
+			callInThread(self.createdict, callback)
+		else:
+			return self.createdict()
 
 	def getplatform(self, currarch):  # get platform from architecture
 		archparts = currarch.split("_")
@@ -123,7 +123,7 @@ class Buildstatus():
 		if callback:
 			if not self.error:
 				print("[%s] buildservers successfully accessed..." % MODULE_NAME)
-			callback()
+			callback(None if self.error else self.htmldict)
 		return None if self.error else self.htmldict
 
 	def htmlparse(self, htmldata):  # parse html-imagesdata & create imagesdict
@@ -266,7 +266,7 @@ def main(argv):  # shell interface
 		elif opt in ("-a", "--architecture"):
 			currarch = arg.lower()
 		elif opt in ("-p", "--platform"):
-			currplat = arg.upper().replace("_", " ")
+			currplat = arg.upper()
 		elif opt in ("-j", "--json"):
 			filename = arg
 		elif opt in ("-b", "--buildbox"):
@@ -288,10 +288,11 @@ def main(argv):  # shell interface
 			print("Error: %s" % BS.error.replace(mainfmt, "").strip())
 			exit()
 	if not currarch:
-		print("Unknown architecture '%s'. Valid is: %s" % (currarch, ", ".join(x.split(" ")[0] for x in archlist)))
+		print("Unknown architecture '%s'. Supported is: %s" % (currarch, ", ".join(x.split(" ")[0] for x in archlist)))
 		exit()
-	if not currplat:
-		print("Unknown platform '%s'. Valid is: %s" % (currarch, ", ".join(x.split(" ")[0] for x in archlist)))
+	currplat = currplat.replace("_", " ")
+	if currplat not in platlist:
+		print("Unknown platform '%s'. Supported is: %s" % (currplat.replace(" ", "_"), ", ".join(x.replace(' ', '_') for x in platlist)))
 		exit()
 	BS.getbuildinfos(currplat)
 	if BS.error:
