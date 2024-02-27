@@ -43,6 +43,7 @@ from .Buildstatus import Buildstatus
 # PLUGIN GLOBALS
 BS = Buildstatus()
 BS.start()
+
 helplist = [x.split(" ")[0] for x in BS.archlist]
 archlist = []
 for arch in helplist:
@@ -188,7 +189,6 @@ class ATVfavorites(Screen):
 		self.platdict = dict()
 		self.currindex = 0
 		self["version"] = Label(VERSION)
-		self["curr_date"] = Label(datetime.now().strftime("%x"))
 		self["platinfo"] = Label()
 		self["red"] = Label("")
 		self["key_red"] = Label(_("remove box from favorites"))

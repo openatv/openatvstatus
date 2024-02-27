@@ -93,7 +93,7 @@ class Buildstatus():
 		else:
 			self.url = None
 			self.error = "[%s] ERROR in module 'getbuildinfos': '%s" % (MODULE_NAME, "invalid platform '%s'" % platform)
-			return None
+			return {}
 		if callback:
 			callInThread(self.createdict, callback)
 		else:
@@ -234,12 +234,9 @@ def main(argv):  # shell interface
 	failed = 0
 	helpstring = "Buildstatus v1.2: try 'python Buildstatus.py -h' for more information"
 	BS = Buildstatus()
-	BS.start()  # interactive call without threading
 	if BS.error:
 		print("Error: %s" % BS.error.replace(mainfmt, "").strip())
 		exit()
-	archlist = BS.archlist
-	platlist = BS.platlist
 	try:
 		opts, args = getopt(argv, "a:p:j:e:bcvsuh", ["architecture =", "platform=", "json =", "evaluate =", "buildbox", "cycle", "verbose", "supported", "usable", "help"])
 	except GetoptError as error:
@@ -261,9 +258,9 @@ def main(argv):  # shell interface
 			"-e, --evaluate <boxname>\tEvaluates time until image will be build for desired box\n"
 			"-s, --supported\t\t\tShow all currently supported architectures\n"
 			"-u, --usable\t\t\tShow all currently usable platforms\n"
-			"-j, --json <filename>\t\tFile output formatted in JSON" % (", ".join(archlist), ", ".join([x.replace(" ", "_") for x in platlist])))
+			"-j, --json <filename>\t\tFile output formatted in JSON")
 			exit()
-		elif opt in ("-a", "--architecture"):
+		if opt in ("-a", "--architecture"):
 			currarch = arg.lower()
 		elif opt in ("-p", "--platform"):
 			currplat = arg.upper()
@@ -282,6 +279,9 @@ def main(argv):  # shell interface
 			supported = True
 		elif opt in ("-u", "--usable"):
 			usable = True
+	BS.start()  # interactive call without threading
+	archlist = BS.archlist
+	platlist = BS.platlist
 	if not currplat:
 		currplat = BS.getplatform(currarch)
 		if BS.error:
