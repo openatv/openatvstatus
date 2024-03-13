@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2024-01-15 18:51+0100\n"
-"PO-Revision-Date: 2024-01-15 18:52+0100\n"
+"POT-Creation-Date: 2024-03-13 19:29+0100\n"
+"PO-Revision-Date: 2024-03-13 19:29+0100\n"
 "Last-Translator: Mr.Servo <mrservo via GitHub.com>\n"
 "Language-Team: \n"
 "Language: de\n"
@@ -16,187 +16,195 @@ msgstr ""
 "Generated-By: pygettext.py 1.5\n"
 "X-Generator: Poedit 3.4.2\n"
 
-#: ..\plugin.py:50
+#: ..\plugin.py:51
 msgid "latest available version"
 msgstr "neuste verfügbare Version"
 
-#: ..\plugin.py:50
+#: ..\plugin.py:51
 msgid "oldest available version"
 msgstr "älteste verfügbare Version"
 
-#: ..\plugin.py:54
+#: ..\plugin.py:55
 msgid "faster"
 msgstr "schneller"
 
-#: ..\plugin.py:54
+#: ..\plugin.py:55
 msgid "normal"
 msgstr "normal"
 
-#: ..\plugin.py:54
+#: ..\plugin.py:55
 msgid "off"
 msgstr "aus"
 
-#: ..\plugin.py:54
+#: ..\plugin.py:55
 msgid "slower"
 msgstr "langsamer"
 
-#: ..\plugin.py:55
+#: ..\plugin.py:56
 msgid "selected box"
 msgstr "ausgewählte Box"
 
-#: ..\plugin.py:56
+#: ..\plugin.py:57
 msgid "absolute time"
 msgstr "absolute Zeit"
 
-#: ..\plugin.py:56
+#: ..\plugin.py:57
 msgid "relative time"
 msgstr "relative Zeit"
 
-#: ..\plugin.py:188
+#: ..\plugin.py:186
 msgid "Favorites"
 msgstr "Favoriten"
 
-#: ..\plugin.py:197 ..\plugin.py:510
+#: ..\plugin.py:194 ..\plugin.py:522
 msgid "remove box from favorites"
 msgstr "Box aus Favoriten entfernen"
 
-#: ..\plugin.py:198 ..\plugin.py:429
+#: ..\plugin.py:195 ..\plugin.py:441
 msgid "Images list"
 msgstr "Imageliste"
 
-#: ..\plugin.py:199 ..\plugin.py:449 ..\plugin.py:649
+#: ..\plugin.py:196 ..\plugin.py:461 ..\plugin.py:661
 msgid "Boxdetails"
 msgstr "Boxdetails"
 
-#: ..\plugin.py:200 ..\plugin.py:450 ..\plugin.py:734
+#: ..\plugin.py:197 ..\plugin.py:462 ..\plugin.py:746
 msgid "Settings"
 msgstr "Einstellungen"
 
-#: ..\plugin.py:288
+#: ..\plugin.py:292
 msgid "No favorites (box, platform) set yet."
 msgstr "Noch keine Favoriten (Box, Plattform) gesetzt."
 
-#: ..\plugin.py:288
+#: ..\plugin.py:292
 msgid "Please select favorite(s) in the image lists."
 msgstr "Bitte Favorit(en) in den Imagelisten auswählen."
 
-#: ..\plugin.py:345
+#: ..\plugin.py:354 ..\plugin.py:356
 msgid "platform"
 msgstr "Plattform"
 
-#: ..\plugin.py:345 ..\plugin.py:527
+#: ..\plugin.py:354 ..\plugin.py:356 ..\plugin.py:539
 msgid "boxes"
 msgstr "Boxen"
 
-#: ..\plugin.py:345 ..\plugin.py:527
+#: ..\plugin.py:354 ..\plugin.py:356 ..\plugin.py:539
 msgid "failed"
 msgstr "fehlgeschlagen"
 
-#: ..\plugin.py:345 ..\plugin.py:527
+#: ..\plugin.py:354 ..\plugin.py:356 ..\plugin.py:539
 msgid "last build cycle"
 msgstr "letzter Bauzyklus"
 
-#: ..\plugin.py:354 ..\plugin.py:574
+#: ..\plugin.py:356
+msgid "invalid"
+msgstr "ungültig"
+
+#: ..\plugin.py:356
+msgid "unclear"
+msgstr "unklar"
+
+#: ..\plugin.py:365 ..\plugin.py:586
 msgid "Box '%s-%s' was sucessfully removed from favorites!"
 msgstr "Box '%s-%s' wurde erfolgreich aus den Favoriten entfernt!"
 
-#: ..\plugin.py:366 ..\plugin.py:581
+#: ..\plugin.py:377 ..\plugin.py:593
 msgid "Do you really want to remove Box '%s-%s' from favorites?"
 msgstr "Wollen Sie die Box '%s-%s' wirklich aus den Favoriten entfernen?"
 
-#: ..\plugin.py:447
+#: ..\plugin.py:459
 msgid "jump to construction site"
 msgstr "springe zur Baustelle"
 
-#: ..\plugin.py:448
+#: ..\plugin.py:460
 msgid "jump to favorite(s)"
 msgstr "springe zu Favorit(en)"
 
-#: ..\plugin.py:474
+#: ..\plugin.py:486
 msgid "previous"
 msgstr "vorherige"
 
-#: ..\plugin.py:475
+#: ..\plugin.py:487
 msgid "current platform"
 msgstr "derzeitige Plattform"
 
-#: ..\plugin.py:476
+#: ..\plugin.py:488
 msgid "next"
 msgstr "nächste"
 
-#: ..\plugin.py:512
+#: ..\plugin.py:524
 msgid "add box to favorites"
 msgstr "Box zu Favoriten hinzufügen"
 
-#: ..\plugin.py:516
+#: ..\plugin.py:528
 msgid "Next build ends in %sh, still %s boxes ahead"
 msgstr "Nächstes Bauende in %sh, zuvor noch %s Box(en)"
 
-#: ..\plugin.py:518
+#: ..\plugin.py:530
 msgid "Server paused, unclear how many boxes are ahead..."
 msgstr "Server angehalten, unklar, wie viele Boxen voraus sind..."
 
-#: ..\plugin.py:523
+#: ..\plugin.py:535
 msgid "Image is under construction, the duration is unclear..."
 msgstr "Image wird gerade gebaut, die Dauer ist unklar..."
 
-#: ..\plugin.py:525
+#: ..\plugin.py:537
 msgid "Image is waiting with priority, the duration is unclear..."
 msgstr "Image wartet mit Vorrang, die Dauer ist unklar..."
 
-#: ..\plugin.py:529
+#: ..\plugin.py:541
 msgid "No box found in this platform!"
 msgstr "Keine Box in dieser Plattform gefunden!"
 
-#: ..\plugin.py:530
+#: ..\plugin.py:542
 msgid "Nothing to do - no build cycle"
 msgstr "Nichts zu tun - kein Bauzyklus"
 
-#: ..\plugin.py:586
+#: ..\plugin.py:598
 msgid "Box '%s-%s' was sucessfully added to favorites!"
 msgstr "Box '%s-%s' wurde erfolgreich zu den Favoriten hinzugefügt!"
 
-#: ..\plugin.py:596
+#: ..\plugin.py:608
 msgid "At the moment no image is built on the platform '%s'!"
 msgstr "Im Moment wird auf der Plattform '%s' kein Image gebaut!"
 
-#: ..\plugin.py:655 ..\plugin.py:737
+#: ..\plugin.py:667 ..\plugin.py:749
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: ..\plugin.py:675 ..\plugin.py:688 ..\plugin.py:695
+#: ..\plugin.py:687 ..\plugin.py:700 ..\plugin.py:707
 msgid "Model"
 msgstr "Modell"
 
-#: ..\plugin.py:676 ..\plugin.py:689
+#: ..\plugin.py:688 ..\plugin.py:701
 msgid "Brand"
 msgstr "Hersteller"
 
-#: ..\plugin.py:677 ..\plugin.py:690
+#: ..\plugin.py:689 ..\plugin.py:702
 msgid "Image"
 msgstr "Image"
 
-#: ..\plugin.py:678 ..\plugin.py:691
+#: ..\plugin.py:690 ..\plugin.py:703
 msgid "Version"
 msgstr "Version"
 
-#: ..\plugin.py:679 ..\plugin.py:692
+#: ..\plugin.py:691 ..\plugin.py:704
 msgid "Chipset"
 msgstr "Chipsatz"
 
-#: ..\plugin.py:696
+#: ..\plugin.py:708
 msgid "Box is OFFLINE! No current details available"
 msgstr "Box ist OFFLINE! Keine aktuellen Details verfügbar"
 
-#: ..\plugin.py:738
+#: ..\plugin.py:750
 msgid "Save settings"
 msgstr "Einstellungen speichern"
 
-#: ..\plugin.py:744
+#: ..\plugin.py:756
 msgid "Preferred box architecture:"
 msgstr "Bevorzugte Boxarchitektur:"
 
-#: ..\plugin.py:744
+#: ..\plugin.py:756
 msgid ""
 "Specify which box architecture should be preferred when the images list will "
 "be called."
@@ -204,11 +212,11 @@ msgstr ""
 "Legen Sie fest, welche Boxarchitektur beim Aufruf der Imagelisten bevorzugt "
 "aufgerufen werden soll."
 
-#: ..\plugin.py:745
+#: ..\plugin.py:757
 msgid "Animation for change of platform:"
 msgstr "Animation bei Plattformwechsel:"
 
-#: ..\plugin.py:745
+#: ..\plugin.py:757
 msgid ""
 "Sets the animation speed for the carousel function when changing platforms "
 "in images list."
@@ -216,14 +224,14 @@ msgstr ""
 "Legt die Animationsgeschwindigkeit für die Karussellfunktion bei "
 "Plattformwechsel in den Imagelisten fest."
 
-#: ..\plugin.py:746
+#: ..\plugin.py:758
 msgid "Show 'NextBuild' as relative time in hours or as absolute time."
 msgstr "Zeige 'NextBuild' als relative Zeit oder als absolute Zeit."
 
-#: ..\plugin.py:746
+#: ..\plugin.py:758
 msgid "Time indication of 'NextBuild':"
 msgstr "Zeitangabe für 'NextBuild':"
 
-#: ..\plugin.py:768
+#: ..\plugin.py:780
 msgid "Current overview of the OpenATV images building servers"
 msgstr "Aktuelle Übersicht über die openATV Image-Bauserver"
