@@ -119,7 +119,7 @@ class Buildstatus():
 			self.htmldict = self.htmlparse(htmldata)  # complete dict of all platform boxes
 		else:
 			self.htmldict = None
-			self.error = "[%s] ERROR in module 'getpage': htmldata is None." % MODULE_NAME
+			self.error = "[%s] ERROR in module 'createdict': htmldata is None." % MODULE_NAME
 		if callback:
 			if not self.error:
 				print("[%s] buildservers successfully accessed..." % MODULE_NAME)
