@@ -11,8 +11,9 @@
 ########################################################################################################
 
 # PYTHON IMPORTS
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 from json import loads
+from locale import setlocale, LC_ALL
 from os import makedirs
 from os.path import join, exists
 from re import search
@@ -51,13 +52,17 @@ for arch in helplist:
 	version = _("oldest available version") if archparts[1] == "oldest" else _("latest available version")
 	archlist.append((arch, "%s (%s)" % (archparts[0].upper(), version)))
 archlist = sorted(list(set(archlist)))
+datechoices = [(f"%d.%m.%Y", "dd.mm.yyyy"), (f"%d/%m/%Y", "dd/mm/yyyy"), (f"%d-%m-%Y", "dd-mm-yyyy"), (f"%Y/%m/%d", "yyyy/mm/dd"),
+			   (f"%Y-%d-%m", "yyyy-mm-dd"), (f"%-d.%-m.%Y", "d.m.yyyy"), (f"%-m/%-d/%Y", "m/d/yyyy"), (f"%Y/%-m/%-d", "yyyy/m/d")]
 config.plugins.OpenATVstatus = ConfigSubsection()
 config.plugins.OpenATVstatus.animate = ConfigSelection(default="50", choices=[("0", _("off")), ("70", _("slower")), ("50", _("normal")), ("30", _("faster"))])
 config.plugins.OpenATVstatus.favarch = ConfigSelection(default="current", choices=[("current", _("selected box"))] + archlist)
 config.plugins.OpenATVstatus.nextbuild = ConfigSelection(default="relative", choices=[("relative", _("relative time")), ("absolute", _("absolute time"))])
+config.plugins.OpenATVstatus.timezone = ConfigSelection(default="local", choices=[("local", _("local time (this box)")), ("server", _("server time (UTC)"))])
+config.plugins.OpenATVstatus.dateformat = ConfigSelection(default=f"%d.%m.%Y", choices=datechoices)
 config.plugins.OpenATVstatus.favboxes = ConfigText(default="", fixed_size=False)
 
-VERSION = "V2.3"
+VERSION = "V2.4"
 MODULE_NAME = __name__.split(".")[-2]
 FAVLIST = [tuple(x.strip() for x in item.replace("(", "").replace(")", "").split(",")) for item in config.plugins.OpenATVstatus.favboxes.value.split(";")] if config.plugins.OpenATVstatus.favboxes.value else []
 PICURL = "https://raw.githubusercontent.com/oe-alliance/remotes/master/boxes/"
@@ -84,8 +89,23 @@ def readSkin(skin):
 	return skintext
 
 
-class Carousel():
+def fmtDateTime(datetimestr):
+	if datetimestr:
+		time = datetime.strptime(datetimestr, f"%Y/%m/%d, %H:%M:%S").replace(tzinfo=timezone.utc)
+		if config.plugins.OpenATVstatus.timezone.value == "local":
+			time = time.astimezone()
+		return f"{time.strftime(f'{config.plugins.OpenATVstatus.dateformat.value}, %H:%M h')}"
+	return datetimestr
 
+
+def roundMinutes(timestr):
+	if timestr:
+		tlist = timestr.split(":")
+		return f"{int(timedelta(hours=int(tlist[0]), minutes=int(tlist[1]), seconds=(int(tlist[2]) + 30) // 60 * 60).total_seconds() / 60)} min"
+	return timestr
+
+
+class Carousel():
 	def __init__(self, delay=50):
 		self.delay = delay
 		self.error = None
@@ -241,6 +261,8 @@ class ATVfavorites(Screen):
 				# for compatibility reasons: use oldest available platform if architecture version-no. is missing (older plugin releases)
 				currplat = [plat for plat in BS.platlist if currarch.split(" ")[0].upper() in plat][0] if len(currarch.split(" ")) == 1 else currarch
 				htmldict = BS.getbuildinfos(currplat)
+				boxpix = None
+				textlist = ["no box", "no platform", "unclear", "no server", "no server", "no server found", "no server found", "no server found", 0xFF0400, None]
 				if htmldict:  # favorites' platform found
 					for box in [item for item in FAVLIST if item[1] in set([item[1]])]:
 						if box[1] in currarch and box[0] in htmldict["boxinfo"]:
@@ -251,17 +273,16 @@ class ATVfavorites(Screen):
 							nextbuild, boxesahead, cycletime, counter, failed = BS.evaluate(box[0])
 							if box[1] not in self.platdict:
 								self.platdict[currplat] = dict()
-								self.platdict[currplat]["cycletime"] = BS.strf_delta(cycletime)
+								self.platdict[currplat]["cycletime"] = f"{BS.strf_delta(cycletime)[:5]} h"
 								self.platdict[currplat]["boxcounter"] = "%s" % counter
 								self.platdict[currplat]["boxfailed"] = "%s" % failed
 							if BS.findbuildbox():
-								nextbuild = (datetime.now() + nextbuild).strftime("%Y/%m/%d, %H:%M:%S") if config.plugins.OpenATVstatus.nextbuild.value == "absolute" and nextbuild else "%sh" % BS.strf_delta(nextbuild)
+								nextbuild = fmtDateTime((datetime.now() + nextbuild).strftime("%Y/%m/%d, %H:%M:%S") if config.plugins.OpenATVstatus.nextbuild.value == "absolute" and nextbuild else BS.strf_delta(nextbuild))
 							else:
 								nextbuild, boxesahead = "server paused", "unclear"
-							buildtime = bd["BuildTime"].strip()
-							buildtime = "%sh" % buildtime if buildtime else ""
+							buildtime = roundMinutes(bd["BuildTime"].strip())
 							statuslist.append(box)  # collect all server status (avoids flickering in menu)
-							textlist = [box[0], box[1], bd["BuildStatus"], buildtime, "%s" % boxesahead, bd["StartBuild"], bd["EndBuild"], nextbuild, color, None]
+							textlist = [box[0], box[1], bd["BuildStatus"], buildtime, "%s" % boxesahead, fmtDateTime(bd["StartBuild"]), fmtDateTime(bd["EndBuild"]), nextbuild, color, None]
 							baselist.append(textlist)
 							boxpix = self.imageDisplay(box)
 							if not boxpix:
@@ -351,7 +372,7 @@ class ATVfavorites(Screen):
 				currplat = self.boxlist[self.currindex][1]
 				if currplat in self.platdict.keys():
 					platdict = self.platdict[currplat]
-					self["platinfo"].setText("%s: %s, %s: %sh, %s %s, %s: %s" % (_("platform"), currplat, _("last build cycle"), platdict["cycletime"], platdict["boxcounter"], _("boxes"), _("failed"), platdict["boxfailed"]))
+					self["platinfo"].setText("%s: %s, %s: %s, %s %s, %s: %s" % (_("platform"), currplat, _("last build cycle"), platdict["cycletime"], platdict["boxcounter"], _("boxes"), _("failed"), platdict["boxfailed"]))
 				else:
 					self["platinfo"].setText("%s: %s, %s: %s, %s %s, %s: %s" % (_("platform"), _("invalid"), _("last build cycle"), _("unclear"), _("unclear"), _("boxes"), _("failed"), _("unclear")))
 
@@ -440,6 +461,7 @@ class ATVimageslist(Screen):
 		Screen.__init__(self, session, self.skin)
 		self.setTitle(_("Images list"))
 		self.boxlist = []
+		self.htmldict = {}
 		self.platidx = BS.platlist.index(self.currplat)
 		self.currindex = 0
 		self.favindex = 0
@@ -492,20 +514,24 @@ class ATVimageslist(Screen):
 
 	def refreshplatlist(self):
 		self.currplat = BS.platlist[self.platidx]
-		BS.getbuildinfos(BS.platlist[self.platidx], callback=self.makeimagelist)
+		BS.getbuildinfos(BS.platlist[self.platidx], callback=self.refreshCallback)
 
-	def makeimagelist(self, htmldict):
+	def refreshCallback(self, htmldict):
+		self.htmldict = htmldict  # for updateList in case config will be changed
+		self.makeimagelist()
+
+	def makeimagelist(self):
 		menulist = []
 		boxlist = []
-		if htmldict:
-			for boxname in htmldict["boxinfo"]:
+		if self.htmldict:
+			for boxname in self.htmldict["boxinfo"]:
 				boxlist.append((boxname, self.currplat))
-				bd = htmldict["boxinfo"][boxname]
+				bd = self.htmldict["boxinfo"][boxname]
 				palette = {"Building": 0x00B028, "Failed": 0xFF0400, "Complete": 0xB0B0B0, "Waiting": 0xFFAE00}
 				color = 0xFDFf00 if [item for item in FAVLIST if item == (boxname, self.currplat)] else palette.get(bd["BuildStatus"], 0xB0B0B0)
-				buildtime = bd["BuildTime"].strip()
-				buildtime = "%sh" % buildtime if buildtime else ""
-				menulist.append(tuple([boxname, bd["BuildStatus"], bd["StartBuild"], bd["StartFeedSync"], bd["EndBuild"], bd["SyncTime"], buildtime, color]))
+				buildtime = roundMinutes(bd["BuildTime"].strip())
+				synctime = roundMinutes(bd["SyncTime"].strip())
+				menulist.append(tuple([boxname, bd["BuildStatus"], fmtDateTime(bd["StartBuild"]), fmtDateTime(bd["StartFeedSync"]), fmtDateTime(bd["EndBuild"]), synctime, buildtime, color]))
 			self["menu"].updateList(menulist)
 			self.boxlist = boxlist
 		if self.currbox:
@@ -525,7 +551,7 @@ class ATVimageslist(Screen):
 			currbox = self.boxlist[self.currindex][0]
 			nextbuild, boxesahead, cycletime, counter, failed = BS.evaluate(currbox)
 			if BS.findbuildbox():
-				boxinfo = _("Next build ends in %sh, still %s boxes ahead") % (BS.strf_delta(nextbuild), boxesahead)
+				boxinfo = _("Next build ends in %s, still %s boxes ahead") % (f"{BS.strf_delta(nextbuild)[:5]} h", boxesahead)
 			else:
 				boxinfo = _("Server paused, unclear how many boxes are ahead...")
 			buildstatus = BS.htmldict["boxinfo"][self.boxlist[self.currindex][0]]["BuildStatus"] if BS.htmldict else ""
@@ -536,7 +562,8 @@ class ATVimageslist(Screen):
 			elif buildstatus == "Waiting":
 				self["boxinfo"].setText(_("Image is waiting with priority, the duration is unclear..."))
 			if cycletime:
-				self["platinfo"].setText("%s: %sh, %s %s, %s: %s" % (_("last build cycle"), BS.strf_delta(cycletime), counter, _("boxes"), _("failed"), failed))
+				cycletime = f"{BS.strf_delta(cycletime)[:5]} h"
+				self["platinfo"].setText("%s: %s, %s %s, %s: %s" % (_("last build cycle"), cycletime, counter, _("boxes"), _("failed"), failed))
 			else:
 				self["boxinfo"].setText(_("No box found in this platform!"))
 				self["platinfo"].setText(_("Nothing to do - no build cycle"))
@@ -649,7 +676,10 @@ class ATVimageslist(Screen):
 		self.close()
 
 	def openConfig(self):
-		self.session.open(ATVconfig)
+		self.session.openWithCallback(self.openConfigCB, ATVconfig)
+
+	def openConfigCB(self):
+		self.makeimagelist()
 
 
 class ATVboxdetails(Screen):
@@ -756,6 +786,8 @@ class ATVconfig(ConfigListScreen, Screen):
 		clist.append(getConfigListEntry(_("Preferred box architecture:"), config.plugins.OpenATVstatus.favarch, _("Specify which box architecture should be preferred when the images list will be called.")))
 		clist.append(getConfigListEntry(_("Animation for change of platform:"), config.plugins.OpenATVstatus.animate, _("Sets the animation speed for the carousel function when changing platforms in images list.")))
 		clist.append(getConfigListEntry(_("Time indication of 'NextBuild':"), config.plugins.OpenATVstatus.nextbuild, _("Show 'NextBuild' as relative time in hours or as absolute time.")))
+		clist.append(getConfigListEntry(_("Time zone:"), config.plugins.OpenATVstatus.timezone, _("Show time as local time or as standard time (UTC) from server.")))
+		clist.append(getConfigListEntry(_("Date format:"), config.plugins.OpenATVstatus.dateformat, _("Show date in desired format.")))
 		self["config"].setList(clist)
 
 	def keyGreen(self):
