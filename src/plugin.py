@@ -91,10 +91,13 @@ def readSkin(skin):
 
 def fmtDateTime(datetimestr):
 	if datetimestr:
-		time = datetime.strptime(datetimestr, f"%Y/%m/%d, %H:%M:%S").replace(tzinfo=timezone.utc)
-		if config.plugins.OpenATVstatus.timezone.value == "local":
-			time = time.astimezone()
-		return f"{time.strftime(f'{config.plugins.OpenATVstatus.dateformat.value}, %H:%M h')}"
+		if datetimestr != "00:00:00":
+			time = datetime.strptime(datetimestr, f"%Y/%m/%d, %H:%M:%S").replace(tzinfo=timezone.utc)
+			if config.plugins.OpenATVstatus.timezone.value == "local":
+				time = time.astimezone()
+			return f"{time.strftime(f'{config.plugins.OpenATVstatus.dateformat.value}, %H:%M h')}"
+		else:
+			datetimestr = ""
 	return datetimestr
 
 
