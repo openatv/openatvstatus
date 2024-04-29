@@ -52,14 +52,14 @@ for arch in helplist:
 	version = _("oldest available version") if archparts[1] == "oldest" else _("latest available version")
 	archlist.append((arch, "%s (%s)" % (archparts[0].upper(), version)))
 archlist = sorted(list(set(archlist)))
-datechoices = [(f"%d.%m.%Y", "dd.mm.yyyy"), (f"%d/%m/%Y", "dd/mm/yyyy"), (f"%d-%m-%Y", "dd-mm-yyyy"), (f"%Y/%m/%d", "yyyy/mm/dd"),
-			   (f"%Y-%d-%m", "yyyy-mm-dd"), (f"%-d.%-m.%Y", "d.m.yyyy"), (f"%-m/%-d/%Y", "m/d/yyyy"), (f"%Y/%-m/%-d", "yyyy/m/d")]
+datechoices = [("%d.%m.%Y", "dd.mm.yyyy"), ("%d/%m/%Y", "dd/mm/yyyy"), ("%d-%m-%Y", "dd-mm-yyyy"), ("%Y/%m/%d", "yyyy/mm/dd"),
+			   ("%Y-%d-%m", "yyyy-mm-dd"), ("%-d.%-m.%Y", "d.m.yyyy"), ("%-m/%-d/%Y", "m/d/yyyy"), ("%Y/%-m/%-d", "yyyy/m/d")]
 config.plugins.OpenATVstatus = ConfigSubsection()
 config.plugins.OpenATVstatus.animate = ConfigSelection(default="50", choices=[("0", _("off")), ("70", _("slower")), ("50", _("normal")), ("30", _("faster"))])
 config.plugins.OpenATVstatus.favarch = ConfigSelection(default="current", choices=[("current", _("selected box"))] + archlist)
 config.plugins.OpenATVstatus.nextbuild = ConfigSelection(default="relative", choices=[("relative", _("relative time")), ("absolute", _("absolute time"))])
 config.plugins.OpenATVstatus.timezone = ConfigSelection(default="local", choices=[("local", _("local time (this box)")), ("server", _("server time (UTC)"))])
-config.plugins.OpenATVstatus.dateformat = ConfigSelection(default=f"%d.%m.%Y", choices=datechoices)
+config.plugins.OpenATVstatus.dateformat = ConfigSelection(default="%d.%m.%Y", choices=datechoices)
 config.plugins.OpenATVstatus.favboxes = ConfigText(default="", fixed_size=False)
 
 VERSION = "V2.4"
@@ -92,7 +92,7 @@ def readSkin(skin):
 def fmtDateTime(datetimestr):
 	if datetimestr:
 		if datetimestr != "00:00:00":
-			time = datetime.strptime(datetimestr, f"%Y/%m/%d, %H:%M:%S").replace(tzinfo=timezone.utc)
+			time = datetime.strptime(datetimestr, "%Y/%m/%d, %H:%M:%S").replace(tzinfo=timezone.utc)
 			if config.plugins.OpenATVstatus.timezone.value == "local":
 				time = time.astimezone()
 			return f"{time.strftime(f'{config.plugins.OpenATVstatus.dateformat.value}, %H:%M h')}"
@@ -104,7 +104,7 @@ def fmtDateTime(datetimestr):
 def roundMinutes(timestr):
 	if timestr:
 		tlist = timestr.split(":")
-		return f"{int(timedelta(hours=int(tlist[0]), minutes=int(tlist[1]), seconds=(int(tlist[2]) + 30) // 60 * 60).total_seconds() / 60)} min"
+		timestr = f"{int(timedelta(hours=int(tlist[0]), minutes=int(tlist[1]), seconds=(int(tlist[2]) + 30) // 60 * 60).total_seconds() / 60)} min"
 	return timestr
 
 
@@ -280,7 +280,7 @@ class ATVfavorites(Screen):
 								self.platdict[currplat]["boxcounter"] = "%s" % counter
 								self.platdict[currplat]["boxfailed"] = "%s" % failed
 							if BS.findbuildbox():
-								nextbuild = fmtDateTime((datetime.now() + nextbuild).strftime("%Y/%m/%d, %H:%M:%S") if config.plugins.OpenATVstatus.nextbuild.value == "absolute" and nextbuild else BS.strf_delta(nextbuild))
+								nextbuild = fmtDateTime((datetime.now() + nextbuild).strftime("%Y/%m/%d, %H:%M:%S")) if config.plugins.OpenATVstatus.nextbuild.value == "absolute" and nextbuild else f"{BS.strf_delta(nextbuild)[:5]} h"
 							else:
 								nextbuild, boxesahead = "server paused", "unclear"
 							buildtime = roundMinutes(bd["BuildTime"].strip())
