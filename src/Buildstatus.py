@@ -12,7 +12,7 @@
 #########################################################################################################
 
 # PYTHON IMPORTS
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from getopt import getopt, GetoptError
 from json import loads, dump
 from re import search, findall, S, M
@@ -250,8 +250,8 @@ def main(argv):  # shell interface
 		if opt == "-h":
 			print("Usage  : python Buildstatus.py [options...] <data>\n"
 			"Example: python Buildstatus.py -a arm_latest -v -e gbue4k -s -u\n"
-			"-a, --architecture <data>\tUse architecture: %s\n"
-			"-p, --platform <data>\t\tUse platform: %s\n"
+			"-a, --architecture <data>\tUse architecture\n"
+			"-p, --platform <data>\t\tUse platform\n"
 			"-b, --buildbox\t\t\tShow the box for which currently built an image\n"
 			"-c, --cycle\t\t\tShow the estimated duration of a complete build cycle\n"
 			"-v, --verbose\t\t\tPerform with complete image build status overview\n"
@@ -287,12 +287,13 @@ def main(argv):  # shell interface
 		if BS.error:
 			print("Error: %s" % BS.error.replace(mainfmt, "").strip())
 			exit()
-	if not currarch:
+	if currarch not in archlist:
 		print("Unknown architecture '%s'. Supported is: %s" % (currarch, ", ".join(x.split(" ")[0] for x in archlist)))
 		exit()
-	currplat = currplat.replace("_", " ")
-	if currplat not in platlist:
-		print("Unknown platform '%s'. Supported is: %s" % (currplat.replace(" ", "_"), ", ".join(x.replace(' ', '_') for x in platlist)))
+	if currplat:
+		currplat = currplat.replace("_", " ")
+	if currplat and currplat not in platlist:
+		print("Unknown platform '%s'. Supported is: %s" % (currplat.replace(" ", "_").lower(), ", ".join(x.replace(' ', '_').lower() for x in platlist)))
 		exit()
 	BS.getbuildinfos(currplat)
 	if BS.error:
