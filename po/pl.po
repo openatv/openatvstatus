@@ -1,230 +1,95 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR ORGANIZATION
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
-"POT-Creation-Date: 2024-04-28 00:54+0200\n"
-"PO-Revision-Date: 2024-04-28 00:58+0200\n"
-"Last-Translator: Mr.Servo <mrservo via GitHub.com>\n"
+"Project-Id-Version: OpenATVstatus\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2025-01-24 17:52+0000\n"
+"Last-Translator: pololoko111\n"
 "Language-Team: endriu\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: pygettext.py 1.5\n"
-"X-Generator: Poedit 3.4.2\n"
+"X-Generator: Poedit 3.5\n"
 
-#: ..\plugin.py:52
-msgid "latest available version"
-msgstr "najnowsza dostępna wersja"
-
-#: ..\plugin.py:52
-msgid "oldest available version"
-msgstr "najstarsza dostępna wersja"
-
-#: ..\plugin.py:58
-msgid "faster"
-msgstr "szybciej"
-
-#: ..\plugin.py:58
-msgid "normal"
-msgstr "normalnie"
-
-#: ..\plugin.py:58
-msgid "off"
-msgstr "wyłącz"
-
-#: ..\plugin.py:58
-msgid "slower"
-msgstr "wolniej"
-
-#: ..\plugin.py:59
-msgid "selected box"
-msgstr "wybrany Box"
-
-#: ..\plugin.py:60
-msgid "absolute time"
-msgstr "czas bezwzględny"
-
-#: ..\plugin.py:60
-msgid "relative time"
-msgstr "czas względny"
-
-#: ..\plugin.py:61
-msgid "local time (this box)"
-msgstr "czas lokalny (to pole)"
-
-#: ..\plugin.py:61
-msgid "server time (UTC)"
-msgstr "czas serwera (UTC)"
-
-#: ..\plugin.py:209
-msgid "Favorites"
-msgstr "Ulubione"
-
-#: ..\plugin.py:217 ..\plugin.py:551
-msgid "remove box from favorites"
-msgstr "usuń Box z ulubionych"
-
-#: ..\plugin.py:218 ..\plugin.py:465
-msgid "Images list"
-msgstr "Lista obrazów"
-
-#: ..\plugin.py:219 ..\plugin.py:486 ..\plugin.py:694
-msgid "Boxdetails"
-msgstr "Szczegóły Boxa"
-
-#: ..\plugin.py:220 ..\plugin.py:487 ..\plugin.py:779
-msgid "Settings"
-msgstr "Ustawienia"
-
-#: ..\plugin.py:316
-msgid "No favorites (box, platform) set yet."
-msgstr "Nie ustawiono jeszcze ulubionych (box, platforma)."
-
-#: ..\plugin.py:316
-msgid "Please select favorite(s) in the image lists."
-msgstr "Wybierz ulubione z list obrazów."
-
-#: ..\plugin.py:378 ..\plugin.py:380
-msgid "platform"
-msgstr "platforma"
-
-#: ..\plugin.py:378 ..\plugin.py:380 ..\plugin.py:569
-msgid "boxes"
-msgstr "boxy"
-
-#: ..\plugin.py:378 ..\plugin.py:380 ..\plugin.py:569
-msgid "failed"
-msgstr "błąd"
-
-#: ..\plugin.py:378 ..\plugin.py:380 ..\plugin.py:569
-msgid "last build cycle"
-msgstr "ostatni cykl budowy"
-
-#: ..\plugin.py:380
-msgid "invalid"
-msgstr "nieważny"
-
-#: ..\plugin.py:380
-msgid "unclear"
-msgstr "niejasny"
-
-#: ..\plugin.py:389 ..\plugin.py:616
-msgid "Box '%s-%s' was sucessfully removed from favorites!"
-msgstr "Box „%s-%s” został pomyślnie usunięty z ulubionych!"
-
-#: ..\plugin.py:401 ..\plugin.py:623
-msgid "Do you really want to remove Box '%s-%s' from favorites?"
-msgstr "Na pewno chcesz usunąć Box „%s-%s” z ulubionych?"
-
-#: ..\plugin.py:484
-msgid "jump to construction site"
-msgstr "skocz do strony budowy"
-
-#: ..\plugin.py:485
-msgid "jump to favorite(s)"
-msgstr "skocz do ulubionych"
-
-#: ..\plugin.py:511
-msgid "previous"
-msgstr "poprzedni"
-
-#: ..\plugin.py:512
-msgid "current platform"
-msgstr "aktualna platforma"
-
-#: ..\plugin.py:513
-msgid "next"
-msgstr "następny"
-
-#: ..\plugin.py:553
-msgid "add box to favorites"
-msgstr "dodaj Box do ulubionych"
-
-#: ..\plugin.py:557
-msgid "Next build ends in %s, still %s boxes ahead"
-msgstr "Następna kompilacja kończy się za %s, nadal %s boxy wcześniej"
-
-#: ..\plugin.py:559
-msgid "Server paused, unclear how many boxes are ahead..."
-msgstr "Serwer wstrzymany, nie wiadomo ile skrzynek przed nami..."
-
-#: ..\plugin.py:564
-msgid "Image is under construction, the duration is unclear..."
-msgstr "Image jest w budowie, czas trwania jest niejasny..."
-
-#: ..\plugin.py:566
-msgid "Image is waiting with priority, the duration is unclear..."
-msgstr "Image czeka z priorytetem, czas trwania jest niejasny..."
-
-#: ..\plugin.py:571
-msgid "No box found in this platform!"
-msgstr "Nie znaleziono boxa na tej platformie!"
-
-#: ..\plugin.py:572
-msgid "Nothing to do - no build cycle"
-msgstr "Nic do zrobienia - brak cyklu budowania"
-
-#: ..\plugin.py:628
-msgid "Box '%s-%s' was sucessfully added to favorites!"
-msgstr "Box „%s-%s” został pomyślnie dodany do ulubionych!"
-
-#: ..\plugin.py:638
-msgid "At the moment no image is built on the platform '%s'!"
-msgstr "W tej chwili żaden obraz nie jest tworzony na platformie „%s”!"
-
-#: ..\plugin.py:700 ..\plugin.py:782
-msgid "Cancel"
-msgstr "Anuluj"
-
-#: ..\plugin.py:720 ..\plugin.py:733 ..\plugin.py:740
-msgid "Model"
-msgstr "Model"
-
-#: ..\plugin.py:721 ..\plugin.py:734
-msgid "Brand"
-msgstr "Producent"
-
-#: ..\plugin.py:722 ..\plugin.py:735
-msgid "Image"
-msgstr "Obraz"
-
-#: ..\plugin.py:723 ..\plugin.py:736
-msgid "Version"
-msgstr "Wersja"
-
-#: ..\plugin.py:724 ..\plugin.py:737
-msgid "Chipset"
-msgstr "Chipset"
-
-#: ..\plugin.py:741
-msgid "Box is OFFLINE! No current details available"
-msgstr "Box jest OFFLINE! Brak aktualnych szczegółów"
-
-#: ..\plugin.py:783
-msgid "Save settings"
-msgstr "Zapisz ustawienia"
-
-#: ..\plugin.py:789
-msgid "Preferred box architecture:"
-msgstr "Preferowana architektura pudełka:"
-
-#: ..\plugin.py:789
-msgid ""
-"Specify which box architecture should be preferred when the images list will "
-"be called."
-msgstr ""
-"Określa, która architektura pudełka powinna być preferowana podczas "
-"wywoływania listy obrazów."
-
-#: ..\plugin.py:790
 msgid "Animation for change of platform:"
 msgstr "Animacja w czasie zmiany platformy:"
 
-#: ..\plugin.py:790
+msgid "At the moment no image is built on the platform '%s'!"
+msgstr "W tej chwili żaden obraz nie jest tworzony na platformie '%s'!"
+
+msgid "Box '%s-%s' was sucessfully added to favorites!"
+msgstr "'%s-%s' został pomyślnie dodany do ulubionych!"
+
+msgid "Box '%s-%s' was sucessfully removed from favorites!"
+msgstr "'%s-%s' został pomyślnie usunięty z ulubionych!"
+
+msgid "Box is OFFLINE! No current details available"
+msgstr "Box jest OFFLINE! Brak aktualnych szczegółów"
+
+msgid "Boxdetails"
+msgstr "Szczegóły"
+
+msgid "Brand"
+msgstr "Producent"
+
+msgid "Cancel"
+msgstr "Anuluj"
+
+msgid "Chipset"
+msgstr "Chipset"
+
+msgid "Current overview of the OpenATV images building servers"
+msgstr "Bieżący przegląd serwerów do tworzenia obrazów OATV"
+
+msgid "Date format:"
+msgstr "Format daty:"
+
+msgid "Do you really want to remove Box '%s-%s' from favorites?"
+msgstr "Na pewno chcesz usunąć '%s-%s' z ulubionych?"
+
+msgid "Favorites"
+msgstr "Ulubione"
+
+msgid "Image"
+msgstr "Obraz"
+
+msgid "Image is under construction, the duration is unclear..."
+msgstr "Obraz jest w budowie, czas trwania jest niejasny..."
+
+msgid "Image is waiting with priority, the duration is unclear..."
+msgstr "Obraz czeka z priorytetem, czas trwania jest niejasny..."
+
+msgid "Images list"
+msgstr "Lista obrazów"
+
+msgid "Model"
+msgstr "Model"
+
+msgid "Next build ends in %s, still %s boxes ahead"
+msgstr "Następna kompilacja kończy się za %s, nadal %s boxy wcześniej"
+
+msgid "No box found in this platform!"
+msgstr "Nie znaleziono boxa na tej platformie!"
+
+msgid "No favorites (box, platform) set yet."
+msgstr "Nie ustawiono jeszcze ulubionych (box, platforma)."
+
+msgid "Nothing to do - no build cycle"
+msgstr "Nic do zrobienia - brak cyklu budowania"
+
+msgid "Please select favorite(s) in the image lists."
+msgstr "Wybierz ulubione z list obrazów."
+
+msgid "Preferred box architecture:"
+msgstr "Preferowana architektura:"
+
+msgid "Save settings"
+msgstr "Zapisz ustawienia"
+
+msgid "Server paused, unclear how many boxes are ahead..."
+msgstr "Serwer wstrzymany, nie wiadomo ile skrzynek przed nami..."
+
 msgid ""
 "Sets the animation speed for the carousel function when changing platforms "
 "in images list."
@@ -232,33 +97,105 @@ msgstr ""
 "Ustawia prędkość animacji dla funkcji karuzeli podczas zmiany platform na "
 "liście obrazów."
 
-#: ..\plugin.py:791
+msgid "Settings"
+msgstr "Ustawienia"
+
 msgid "Show 'NextBuild' as relative time in hours or as absolute time."
 msgstr ""
 "Pokaż \"NextBuild\" jako czas względny w godzinach lub jako czas bezwzględny."
 
-#: ..\plugin.py:791
-msgid "Time indication of 'NextBuild':"
-msgstr "Wskazanie czasu \"NextBuild\":"
+msgid "Show date in desired format."
+msgstr "Wyświetlanie daty w wybranym formacie."
 
-#: ..\plugin.py:792
 msgid "Show time as local time or as standard time (UTC) from server."
 msgstr ""
 "Wyświetlanie czasu jako czasu lokalnego lub czasu standardowego (UTC) z "
 "serwera."
 
-#: ..\plugin.py:792
+msgid ""
+"Specify which box architecture should be preferred when the images list will "
+"be called."
+msgstr ""
+"Określa, która architektura powinna być preferowana podczas wywoływania "
+"listy obrazów."
+
+msgid "Time indication of 'NextBuild':"
+msgstr "Wskazanie czasu \"NextBuild\":"
+
 msgid "Time zone:"
 msgstr "Strefa czasowa:"
 
-#: ..\plugin.py:793
-msgid "Date format:"
-msgstr "Format daty:"
+msgid "Version"
+msgstr "Wersja"
 
-#: ..\plugin.py:793
-msgid "Show date in desired format."
-msgstr "Wyświetlanie daty w wybranym formacie."
+msgid "absolute time"
+msgstr "Czas bezwzględny"
 
-#: ..\plugin.py:815
-msgid "Current overview of the OpenATV images building servers"
-msgstr "Bieżący przegląd serwerów do tworzenia obrazów OATV"
+msgid "add box to favorites"
+msgstr "Dodaj Box do ulubionych"
+
+msgid "boxes"
+msgstr "Boxy"
+
+msgid "current platform"
+msgstr "Aktualna platforma"
+
+msgid "failed"
+msgstr "Błąd"
+
+msgid "faster"
+msgstr "Szybciej"
+
+msgid "invalid"
+msgstr "Nieważny"
+
+msgid "jump to construction site"
+msgstr "Skocz do strony budowy"
+
+msgid "jump to favorite(s)"
+msgstr "Skocz do ulubionych"
+
+msgid "last build cycle"
+msgstr "Ostatni cykl budowy"
+
+msgid "latest available version"
+msgstr "Najnowsza dostępna wersja"
+
+msgid "local time (this box)"
+msgstr "Czas lokalny"
+
+msgid "next"
+msgstr "Następny"
+
+msgid "normal"
+msgstr "Normalny"
+
+msgid "off"
+msgstr "Wyłączony"
+
+msgid "oldest available version"
+msgstr "Najstarsza dostępna wersja"
+
+msgid "platform"
+msgstr "Platforma"
+
+msgid "previous"
+msgstr "Poprzedni"
+
+msgid "relative time"
+msgstr "Czas względny"
+
+msgid "remove box from favorites"
+msgstr "Uuń Box z ulubionych"
+
+msgid "selected box"
+msgstr "Wybrany Box"
+
+msgid "server time (UTC)"
+msgstr "Czas serwera (UTC)"
+
+msgid "slower"
+msgstr "Wolniej"
+
+msgid "unclear"
+msgstr "Niejasny"
