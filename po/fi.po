@@ -1,0 +1,257 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenATVstatus\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2025-01-25 01:17+0200\n"
+"Last-Translator: tomppaa <http://www.huoltovalikko.com/>\n"
+"Language-Team: tomppaa\n"
+"Language: fi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+"X-Generator: Poedit 3.5\n"
+
+#: ..\plugin.py:52
+msgid "latest available version"
+msgstr "uusin saatavilla oleva versio"
+
+#: ..\plugin.py:52
+msgid "oldest available version"
+msgstr "vanhin saatavilla oleva versio"
+
+#: ..\plugin.py:58
+msgid "faster"
+msgstr "nopeampi"
+
+#: ..\plugin.py:58
+msgid "normal"
+msgstr "normaali"
+
+#: ..\plugin.py:58
+msgid "off"
+msgstr "pois"
+
+#: ..\plugin.py:58
+msgid "slower"
+msgstr "hitaampi"
+
+#: ..\plugin.py:59
+msgid "selected box"
+msgstr "valitse digiboksi"
+
+#: ..\plugin.py:60
+msgid "absolute time"
+msgstr "absoluuttinen aika"
+
+#: ..\plugin.py:60
+msgid "relative time"
+msgstr "suhteellinen aika"
+
+#: ..\plugin.py:61
+msgid "local time (this box)"
+msgstr "paikallinen aika (tämä digiboksi)"
+
+#: ..\plugin.py:61
+msgid "server time (UTC)"
+msgstr "palvelin aika (UTC)"
+
+#: ..\plugin.py:209
+msgid "Favorites"
+msgstr "Suosikit"
+
+#: ..\plugin.py:217 ..\plugin.py:551
+msgid "remove box from favorites"
+msgstr "poista digiboksi suosikeista"
+
+#: ..\plugin.py:218 ..\plugin.py:465
+msgid "Images list"
+msgstr "Image lista"
+
+#: ..\plugin.py:219 ..\plugin.py:486 ..\plugin.py:694
+msgid "Boxdetails"
+msgstr "Digiboksin tiedot"
+
+#: ..\plugin.py:220 ..\plugin.py:487 ..\plugin.py:779
+msgid "Settings"
+msgstr "Asetukset"
+
+#: ..\plugin.py:316
+msgid "No favorites (box, platform) set yet."
+msgstr "Ei suosikkeja (digiboksi, alusta) ei ole vielä asetettu."
+
+#: ..\plugin.py:316
+msgid "Please select favorite(s) in the image lists."
+msgstr "Valitse suosiki image listasta."
+
+#: ..\plugin.py:378 ..\plugin.py:380
+msgid "platform"
+msgstr "alusta"
+
+#: ..\plugin.py:378 ..\plugin.py:380 ..\plugin.py:569
+msgid "boxes"
+msgstr "digiboksi"
+
+#: ..\plugin.py:378 ..\plugin.py:380 ..\plugin.py:569
+msgid "failed"
+msgstr "epäonnistui"
+
+#: ..\plugin.py:378 ..\plugin.py:380 ..\plugin.py:569
+msgid "last build cycle"
+msgstr "viimeisin build"
+
+#: ..\plugin.py:380
+msgid "invalid"
+msgstr "virheellinen"
+
+#: ..\plugin.py:380
+msgid "unclear"
+msgstr "epäselvä"
+
+#: ..\plugin.py:389 ..\plugin.py:616
+msgid "Box '%s-%s' was sucessfully removed from favorites!"
+msgstr "Digiboksi '%s-%s' poistettiin onnistuneesti suosikeista!"
+
+#: ..\plugin.py:401 ..\plugin.py:623
+msgid "Do you really want to remove Box '%s-%s' from favorites?"
+msgstr "Haluatko varmasti poistaa digiboksin '%s-%s' pois suosikeista?"
+
+#: ..\plugin.py:484
+msgid "jump to construction site"
+msgstr "siirry työmaa puolelle"
+
+#: ..\plugin.py:485
+msgid "jump to favorite(s)"
+msgstr "siirry suosikkeihin"
+
+#: ..\plugin.py:511
+msgid "previous"
+msgstr "edellinen"
+
+#: ..\plugin.py:512
+msgid "current platform"
+msgstr "nykyinen alusta"
+
+#: ..\plugin.py:513
+msgid "next"
+msgstr "seuraava"
+
+#: ..\plugin.py:553
+msgid "add box to favorites"
+msgstr "lisää digiboksi suosikkeihin"
+
+#: ..\plugin.py:557
+msgid "Next build ends in %s, still %s boxes ahead"
+msgstr "Seuraava build päättyy %s, jäljellä %s digiboksia edellä"
+
+#: ..\plugin.py:559
+msgid "Server paused, unclear how many boxes are ahead..."
+msgstr "Palvelin keskeytetty, ei tiedetä kuinka monta digiboksi on edellä.."
+
+#: ..\plugin.py:564
+msgid "Image is under construction, the duration is unclear..."
+msgstr "Image on rakenteilla, kesto on vielä epäselvä..."
+
+#: ..\plugin.py:566
+msgid "Image is waiting with priority, the duration is unclear..."
+msgstr "Image odottaa prioriteetillä, kesto on vielä epäselvä..."
+
+#: ..\plugin.py:571
+msgid "No box found in this platform!"
+msgstr "Digiboksia ei löydy tältä alustalta!"
+
+#: ..\plugin.py:572
+msgid "Nothing to do - no build cycle"
+msgstr "Ei mitään tehtävää - ei buildia saatavilla"
+
+#: ..\plugin.py:628
+msgid "Box '%s-%s' was sucessfully added to favorites!"
+msgstr "Digiboksi '%s-%s' lisättiin onnistuneesti suosikkeihin!"
+
+#: ..\plugin.py:638
+msgid "At the moment no image is built on the platform '%s'!"
+msgstr "Tällä hetkellä alustalla '%s' ei ole rakennettua imagea!"
+
+#: ..\plugin.py:700 ..\plugin.py:782
+msgid "Cancel"
+msgstr "Peruuta"
+
+#: ..\plugin.py:720 ..\plugin.py:733 ..\plugin.py:740
+msgid "Model"
+msgstr "Malli"
+
+#: ..\plugin.py:721 ..\plugin.py:734
+msgid "Brand"
+msgstr "Valmistaja"
+
+#: ..\plugin.py:722 ..\plugin.py:735
+msgid "Image"
+msgstr "Image"
+
+#: ..\plugin.py:723 ..\plugin.py:736
+msgid "Version"
+msgstr "Versio"
+
+#: ..\plugin.py:724 ..\plugin.py:737
+msgid "Chipset"
+msgstr "Piirisarja"
+
+#: ..\plugin.py:741
+msgid "Box is OFFLINE! No current details available"
+msgstr "Digiboksi on pois netistä! Nykyisiä tietoja ei ole saatavilla"
+
+#: ..\plugin.py:783
+msgid "Save settings"
+msgstr "Tallenna asetukset"
+
+#: ..\plugin.py:789
+msgid "Preferred box architecture:"
+msgstr "Ensisijainen digiboksin arkkitehtuuri:"
+
+#: ..\plugin.py:789
+msgid ""
+"Specify which box architecture should be preferred when the images list will "
+"be called."
+msgstr ""
+"Määritä, mikä digiboksin arkkitehtuuri tulisi valita, kun image listaa "
+"etsitään."
+
+#: ..\plugin.py:790
+msgid "Animation for change of platform:"
+msgstr "Animaatio alustan vaihdolle:"
+
+#: ..\plugin.py:790
+msgid ""
+"Sets the animation speed for the carousel function when changing platforms "
+"in images list."
+msgstr "Asettaa animaation nopeus kun alustaa vaihdetaan image listassa."
+
+#: ..\plugin.py:791
+msgid "Show 'NextBuild' as relative time in hours or as absolute time."
+msgstr ""
+"Näytä \"Seuraava Buildi\" kuin suhteellinen aika tunteina tai absoluuttisena "
+"aikana."
+
+#: ..\plugin.py:791
+msgid "Time indication of 'NextBuild':"
+msgstr "Ajan ilmaisu seuraavasta Image versiosta:"
+
+#: ..\plugin.py:792
+msgid "Show time as local time or as standard time (UTC) from server."
+msgstr "Näytä aika paikallisena aikana tai palvelimen (UTC) aikana."
+
+#: ..\plugin.py:792
+msgid "Time zone:"
+msgstr "Aikavyöhyke:"
+
+#: ..\plugin.py:793
+msgid "Date format:"
+msgstr "Päivämäärä muodossa:"
+
+#: ..\plugin.py:793
+msgid "Show date in desired format."
+msgstr "Näytä päivämäärä halutussa muodossa."
+
+#: ..\plugin.py:815
+msgid "Current overview of the OpenATV images building servers"
+msgstr "Nykyinen yleiskatsaus OpenATV palvelimista"
