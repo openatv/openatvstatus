@@ -186,7 +186,7 @@ msgid "relative time"
 msgstr "Czas względny"
 
 msgid "remove box from favorites"
-msgstr "Uuń Box z ulubionych"
+msgstr "Usuń Box z ulubionych"
 
 msgid "selected box"
 msgstr "Wybrany Box"
