@@ -12,7 +12,7 @@
 #########################################################################################################
 
 # PYTHON IMPORTS
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 from getopt import getopt, GetoptError
 from json import loads, dump
 from re import search, findall, S, M
@@ -186,7 +186,7 @@ class Buildstatus():
 			time = boxinfo[boxname]["BuildTime"].strip().split(":")
 			if len(time) < 3:
 				time = [0, 0, 0]
-			if boxname == buildbox:  # aktuell gebaute Box
+			if boxname == buildbox:  # currently built box
 				collect = True
 				if not foundbox:
 					nextbuild = timedelta()  # reset
@@ -198,7 +198,7 @@ class Buildstatus():
 				h, m, s = time
 				nextbuild += timedelta(hours=int(h), minutes=int(m), seconds=int(s))
 				boxesahead += 1
-			if boxname == box:  # eigener Boxname
+			if boxname == box:  # own box name
 				foundbox = True
 				collect = False
 			if "Failed" in boxinfo[boxname]["BuildStatus"]:

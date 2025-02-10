@@ -63,7 +63,7 @@ config.plugins.OpenATVstatus.favboxes = ConfigText(default="", fixed_size=False)
 
 
 class ATVglobs():
-	VERSION = "V2.5"
+	VERSION = "V2.6"
 	MODULE_NAME = __name__.split(".")[-2]
 	FAVLIST = [tuple(x.strip() for x in item.replace("(", "").replace(")", "").split(",")) for item in config.plugins.OpenATVstatus.favboxes.value.split(";")] if config.plugins.OpenATVstatus.favboxes.value else []
 	PICURL = "https://raw.githubusercontent.com/oe-alliance/remotes/master/boxes/"
@@ -100,7 +100,8 @@ class ATVglobs():
 
 	def roundMinutes(self, timestr):
 		if timestr:
-			tlist = timestr.split(":")
+			timestr = timestr.split(",")  # handle those exceptions: e.g. '-1 day, 21:09:24'
+			tlist = timestr[0].split(":") if len(timestr) == 1 else timestr[1].split(":")
 			timestr = f"{int(timedelta(hours=int(tlist[0]), minutes=int(tlist[1]), seconds=(int(tlist[2]) + 30) // 60 * 60).total_seconds() / 60)} min"
 		return timestr
 
