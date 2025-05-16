@@ -145,11 +145,14 @@ class Buildstatus():
 		for datablock in datablocks:
 			boxinfo = findall(r'<td\s*class="(.*?)">(.*?)</td>', datablock, flags=M)
 			dateset = findall(r'<td>(.*?)</td>', datablock)
-			boxname = boxinfo[0][1]
+			boxname = boxinfo[1][1]
 			htmldict["boxinfo"][boxname] = dict()  # boxname
-			htmldict["boxinfo"][boxname]["BoxNameClass"] = boxinfo[0][0]
-			htmldict["boxinfo"][boxname]["BuildStatus"] = boxinfo[1][1]
-			htmldict["boxinfo"][boxname]["BuildClass"] = boxinfo[1][0]
+			htmldict["boxinfo"][boxname]["No"] = boxinfo[0][1]
+			htmldict["boxinfo"][boxname]["BoxNameClass"] = boxinfo[1][0]
+			htmldict["boxinfo"][boxname]["OemName"] = boxinfo[2][1]
+			htmldict["boxinfo"][boxname]["OemNameClass"] = boxinfo[2][0]
+			htmldict["boxinfo"][boxname]["BuildStatus"] = boxinfo[3][1]
+			htmldict["boxinfo"][boxname]["BuildClass"] = boxinfo[3][0]
 			htmldict["boxinfo"][boxname]["StartBuild"] = dateset[0]
 			htmldict["boxinfo"][boxname]["StartFeedSync"] = dateset[1]
 			htmldict["boxinfo"][boxname]["EndBuild"] = dateset[2]
@@ -300,19 +303,19 @@ def main(argv):  # shell interface
 		print("Error: %s" % BS.error.replace(mainfmt, "").strip())
 		exit()
 	if BS.htmldict and verbose:
-		separator = "+--------------------+--------------+----------------------+----------------------+----------------------+-----------+------------+"
-		row = "| {0:<18} | {1:<12} | {2:<20} | {3:<20} | {4:<20} | {5:<9} | {6:<10} |"
-		print("%s%s%s" % ("+", "-" * 129, "+"))
-		print("| {0:<128}|".format(BS.htmldict["title"]))
+		separator = "+-----+--------------------+--------------------+--------------+----------------------+----------------------+----------------------+-----------+------------+"
+		row = "| {0:<3} | {1:<18} | {2:<18} | {3:<12} | {4:<20} | {5:<20} | {6:<20} | {7:<9} | {8:<10} |"
+		print("%s%s%s" % ("+", "-" * 156, "+"))
+		print("| {0:<155}|".format(BS.htmldict["title"]))
 		print(separator)
 		print(row.format(*BS.htmldict["headline"].split(", ")))
 		print(separator)
 		for counter, box in enumerate(BS.htmldict["boxinfo"]):
 			bi = BS.htmldict["boxinfo"][box]
-			print(row.format(box, bi["BuildStatus"].rjust(12), bi["StartBuild"], bi["StartFeedSync"], bi["EndBuild"], bi["SyncTime"].rjust(9), bi["BuildTime"].rjust(10)))
+			print(row.format(bi["No"].rjust(3), box, bi["OemName"], bi["BuildStatus"].rjust(12), bi["StartBuild"], bi["StartFeedSync"], bi["EndBuild"], bi["SyncTime"].rjust(9), bi["BuildTime"].rjust(10)))
 		print(separator)
-		print("| {0:<50}{1:<48}{2:<30}|".format("current platform: %s" % currplat.upper(), "boxes found: %s" % counter, "building errors found: %s" % str(failed).rjust(3)))
-		print("%s%s%s" % ("+", "-" * 129, "+"))
+		print("| {0:<50}{1:<48}{2:<57}|".format("current platform: %s" % currplat.upper(), "boxes found: %s" % counter, "building errors found: %s" % str(failed).rjust(3)))
+		print("%s%s%s" % ("+", "-" * 156, "+"))
 	if BS.htmldict and filename:
 		with open(filename, "w") as f:
 			dump(BS.htmldict, f)
