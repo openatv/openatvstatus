@@ -63,7 +63,7 @@ config.plugins.OpenATVstatus.favboxes = ConfigText(default="", fixed_size=False)
 
 
 class ATVglobs():
-	VERSION = "V2.6"
+	VERSION = "V2.7"
 	MODULE_NAME = __name__.split(".")[-2]
 	FAVLIST = [tuple(x.strip() for x in item.replace("(", "").replace(")", "").split(",")) for item in config.plugins.OpenATVstatus.favboxes.value.split(";")] if config.plugins.OpenATVstatus.favboxes.value else []
 	PICURL = "https://raw.githubusercontent.com/oe-alliance/remotes/master/boxes/"
@@ -532,7 +532,7 @@ class ATVimageslist(Screen, ATVglobs):
 				color = 0xFDFf00 if [item for item in self.FAVLIST if item == (boxname, self.currplat)] else palette.get(bd["BuildStatus"], 0xB0B0B0)
 				buildtime = self.roundMinutes(bd["BuildTime"].strip())
 				synctime = self.roundMinutes(bd["SyncTime"].strip())
-				menulist.append(tuple([boxname, bd["BuildStatus"], self.fmtDateTime(bd["StartBuild"]), self.fmtDateTime(bd["StartFeedSync"]), self.fmtDateTime(bd["EndBuild"]), synctime, buildtime, color]))
+				menulist.append(tuple([bd["No"],boxname, bd["BuildStatus"], self.fmtDateTime(bd["StartBuild"]), self.fmtDateTime(bd["StartFeedSync"]), self.fmtDateTime(bd["EndBuild"]), synctime, buildtime, color]))
 			self["menu"].updateList(menulist)
 			self.boxlist = boxlist
 		if self.currbox:
