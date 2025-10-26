@@ -23,7 +23,7 @@ from twisted.internet.reactor import callInThread
 MODULE_NAME = __name__.split(".")[-1]
 
 
-class Buildstatus():
+class Buildstatus:
 	def __init__(self):
 		self.url = None
 		self.error = None
@@ -35,13 +35,13 @@ class Buildstatus():
 
 	def start(self):  # loads json-platformdata from build server
 		try:
-			response = get("http://api.mynonpublic.com/content.json".encode(), timeout=(3.05, 6))
+			response = get("http://api.mynonpublic.com/content.json", timeout=(3.05, 6))
 			response.raise_for_status()
 		except exceptions.RequestException as err:
 			self.error = "[%s] ERROR in module 'start': '%s" % (MODULE_NAME, str(err))
 			return {}
 		try:
-			dictdata = loads(response.content)
+			dictdata = loads(response.text)
 			if dictdata:
 				self.platdict = dictdata
 				self.platlist = sorted(list(self.platdict["versionurls"].keys()))
@@ -70,13 +70,13 @@ class Buildstatus():
 			if self.callback:
 				print("[%s] accessing buildservers for data..." % MODULE_NAME)
 			try:
-				response = get(self.url.encode(), timeout=(3.05, 6))
+				response = get(self.url, timeout=(3.05, 6))
 				response.raise_for_status()
 			except exceptions.RequestException as err:
 				self.error = "[%s] ERROR in module 'getpage': '%s" % (MODULE_NAME, str(err))
 				return
 			try:
-				htmldata = response.content.decode()
+				htmldata = response.text
 				if htmldata:
 					return htmldata
 				self.error = "[%s] ERROR in module 'getpage': server access failed." % MODULE_NAME
@@ -186,7 +186,8 @@ class Buildstatus():
 		foundbox = False
 		failed = 0
 		for boxname in list(boxinfo.keys()):
-			time = boxinfo[boxname]["BuildTime"].strip().split(":")
+			timestr = boxinfo[boxname]["BuildTime"].split(",")  # handle those exceptions: e.g. '-1 day, 23:59:24'
+			time = timestr[0].strip().split(":") if len(timestr) == 1 else timestr[1].strip().split(":")
 			if len(time) < 3:
 				time = [0, 0, 0]
 			if boxname == buildbox:  # currently built box
@@ -235,7 +236,7 @@ def main(argv):  # shell interface
 	currplat = ""
 	counter = 0
 	failed = 0
-	helpstring = "Buildstatus v1.2: try 'python Buildstatus.py -h' for more information"
+	helpstring = "Buildstatus v1.3: try 'python Buildstatus.py -h' for more information"
 	BS = Buildstatus()
 	if BS.error:
 		print("Error: %s" % BS.error.replace(mainfmt, "").strip())

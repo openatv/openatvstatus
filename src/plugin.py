@@ -100,8 +100,8 @@ class ATVglobs():
 
 	def roundMinutes(self, timestr):
 		if timestr:
-			timestr = timestr.split(",")  # handle those exceptions: e.g. '-1 day, 21:09:24'
-			tlist = timestr[0].split(":") if len(timestr) == 1 else timestr[1].split(":")
+			timestr = timestr.split(",")  # handle those exceptions: e.g. '-1 day, 23:59:24'
+			tlist = timestr[0].strip().split(":") if len(timestr) == 1 else timestr[1].strip().split(":")
 			timestr = f"{int(timedelta(hours=int(tlist[0]), minutes=int(tlist[1]), seconds=(int(tlist[2]) + 30) // 60 * 60).total_seconds() / 60)} min"
 		return timestr
 
@@ -218,20 +218,20 @@ class ATVfavorites(Screen, ATVglobs):
 		self["key_menu"] = Label(_("Settings"))
 		self["menu"] = List([])
 		self["actions"] = ActionMap(["WizardActions",
-									 "DirectionActions",
-									 "MenuActions",
-									 "ColorActions"], {"ok": self.keyOk,
-			   											"back": self.exit,
-														"cancel": self.exit,
-														"red": self.keyRed,
-														"blue": self.keyBlue,
-														"up": self.keyUp,
-														"down": self.keyDown,
-														"right": self.keyPageDown,
-														"left": self.keyPageUp,
-														"nextBouquet": self.keyPageDown,
-														"prevBouquet": self.keyPageUp,
-														"menu": self.openConfig
+									"DirectionActions",
+									"MenuActions",
+									"ColorActions"], {"ok": self.keyOk,
+													"back": self.exit,
+													"cancel": self.exit,
+													"red": self.keyRed,
+													"blue": self.keyBlue,
+													"up": self.keyUp,
+													"down": self.keyDown,
+													"right": self.keyPageDown,
+													"left": self.keyPageUp,
+													"nextBouquet": self.keyPageDown,
+													"prevBouquet": self.keyPageUp,
+													"menu": self.openConfig
 													}, -1)
 		self.onLayoutFinish.append(self.onLayoutFinished)
 		try:
@@ -297,7 +297,7 @@ class ATVfavorites(Screen, ATVglobs):
 							boxpix = self.imageDisplay(box)
 							if not boxpix:
 								boxpiclist.append(box[0])  # collect missing box pictures (avoids flickering in menu)
-				menulist.append((textlist[:-1] + [boxpix] + [None]))  # remove last entry 'serverstatus' from textlist (no need for skin)
+				menulist.append(textlist[:-1] + [boxpix] + [None])  # remove last entry 'serverstatus' from textlist (no need for skin)
 			self["menu"].updateList(menulist)
 			self["red"].show()
 			self["key_red"].show()
@@ -532,7 +532,7 @@ class ATVimageslist(Screen, ATVglobs):
 				color = 0xFDFf00 if [item for item in self.FAVLIST if item == (boxname, self.currplat)] else palette.get(bd["BuildStatus"], 0xB0B0B0)
 				buildtime = self.roundMinutes(bd["BuildTime"].strip())
 				synctime = self.roundMinutes(bd["SyncTime"].strip())
-				menulist.append(tuple([bd["No"],boxname, bd["BuildStatus"], self.fmtDateTime(bd["StartBuild"]), self.fmtDateTime(bd["StartFeedSync"]), self.fmtDateTime(bd["EndBuild"]), synctime, buildtime, color]))
+				menulist.append(tuple([bd["No"], boxname, bd["BuildStatus"], self.fmtDateTime(bd["StartBuild"]), self.fmtDateTime(bd["StartFeedSync"]), self.fmtDateTime(bd["EndBuild"]), synctime, buildtime, color]))
 			self["menu"].updateList(menulist)
 			self.boxlist = boxlist
 		if self.currbox:
@@ -780,9 +780,9 @@ class ATVconfig(ConfigListScreen, Screen, ATVglobs):
 		self["key_red"] = Label(_("Cancel"))
 		self["key_green"] = Label(_("Save settings"))
 		self["actions"] = ActionMap(["OkCancelActions", "ColorActions"], {"cancel": self.keyCancel,
-																		  "red": self.keyCancel,
-																		  "green": self.keyGreen
-																		  }, -1)
+																			"red": self.keyCancel,
+																			"green": self.keyGreen
+																		}, -1)
 		clist = []
 		clist.append(getConfigListEntry(_("Preferred box architecture:"), config.plugins.OpenATVstatus.favarch, _("Specify which box architecture should be preferred when the images list will be called.")))
 		clist.append(getConfigListEntry(_("Animation for change of platform:"), config.plugins.OpenATVstatus.animate, _("Sets the animation speed for the carousel function when changing platforms in images list.")))
