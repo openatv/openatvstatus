@@ -8,6 +8,8 @@ from Tools.Directories import resolveFilename, SCOPE_PLUGINS
 
 PLUGINPATH = resolveFilename(SCOPE_PLUGINS, "Extensions/OpenATVstatus/")
 
+__version__ = "2.7"
+
 
 def localeInit():
     bindtextdomain("OpenATVstatus", join(PLUGINPATH, "locale"))
