@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenATVstatus\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2025-01-24 17:52+0000\n"
+"PO-Revision-Date: 2025-08-23 10:49+0100\n"
 "Last-Translator: pololoko111\n"
 "Language-Team: endriu\n"
 "Language: pl\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: pygettext.py 1.5\n"
-"X-Generator: Poedit 3.5\n"
+"X-Generator: Poedit 3.7\n"
 
 msgid "Animation for change of platform:"
 msgstr "Animacja w czasie zmiany platformy:"
@@ -25,7 +25,7 @@ msgid "Box '%s-%s' was sucessfully removed from favorites!"
 msgstr "'%s-%s' został pomyślnie usunięty z ulubionych!"
 
 msgid "Box is OFFLINE! No current details available"
-msgstr "Box jest OFFLINE! Brak aktualnych szczegółów"
+msgstr "Dekoder jest OFFLINE! Brak aktualnych szczegółów"
 
 msgid "Boxdetails"
 msgstr "Szczegóły"
@@ -61,19 +61,19 @@ msgid "Image is waiting with priority, the duration is unclear..."
 msgstr "Obraz czeka z priorytetem, czas trwania jest niejasny..."
 
 msgid "Images list"
-msgstr "Lista obrazów"
+msgstr "Lista"
 
 msgid "Model"
 msgstr "Model"
 
 msgid "Next build ends in %s, still %s boxes ahead"
-msgstr "Następna kompilacja kończy się za %s, nadal %s boxy wcześniej"
+msgstr "Następna kompilacja kończy się za %s, nadal %s dekoderów wcześniej"
 
 msgid "No box found in this platform!"
 msgstr "Nie znaleziono boxa na tej platformie!"
 
 msgid "No favorites (box, platform) set yet."
-msgstr "Nie ustawiono jeszcze ulubionych (box, platforma)."
+msgstr "Nie ustawiono jeszcze ulubionych (dekoder, platforma)."
 
 msgid "Nothing to do - no build cycle"
 msgstr "Nic do zrobienia - brak cyklu budowania"
@@ -132,10 +132,10 @@ msgid "absolute time"
 msgstr "Czas bezwzględny"
 
 msgid "add box to favorites"
-msgstr "Dodaj Box do ulubionych"
+msgstr "Dodaj do ulubionych"
 
 msgid "boxes"
-msgstr "Boxy"
+msgstr "Dekoderów"
 
 msgid "current platform"
 msgstr "Aktualna platforma"
@@ -186,10 +186,10 @@ msgid "relative time"
 msgstr "Czas względny"
 
 msgid "remove box from favorites"
-msgstr "Usuń Box z ulubionych"
+msgstr "Usuń z ulubionych"
 
 msgid "selected box"
-msgstr "Wybrany Box"
+msgstr "Wybrany dekoder"
 
 msgid "server time (UTC)"
 msgstr "Czas serwera (UTC)"
