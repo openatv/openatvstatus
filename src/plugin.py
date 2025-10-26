@@ -207,7 +207,7 @@ class ATVfavorites(Screen, ATVglobs):
 		self.setTitle(_("Favorites"))
 		self.boxlist = []
 		self.foundFavs = []
-		self.platdict = dict()
+		self.platdict = {}
 		self.currindex = 0
 		self["version"] = Label(self.VERSION)
 		self["platinfo"] = Label()
@@ -273,7 +273,7 @@ class ATVfavorites(Screen, ATVglobs):
 							color = palette.get(bd["BuildStatus"], 0xB0B0B0)
 							nextbuild, boxesahead, cycletime, counter, failed = BS.evaluate(box[0])
 							if box[1] not in self.platdict:
-								self.platdict[currplat] = dict()
+								self.platdict[currplat] = {}
 								self.platdict[currplat]["cycletime"] = f"{BS.strf_delta(cycletime)[:5]} h"
 								self.platdict[currplat]["boxcounter"] = "%s" % counter
 								self.platdict[currplat]["boxfailed"] = "%s" % failed
@@ -388,7 +388,7 @@ class ATVfavorites(Screen, ATVglobs):
 
 	def keyOk(self):
 		if self.boxlist and self.currindex is not None:
-			currbox = self.boxlist[self.currindex] if self.boxlist else None
+			currbox = self.boxlist[self.currindex]
 			if currbox:
 				self.session.open(ATVboxdetails, currbox)
 
@@ -602,7 +602,7 @@ class ATVimageslist(Screen, ATVglobs):
 
 	def keyOk(self):
 		if self.boxlist and self.currindex is not None:
-			currbox = self.boxlist[self.currindex] if self.boxlist else None
+			currbox = self.boxlist[self.currindex]
 			if currbox:
 				self.session.open(ATVboxdetails, currbox)
 

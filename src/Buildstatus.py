@@ -44,7 +44,7 @@ class Buildstatus:
 			dictdata = loads(response.text)
 			if dictdata:
 				self.platdict = dictdata
-				self.platlist = sorted(list(self.platdict["versionurls"].keys()))
+				self.platlist = sorted(self.platdict["versionurls"].keys())
 				helplist = [x.split(" ")[0].lower() for x in self.platlist]
 				archlist = []
 				for arch in helplist:  # separate dupes in platforms in "latest" and "oldest"
@@ -53,7 +53,7 @@ class Buildstatus:
 					else:
 						release = "latest"
 					archlist.append("%s_%s" % (arch.lower(), release))
-				self.archlist = sorted(list(set(archlist)))
+				self.archlist = sorted(set(archlist))
 				return dictdata
 			self.error = "[%s] ERROR in module 'start': server access failed." % MODULE_NAME
 		except Exception as err:
@@ -127,26 +127,26 @@ class Buildstatus:
 		return None if self.error else self.htmldict
 
 	def htmlparse(self, htmldata):  # parse html-imagesdata & create imagesdict
-		htmldict = dict()
+		htmldict = {}
 		title = search(r'<title>(.*?)</title>', htmldata)
 		headline = findall(r"<th>(.*?)</th>", str(findall(r'<thead>\s*<tr>(.*?)</tr>\s*</thead>', htmldata, flags=S)))
 		htmldict["headline"] = ", ".join(headline)
 		htmldict["title"] = title.group(1) if title else ""
 		versionnames = findall(r'">(.*?)</button>', htmldata)
 		versionurls = findall(r"location.href='(.*?)'", htmldata)
-		htmldict["versionurls"] = dict()
+		htmldict["versionurls"] = {}
 		for idx, version in enumerate(versionnames):
-			htmldict["versionurls"][version] = dict()
+			htmldict["versionurls"][version] = {}
 			htmldict["versionurls"][version]["url"] = versionurls[idx]
 		datablocks = search(r"<tbody>(.*?)</tbody>", htmldata, flags=S)
 		datablocks = datablocks.group(1) if datablocks else None
 		datablocks = findall(r"\s*<tr>(.*?)</tr>\s*", datablocks, flags=S) if datablocks else []
-		htmldict["boxinfo"] = dict()
+		htmldict["boxinfo"] = {}
 		for datablock in datablocks:
 			boxinfo = findall(r'<td\s*class="(.*?)">(.*?)</td>', datablock, flags=M)
 			dateset = findall(r'<td>(.*?)</td>', datablock)
 			boxname = boxinfo[1][1]
-			htmldict["boxinfo"][boxname] = dict()  # boxname
+			htmldict["boxinfo"][boxname] = {}  # boxname
 			htmldict["boxinfo"][boxname]["No"] = boxinfo[0][1]
 			htmldict["boxinfo"][boxname]["BoxNameClass"] = boxinfo[1][0]
 			htmldict["boxinfo"][boxname]["OemName"] = boxinfo[2][1]
