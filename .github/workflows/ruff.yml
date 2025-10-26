@@ -3,8 +3,10 @@ name: Ruff Linter
 on:
   push:
     branches:
-      - python3
+      - main
   pull_request:
+
+  workflow_dispatch:
 
 jobs:
   lint:

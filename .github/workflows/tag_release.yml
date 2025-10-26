@@ -5,7 +5,8 @@ on:
     paths:
       - src/__init__.py
     branches:
-      - python3
+      - main
+  workflow_dispatch:
 
 permissions:
   contents: write
