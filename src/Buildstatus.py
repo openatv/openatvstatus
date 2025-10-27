@@ -1,7 +1,7 @@
 #########################################################################################################
 #                                                                                                       #
 #  Buildstatus for openATV is a multiplatform tool (runs on Enigma2 & Windows and probably many others) #
-#  Coded by Mr.Servo @ openATV (c) 2023                                                                 #
+#  Coded by Mr.Servo @ openATV (c) 2023-2025                                                            #
 #  Learn more about the tool by running it in the shell: "python Buildstatus.py -h"                     #
 #  -----------------------------------------------------------------------------------------------------#
 #  This plugin is licensed under the GNU version 3.0 <https://www.gnu.org/licenses/gpl-3.0.en.html>.    #
@@ -38,7 +38,7 @@ class Buildstatus:
 			response = get("http://api.mynonpublic.com/content.json", timeout=(3.05, 6))
 			response.raise_for_status()
 		except exceptions.RequestException as err:
-			self.error = "[%s] ERROR in module 'start': '%s" % (MODULE_NAME, str(err))
+			self.error = f"[{MODULE_NAME}] ERROR in module 'start': '{str(err)}"
 			return {}
 		try:
 			dictdata = loads(response.text)
@@ -49,15 +49,15 @@ class Buildstatus:
 				archlist = []
 				for arch in helplist:  # separate dupes in platforms in "latest" and "oldest"
 					if helplist.count(arch) > 1:
-						release = "oldest" if "%s_latest" % arch in archlist else "latest"
+						release = "oldest" if f"{arch}_latest" in archlist else "latest"
 					else:
 						release = "latest"
-					archlist.append("%s_%s" % (arch.lower(), release))
+					archlist.append(f"{arch.lower()}_{release}")
 				self.archlist = sorted(set(archlist))
 				return dictdata
-			self.error = "[%s] ERROR in module 'start': server access failed." % MODULE_NAME
+			self.error = f"[{MODULE_NAME}] ERROR in module 'start': server access failed."
 		except Exception as err:
-			self.error = "[%s] ERROR in module 'start': invalid json data from server. %s" % (MODULE_NAME, str(err))
+			self.error = f"[{MODULE_NAME}] ERROR in module 'start': invalid json data from server. {str(err)}"
 		return {}
 
 	def stop(self):
@@ -68,22 +68,22 @@ class Buildstatus:
 		self.error = None
 		if self.url:
 			if self.callback:
-				print("[%s] accessing buildservers for data..." % MODULE_NAME)
+				print(f"[{MODULE_NAME}] accessing buildservers for data...")
 			try:
 				response = get(self.url, timeout=(3.05, 6))
 				response.raise_for_status()
 			except exceptions.RequestException as err:
-				self.error = "[%s] ERROR in module 'getpage': '%s" % (MODULE_NAME, str(err))
+				self.error = f"[{MODULE_NAME}] ERROR in module 'getpage': '{str(err)}"
 				return
 			try:
 				htmldata = response.text
 				if htmldata:
 					return htmldata
-				self.error = "[%s] ERROR in module 'getpage': server access failed." % MODULE_NAME
+				self.error = f"[{MODULE_NAME}] ERROR in module 'getpage': server access failed."
 			except Exception as err:
-				self.error = "[%s] ERROR in module 'getpage': invalid data from server %s" % (MODULE_NAME, str(err))
+				self.error = f"[{MODULE_NAME}] ERROR in module 'getpage': invalid data from server {str(err)}"
 		else:
-			self.error = "[%s] ERROR in module 'getpage': missing url" % MODULE_NAME
+			self.error = f"[{MODULE_NAME}] ERROR in module 'getpage': missing url"
 
 	def getbuildinfos(self, platform, callback=None):  # loads imagesdata from build server
 		self.callback = callback
@@ -92,7 +92,7 @@ class Buildstatus:
 			self.url = self.platdict["versionurls"][platform]["url"]
 		else:
 			self.url = None
-			self.error = "[%s] ERROR in module 'getbuildinfos': '%s" % (MODULE_NAME, "invalid platform '%s'" % platform)
+			self.error = f"[{MODULE_NAME}] ERROR in module 'getbuildinfos': invalid platform: {platform})"
 			return {}
 		if callback:
 			callInThread(self.createdict, callback)
@@ -119,10 +119,10 @@ class Buildstatus:
 			self.htmldict = self.htmlparse(htmldata)  # complete dict of all platform boxes
 		else:
 			self.htmldict = None
-			self.error = "[%s] ERROR in module 'createdict': htmldata is None." % MODULE_NAME
+			self.error = f"[{MODULE_NAME}] ERROR in module 'createdict': htmldata is None."
 		if callback:
 			if not self.error:
-				print("[%s] buildservers successfully accessed..." % MODULE_NAME)
+				print(f"[{MODULE_NAME}] buildservers successfully accessed...")
 			callback(None if self.error else self.htmldict)
 		return None if self.error else self.htmldict
 
@@ -162,7 +162,7 @@ class Buildstatus:
 
 	def findbuildbox(self):  # find boxname current image is build for
 		if self.htmldict is None:
-			self.error = "[%s] ERROR in module 'findbuildbox': '%s" % (MODULE_NAME, "self.htmldict is None")
+			self.error = f"[{MODULE_NAME}] ERROR in module 'findbuildbox': self.htmldict is None"
 			return
 		hit = None
 		boxinfo = self.htmldict["boxinfo"]
@@ -174,7 +174,7 @@ class Buildstatus:
 
 	def evaluate(self, box=None):  # evaluate box data
 		if self.htmldict is None:
-			self.error = "[%s] ERROR in module 'evaluate': '%s" % (MODULE_NAME, "self.htmldict is None")
+			self.error = f"[{MODULE_NAME}] ERROR in module 'evaluate': self.htmldict is None"
 			return None, 0, None, 0, 0
 		buildbox = self.findbuildbox()
 		boxinfo = self.htmldict["boxinfo"]
@@ -209,7 +209,7 @@ class Buildstatus:
 				failed += 1
 			boxcounter += 1
 		if box is not None and not foundbox:
-			self.error = "[%s] WARNING in module 'evaluate': '%s'" % (MODULE_NAME, "Box not found in this platform. Try another platform.")
+			self.error = f"[{MODULE_NAME}] WARNING in module 'evaluate': Box not found in this platform. Try another platform."
 			return timedelta(), 0, cycletime, boxcounter, failed
 		return nextbuild, boxesahead - 1, cycletime, boxcounter, failed
 
@@ -222,29 +222,20 @@ class Buildstatus:
 
 def main(argv):  # shell interface
 	mainfmt = "[__main__]"
-	buildbox = False
-	cycle = False
-	evaluate = False
-	verbose = False
-	architecture = False
-	supported = False
-	usable = False
-	filename = None
-	boxname = None
-	cycletime = None
+	buildbox, cycle, evaluate, verbose, architecture, supported, usable = False, False, False, False, False, False, False
+	filename, boxname, cycletime = None, None, None
 	currarch = "arm_latest"
 	currplat = ""
-	counter = 0
-	failed = 0
+	counter, failed = 0, 0
 	helpstring = "Buildstatus v1.3: try 'python Buildstatus.py -h' for more information"
 	BS = Buildstatus()
 	if BS.error:
-		print("Error: %s" % BS.error.replace(mainfmt, "").strip())
+		print(f"Error: {BS.error.replace(mainfmt, '').strip()}")
 		exit()
 	try:
 		opts, args = getopt(argv, "a:p:j:e:bcvsuh", ["architecture =", "platform=", "json =", "evaluate =", "buildbox", "cycle", "verbose", "supported", "usable", "help"])
 	except GetoptError as error:
-		print("Error: %s\n%s" % (error, helpstring))
+		print(f"Error: {error}\n{helpstring}")
 		exit(2)
 	if not opts:
 		verbose = True
@@ -289,25 +280,25 @@ def main(argv):  # shell interface
 	if not currplat:
 		currplat = BS.getplatform(currarch)
 		if BS.error:
-			print("Error: %s" % BS.error.replace(mainfmt, "").strip())
+			print(f"Error: {BS.error.replace(mainfmt, '').strip()}")
 			exit()
 	if currarch not in archlist:
-		print("Unknown architecture '%s'. Supported is: %s" % (currarch, ", ".join(x.split(" ")[0] for x in archlist)))
+		print(f"Unknown architecture '{currarch}'. Supported is: {', '.join(x.split(' ')[0] for x in archlist)}")
 		exit()
 	if currplat:
 		currplat = currplat.replace("_", " ")
 	if currplat and currplat not in platlist:
-		print("Unknown platform '%s'. Supported is: %s" % (currplat.replace(" ", "_").lower(), ", ".join(x.replace(' ', '_').lower() for x in platlist)))
+		print(f"Unknown platform '{currplat.replace(' ', '_').lower()}'. Supported is: {', '.join(x.replace(' ', '_').lower() for x in platlist)}")
 		exit()
 	BS.getbuildinfos(currplat)
 	if BS.error:
-		print("Error: %s" % BS.error.replace(mainfmt, "").strip())
+		print(f"Error: {BS.error.replace(mainfmt, '').strip()}")
 		exit()
 	if BS.htmldict and verbose:
 		separator = "+-----+--------------------+--------------------+--------------+----------------------+----------------------+----------------------+-----------+------------+"
-		row = "| {0:<3} | {1:<18} | {2:<18} | {3:<12} | {4:<20} | {5:<20} | {6:<20} | {7:<9} | {8:<10} |"
-		print("%s%s%s" % ("+", "-" * 156, "+"))
-		print("| {0:<155}|".format(BS.htmldict["title"]))
+		row = "| {:<3} | {:<18} | {:<18} | {:<12} | {:<20} | {:<20} | {:<20} | {:<9} | {:<10} |"
+		print(f"+{'-' * 156}+")
+		print(f"| {BS.htmldict['title']:<155}|")
 		print(separator)
 		print(row.format(*BS.htmldict["headline"].split(", ")))
 		print(separator)
@@ -315,29 +306,29 @@ def main(argv):  # shell interface
 			bi = BS.htmldict["boxinfo"][box]
 			print(row.format(bi["No"].rjust(3), box, bi["OemName"], bi["BuildStatus"].rjust(12), bi["StartBuild"], bi["StartFeedSync"], bi["EndBuild"], bi["SyncTime"].rjust(9), bi["BuildTime"].rjust(10)))
 		print(separator)
-		print("| {0:<50}{1:<48}{2:<57}|".format("current platform: %s" % currplat.upper(), "boxes found: %s" % counter, "building errors found: %s" % str(failed).rjust(3)))
-		print("%s%s%s" % ("+", "-" * 156, "+"))
+		print("| {:<50}{:<48}{:<57}|".format(f"current platform: {currplat.upper()}", f"boxes found: {counter}", f"building errors found: {str(failed).rjust(3)}"))
+		print(f"+{'-' * 156}+")
 	if BS.htmldict and filename:
 		with open(filename, "w") as f:
 			dump(BS.htmldict, f)
-		print("File '%s' was successfully created." % filename)
+		print(f"File '{filename}' was successfully created.")
 	if buildbox:
 		buildboxname = BS.findbuildbox()
 		if BS.error:
-			print("Error: %s" % BS.error.replace(mainfmt, "").strip())
+			print(f"Error: {BS.error.replace(mainfmt, '').strip()}")
 			exit()
 		if buildboxname:
-			print("Currently the image is built for: '%s'" % buildboxname)
+			print(f"Currently the image is built for: '{buildboxname}'")
 		else:
 			print("At the moment no image is built on the platform!")
 	if evaluate:
 		if boxname:
 			nextbuild, boxesahead, cycletime, counter, failed = BS.evaluate(boxname)
 			if BS.error:
-				print("Error: %s" % BS.error.replace(mainfmt, "").strip())
+				print(f"Error: {BS.error.replace(mainfmt, '').strip()}")
 				exit()
 			if nextbuild:
-				print("Estimated duration for next image for '%s' in %sh at %s (%s boxes ahead) " % (boxname, BS.strf_delta(nextbuild), (datetime.now() + nextbuild).strftime("%Y/%m/%d, %H:%M:%S"), boxesahead))
+				print(f"Estimated duration for next image for '{boxname}' in {BS.strf_delta(nextbuild)}h at {(datetime.now() + nextbuild).strftime('%Y/%m/%d, %H:%M:%S')} ({boxesahead} boxes ahead) ")
 			else:
 				print("Server paused, unclear how many boxes are ahead!")
 		else:
@@ -347,17 +338,17 @@ def main(argv):  # shell interface
 		if not cycletime:
 			nextbuild, boxesahead, cycletime, counter, failed = BS.evaluate()
 			if BS.error:
-				print("Error: %s" % BS.error.replace(mainfmt, "").strip())
+				print(f"Error: {BS.error.replace(mainfmt, '').strip()}")
 				exit()
-		print("Estimated durance of complete cycle (%s): %s h" % (currplat, BS.strf_delta(cycletime)))
+		print(f"Estimated durance of complete cycle ({currplat}): {BS.strf_delta(cycletime)} h")
 	if supported:
 		if not architecture and archlist:
-			print("Available architectures: %s" % ", ".join(x for x in archlist))
+			print(f"Available architectures: {', '.join(x for x in archlist)}")
 		else:
 			print("No architectures found")
 	if usable:
 		if platlist:
-			print("Available platforms: %s" % ", ".join(x.lower().replace(" ", "_") for x in platlist))
+			print(f"Available architectures: {', '.join(x for x in archlist)}")
 		else:
 			print("No platforms found")
 
