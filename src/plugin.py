@@ -37,7 +37,7 @@ from Tools.LoadPixmap import LoadPixmap
 from Tools.Directories import resolveFilename, SCOPE_PLUGINS
 
 # PLUGIN IMPORTS
-from . import PLUGINPATH, _  # for localized messages
+from . import PLUGINPATH, __version__, _  # for localized messages
 from .Buildstatus import Buildstatus
 
 # PLUGIN GLOBALS
@@ -63,7 +63,7 @@ config.plugins.OpenATVstatus.favboxes = ConfigText(default="", fixed_size=False)
 
 
 class ATVglobs:
-	VERSION = "V2.7"
+	VERSION = f"v{__version__}"
 	MODULE_NAME = __name__.split(".")[-2]
 	FAVLIST = [tuple(x.strip() for x in item.replace("(", "").replace(")", "").split(",")) for item in config.plugins.OpenATVstatus.favboxes.value.split(";")] if config.plugins.OpenATVstatus.favboxes.value else []
 	PICURL = "https://raw.githubusercontent.com/oe-alliance/remotes/master/boxes/"
@@ -74,7 +74,7 @@ class ATVglobs:
 		skintext = ""
 		skinfile = join(PLUGINPATH, f"skin_{'fHD' if getDesktop(0).size().width() > 1300 else 'HD'}.xml")
 		try:
-			with open(skinfile, "r") as file:
+			with open(skinfile) as file:
 				try:
 					domskin = parse(file).getroot()
 					for element in domskin:
@@ -214,8 +214,8 @@ class ATVfavorites(Screen, ATVglobs):
 		self["platinfo"] = Label()
 		self["red"] = Label("")
 		self["key_red"] = Label(_("remove box from favorites"))
-		self["key_blue"] = Label(_("Images list"))
-		self["key_ok"] = Label(_("Boxdetails"))
+		self["key_ok"] = Label(_("Images list"))
+		self["key_info"] = Label(_("Boxdetails"))
 		self["key_menu"] = Label(_("Settings"))
 		self["menu"] = List([])
 		self["actions"] = ActionMap(["WizardActions",
@@ -225,13 +225,14 @@ class ATVfavorites(Screen, ATVglobs):
 													"back": self.exit,
 													"cancel": self.exit,
 													"red": self.keyRed,
-													"blue": self.keyBlue,
+													"blue": self.keyInfo,
 													"up": self.keyUp,
 													"down": self.keyDown,
 													"right": self.keyPageDown,
 													"left": self.keyPageUp,
 													"nextBouquet": self.keyPageDown,
 													"prevBouquet": self.keyPageUp,
+													"info": self.keyInfo,
 													"menu": self.openConfig
 													}, -1)
 		self.onLayoutFinish.append(self.onLayoutFinished)
@@ -388,18 +389,6 @@ class ATVfavorites(Screen, ATVglobs):
 			self.session.open(MessageBox, text=_("Box '%s-%s' was sucessfully removed from favorites!") % removedbox, type=MessageBox.TYPE_INFO, timeout=2, close_on_any_key=True)
 
 	def keyOk(self):
-		if self.boxlist and self.currindex is not None:
-			currbox = self.boxlist[self.currindex]
-			if currbox:
-				self.session.open(ATVboxdetails, currbox)
-
-	def keyRed(self):
-		if self.boxlist and self.currindex is not None:
-			self.foundFavs = [item for item in self.FAVLIST if item == self.boxlist[self.currindex]]
-			if self.foundFavs:
-				self.session.openWithCallback(self.msgboxCB, MessageBox, _("Do you really want to remove Box '%s-%s' from favorites?") % self.boxlist[self.currindex], MessageBox.TYPE_YESNO, timeout=20, default=False)
-
-	def keyBlue(self):
 		if config.plugins.OpenATVstatus.favarch.value == "current":
 			if self.boxlist and self.currindex is not None:
 				currbox = self.boxlist[self.currindex]
@@ -412,6 +401,18 @@ class ATVfavorites(Screen, ATVglobs):
 		self.oldfavlist = self.FAVLIST[:]
 		if currbox[1] in BS.platlist:
 			self.session.openWithCallback(self.ATVimageslistCB, ATVimageslist, currbox)
+
+	def keyInfo(self):
+		if self.boxlist and self.currindex is not None:
+			currbox = self.boxlist[self.currindex]
+			if currbox:
+				self.session.open(ATVboxdetails, currbox)
+
+	def keyRed(self):
+		if self.boxlist and self.currindex is not None:
+			self.foundFavs = [item for item in self.FAVLIST if item == self.boxlist[self.currindex]]
+			if self.foundFavs:
+				self.session.openWithCallback(self.msgboxCB, MessageBox, _("Do you really want to remove Box '%s-%s' from favorites?") % self.boxlist[self.currindex], MessageBox.TYPE_YESNO, timeout=20, default=False)
 
 	def ATVimageslistCB(self):
 		if self.oldfavlist != self.FAVLIST:  # any changes when running 'ATVimageslist'?
@@ -502,6 +503,7 @@ class ATVimageslist(Screen, ATVglobs):
 													"prevBouquet": self.keyPageDown,
 													"nextMarker": self.nextPlatform,
 													"prevMarker": self.prevPlatform,
+													"info": self.keyOk,
 													"menu": self.openConfig
 													}, -1)
 		delay = int(config.plugins.OpenATVstatus.animate.value)
@@ -560,6 +562,7 @@ class ATVimageslist(Screen, ATVglobs):
 			else:
 				boxinfo = _("Server paused, unclear how many boxes are ahead...")
 			buildstatus = BS.htmldict["boxinfo"][self.boxlist[self.currindex][0]]["BuildStatus"] if BS.htmldict else ""
+			nextbuild = self.fmtDateTime((datetime.now(timezone.utc) + nextbuild).strftime("%Y/%m/%d, %H:%M:%S")) if config.plugins.OpenATVstatus.nextbuild.value == "absolute" and nextbuild else f"{BS.strf_delta(nextbuild)[:5]} h"
 			if nextbuild:
 				self["boxinfo"].setText(boxinfo)
 			elif buildstatus == "Building":
@@ -738,9 +741,9 @@ class ATVboxdetails(Screen, ATVglobs):
 					details += f"{_('Version')}:\t{bd.get('info', {}).get('imagever', '')}\n"
 					details += f"{_("Chipset")}:\t{bd.get("info", {}).get("chipset", "")}h\n"
 					self["status"].setText("online")
-				else:
-					details += f"{_('Model')}:\t{self.box[0]}\n"
-					details += f"\n{_('Box is OFFLINE! No current details available')}"
+			else:
+				details += f"{_('Model')}:\t{self.box[0]}\n"
+				details += f"\n{_('Box is OFFLINE! No current details available')}"
 		self["status"].setText(status)
 		self["details"].setText(details)
 

@@ -46,12 +46,12 @@
 		<eLabel position="15,855" size="1170,42" backgroundColor="grey" zPosition="-1" />
 		<widget name="platinfo" position="25,855" size="1190,42" font="Regular;30" halign="center" valign="center" foregroundColor="black" backgroundColor="grey" />
 		<widget name="red" position="50,915" size="10,65" backgroundColor="red" zPosition="1" />
-		<eLabel name="blue" position="504,915" size="10,65" backgroundColor="blue" zPosition="1" />
-		<ePixmap position="740,925" size="45,45" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/icons/key_ok_fHD.png" alphatest="blend" zPosition="1" />\
+		<ePixmap position="471,925" size="45,45" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/icons/key_ok_fHD.png" alphatest="blend" zPosition="1" />\
+		<ePixmap position="741,925" size="45,45" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/icons/key_info_fHD.png" alphatest="blend" zPosition="1" />\
 		<ePixmap position="990,925" size="45,45" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/icons/key_menu_fHD.png" alphatest="blend" zPosition="1" />
 		<widget name="key_red" position="75,925" size="450,42" font="Regular;30" foregroundColor="grey" />
-		<widget name="key_blue" position="525,925" size="555,42" font="Regular;30" foregroundColor="grey" />
-		<widget name="key_ok" position="795,925" size="180,42" font="Regular;30" halign="left" foregroundColor="grey" />
+		<widget name="key_ok" position="525,925" size="555,42" font="Regular;30" foregroundColor="grey" />
+		<widget name="key_info" position="795,925" size="180,42" font="Regular;30" halign="left" foregroundColor="grey" />
 		<widget name="key_menu" position="1044,925" size="255,42" font="Regular;30" halign="left" foregroundColor="grey" />
 	</screen>
 
@@ -117,8 +117,8 @@
 		<widget name="curr_date" position="805,10" size="180,40" font="Regular;30" halign="right" valign="top" />
 		<eLabel position="805,55" size="180,42" backgroundColor="grey" zPosition="-1" />
 		<widget name="status" position="830,50" size="155,40" font="Regular;30" halign="center" valign="center" foregroundColor="black" backgroundColor="grey" />
-		<widget name="picture" position="15,105" size="970,350" alphatest="blend" />
-		<widget name="details" position="30,460" size="940,200" font="Regular;30" halign="left" valign="top" />
+		<widget name="picture" position="15,105" size="970,351" alphatest="blend" />
+		<widget name="details" position="30,460" size="940,198" font="Regular;30" halign="left" valign="top" />
 		<eLabel name="red" position="54,670" size="10,65" backgroundColor="red" zPosition="1" />
 		<widget name="key_red" position="75,680" size="380,42" font="Regular;30" halign="left" foregroundColor="grey" />
 	</screen>

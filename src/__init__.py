@@ -6,20 +6,19 @@ from os.path import join
 from Components.Language import language
 from Tools.Directories import resolveFilename, SCOPE_PLUGINS
 
+__version__ = "2.8"
 PLUGINPATH = resolveFilename(SCOPE_PLUGINS, "Extensions/OpenATVstatus/")
-
-__version__ = "2.7"
 
 
 def localeInit():
-    bindtextdomain("OpenATVstatus", join(PLUGINPATH, "locale"))
+	bindtextdomain("OpenATVstatus", join(PLUGINPATH, "locale"))
 
 
 def _(txt):
-    t = dgettext("OpenATVstatus", txt)
-    if t == txt:
-        t = gettext(txt)
-    return t
+	t = dgettext("OpenATVstatus", txt)
+	if t == txt:
+		t = gettext(txt)
+	return t
 
 
 localeInit()
