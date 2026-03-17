@@ -107,7 +107,7 @@ class Buildstatus:
 		if self.platdict and archparts[1] in ["oldest", "latest"]:
 			hitlist = []
 			for tempplat in self.platlist:
-				if archparts[0].upper() in tempplat:
+				if archparts[0].upper() in tempplat.upper():
 					hitlist.append(tempplat)  # add current platforms to hitlist
 			if hitlist:
 				platform = hitlist[-1] if archparts[1] == "latest" else hitlist[0]
