@@ -741,9 +741,9 @@ class ATVboxdetails(Screen, ATVglobs):
 					details += f"{_('Version')}:\t{bd.get('info', {}).get('imagever', '')}\n"
 					details += f"{_("Chipset")}:\t{bd.get("info", {}).get("chipset", "")}h\n"
 					self["status"].setText("online")
-			else:
-				details += f"{_('Model')}:\t{self.box[0]}\n"
-				details += f"\n{_('Box is OFFLINE! No current details available')}"
+		if not details:
+			details += f"{_('Model')}:\t{self.box[0]}\n"
+			details += f"\n{_('Box is OFFLINE! No current details available')}"
 		self["status"].setText(status)
 		self["details"].setText(details)
 
