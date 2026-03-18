@@ -225,7 +225,7 @@ class ATVfavorites(Screen, ATVglobs):
 													"back": self.exit,
 													"cancel": self.exit,
 													"red": self.keyRed,
-													"blue": self.keyInfo,
+													"blue": self.keyOk,
 													"up": self.keyUp,
 													"down": self.keyDown,
 													"right": self.keyPageDown,
