@@ -20,6 +20,7 @@ from requests import get, exceptions
 from shutil import rmtree
 from twisted.internet.reactor import callInThread
 from xml.etree.ElementTree import tostring, parse
+from zoneinfo import ZoneInfo
 
 # ENIGMA IMPORTS
 from enigma import getDesktop, eTimer, getPeerStreamingBoxes, BT_SCALE, BT_KEEP_ASPECT_RATIO, BT_HALIGN_CENTER, BT_VALIGN_CENTER
@@ -90,9 +91,9 @@ class ATVglobs:
 	def fmtDateTime(self, datetimestr):
 		if datetimestr:
 			if datetimestr != "00:00:00":
-				time = datetime.strptime(datetimestr, "%Y/%m/%d, %H:%M:%S").replace(tzinfo=timezone.utc)
-				if config.plugins.OpenATVstatus.timezone.value == "local":
-					time = time.astimezone()
+				berlin = datetime.strptime(datetimestr, "%Y/%m/%d, %H:%M:%S").replace(tzinfo=ZoneInfo("Europe/Berlin"))  # server time
+				utc = berlin.astimezone(ZoneInfo("UTC")) # UTC time as a uniform basis
+				time = utc.astimezone() if config.plugins.OpenATVstatus.timezone.value == "local" else utc  # local time on user demand
 				timefmt = f"{config.plugins.OpenATVstatus.dateformat.value} %H:%M h"
 				return f"{time.strftime(timefmt)}"
 			else:
@@ -280,7 +281,7 @@ class ATVfavorites(Screen, ATVglobs):
 								self.platdict[currplat]["boxcounter"] = f"{counter}"
 								self.platdict[currplat]["boxfailed"] = f"{failed}"
 							if BS.findbuildbox():
-								nextbuild = self.fmtDateTime((datetime.now(timezone.utc) + nextbuild).strftime("%Y/%m/%d, %H:%M:%S")) if config.plugins.OpenATVstatus.nextbuild.value == "absolute" and nextbuild else f"{BS.strf_delta(nextbuild)[:5]} h"
+								nextbuild = self.fmtDateTime((datetime.now(tz=ZoneInfo("Europe/Berlin")) + nextbuild).strftime("%Y/%m/%d, %H:%M:%S")) if config.plugins.OpenATVstatus.nextbuild.value == "absolute" and nextbuild else f"{BS.strf_delta(nextbuild)[:5]} h"
 							else:
 								nextbuild, boxesahead = "server paused", "unclear"
 							buildtime = self.roundMinutes(bd["BuildTime"].strip())
@@ -562,7 +563,7 @@ class ATVimageslist(Screen, ATVglobs):
 			else:
 				boxinfo = _("Server paused, unclear how many boxes are ahead...")
 			buildstatus = BS.htmldict["boxinfo"][self.boxlist[self.currindex][0]]["BuildStatus"] if BS.htmldict else ""
-			nextbuild = self.fmtDateTime((datetime.now(timezone.utc) + nextbuild).strftime("%Y/%m/%d, %H:%M:%S")) if config.plugins.OpenATVstatus.nextbuild.value == "absolute" and nextbuild else f"{BS.strf_delta(nextbuild)[:5]} h"
+			nextbuild = self.fmtDateTime((datetime.now(tz=ZoneInfo("Europe/Berlin")) + nextbuild).strftime("%Y/%m/%d, %H:%M:%S")) if config.plugins.OpenATVstatus.nextbuild.value == "absolute" and nextbuild else f"{BS.strf_delta(nextbuild)[:5]} h"
 			if nextbuild:
 				self["boxinfo"].setText(boxinfo)
 			elif buildstatus == "Building":
