@@ -42,6 +42,7 @@ from . import PLUGINPATH, __version__, _  # for localized messages
 from .Buildstatus import Buildstatus
 
 # PLUGIN GLOBALS
+PLUGIN_NAME = "OpenATV Status"
 BS = Buildstatus()
 BS.start()
 
@@ -814,9 +815,15 @@ def main(session, **kwargs):
 		session.open(ATVfavorites)
 
 
+def menu(menuid, **kwargs):
+	return [(PLUGIN_NAME, main, "openatv_status", 20)] if menuid == "support" else []
+
+
 def autostart(reason, **kwargs):
 	pass
 
 
 def Plugins(**kwargs):
-	return PluginDescriptor(name="OpenATV Status", icon="plugin.png", description=_("Current overview of the OpenATV images building servers"), where=PluginDescriptor.WHERE_PLUGINMENU, fnc=main)
+	description = _("Current overview of the OpenATV images building servers")
+	return [PluginDescriptor(name=PLUGIN_NAME, icon="plugin.png", description=description, where=PluginDescriptor.WHERE_PLUGINMENU, fnc=main),
+		PluginDescriptor(name=PLUGIN_NAME, description=description, where=PluginDescriptor.WHERE_MENU, fnc=menu)]
