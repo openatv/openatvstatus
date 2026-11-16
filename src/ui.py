@@ -93,29 +93,24 @@ class ATVglobs:
 		"""Find a platform for the requested architecture with intelligent fallback."""
 		if not requested_arch or not BS.platlist:
 			return BS.platlist[0] if BS.platlist else None
-		
 		# Try the requested architecture first
 		platform = BS.getplatform(requested_arch)
 		if platform:
 			return platform
-		
 		# If not found, try intelligent fallback based on architecture
 		archparts = requested_arch.split("_")
 		base_arch = archparts[0].upper() if len(archparts) > 0 else ""
-		
 		# Try same architecture with _latest
 		if base_arch:
 			fallback_arch = f"{base_arch}_latest"
 			platform = BS.getplatform(fallback_arch)
 			if platform:
 				return platform
-		
 		# Try fallback priority list: ARM_latest → MIPSEL_latest → DEVEL_latest
 		for fallback in ["ARM_latest", "MIPSEL_latest", "DEVEL_latest"]:
 			platform = BS.getplatform(fallback)
 			if platform:
 				return platform
-		
 		# Last resort: return first available
 		return BS.platlist[0] if BS.platlist else None
 
@@ -433,7 +428,7 @@ class ATVfavorites(Screen, ATVglobs):
 									self.updateMenulist()
 					self.error = f"[{self.MODULE_NAME}] ERROR in module 'getstatus': server access failed."
 				except Exception as err:
-					self.error = f"[{self.MODULE_NAME}] ERROR in module 'getstatus': invalid data from server {str(err)}"
+					self.error = f"[{self.MODULE_NAME}] ERROR in module 'getstatus': invalid data from server {err}"
 		else:
 			self.error = f"[{self.MODULE_NAME}] ERROR in module 'getstatus': missing boxname"
 

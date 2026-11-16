@@ -22,18 +22,19 @@ def menu(menuid, **kwargs):
 
 
 def Plugins(**kwargs):
-	description = _("Current overview of the OpenATV images building servers")
+	PLUGIN_NAME = "OpenATV Status"
+	PLUGIN_DESCRIPTION = _("Current overview of the OpenATV images building servers")
 	return [
 		PluginDescriptor(
-			name="OpenATV Status",
+			name=PLUGIN_NAME,
 			icon="plugin.png",
-			description=description,
+			description=PLUGIN_DESCRIPTION,
 			where=PluginDescriptor.WHERE_PLUGINMENU,
 			fnc=main
 		),
 		PluginDescriptor(
-			name="OpenATV Status",
-			description=description,
+			name=PLUGIN_NAME,
+			description=PLUGIN_DESCRIPTION,
 			where=PluginDescriptor.WHERE_MENU,
 			fnc=menu
 		)

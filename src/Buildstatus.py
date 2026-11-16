@@ -15,7 +15,7 @@
 from datetime import datetime, timedelta
 from getopt import GetoptError, getopt
 from json import dump, loads
-from re import M, S, findall, search
+from re import M, DOTALL, findall, search
 from sys import argv, exit
 from requests import get
 from requests.exceptions import RequestException
@@ -39,7 +39,7 @@ class Buildstatus:
 			response = get("http://api.mynonpublic.com/content.json", timeout=(3.05, 6))
 			response.raise_for_status()
 		except RequestException as err:
-			self.error = f"[{MODULE_NAME}] ERROR in module 'start': '{str(err)}"
+			self.error = f"[{MODULE_NAME}] ERROR in module 'start': '{err}"
 			return {}
 		try:
 			dictdata = loads(response.text)
@@ -58,7 +58,7 @@ class Buildstatus:
 				return dictdata
 			self.error = f"[{MODULE_NAME}] ERROR in module 'start': server access failed."
 		except Exception as err:
-			self.error = f"[{MODULE_NAME}] ERROR in module 'start': invalid json data from server. {str(err)}"
+			self.error = f"[{MODULE_NAME}] ERROR in module 'start': invalid json data from server. {err}"
 		return {}
 
 	def stop(self):
@@ -71,10 +71,11 @@ class Buildstatus:
 			if self.callback:
 				print(f"[{MODULE_NAME}] accessing buildservers for data...")
 			try:
+				print(self.url)
 				response = get(self.url, timeout=(3.05, 6))
 				response.raise_for_status()
 			except RequestException as err:
-				self.error = f"[{MODULE_NAME}] ERROR in module 'getpage': '{str(err)}"
+				self.error = f"[{MODULE_NAME}] ERROR in module 'getpage': '{err}"
 				return
 			try:
 				htmldata = response.text
@@ -82,7 +83,7 @@ class Buildstatus:
 					return htmldata
 				self.error = f"[{MODULE_NAME}] ERROR in module 'getpage': server access failed."
 			except Exception as err:
-				self.error = f"[{MODULE_NAME}] ERROR in module 'getpage': invalid data from server {str(err)}"
+				self.error = f"[{MODULE_NAME}] ERROR in module 'getpage': invalid data from server {err}"
 		else:
 			self.error = f"[{MODULE_NAME}] ERROR in module 'getpage': missing url"
 
@@ -130,7 +131,7 @@ class Buildstatus:
 	def htmlparse(self, htmldata):  # parse html-imagesdata & create imagesdict
 		htmldict = {}
 		title = search(r'<title>(.*?)</title>', htmldata)
-		headline = findall(r"<th>(.*?)</th>", str(findall(r'<thead>\s*<tr>(.*?)</tr>\s*</thead>', htmldata, flags=S)))
+		headline = findall(r"<th>(.*?)</th>", str(findall(r'<thead>\s*<tr>(.*?)</tr>\s*</thead>', htmldata, flags=DOTALL)))
 		htmldict["headline"] = ", ".join(headline)
 		htmldict["title"] = title.group(1) if title else ""
 		versionnames = findall(r'">(.*?)</button>', htmldata)
@@ -139,9 +140,9 @@ class Buildstatus:
 		for idx, version in enumerate(versionnames):
 			htmldict["versionurls"][version] = {}
 			htmldict["versionurls"][version]["url"] = versionurls[idx]
-		datablocks = search(r"<tbody>(.*?)</tbody>", htmldata, flags=S)
+		datablocks = search(r"<tbody>(.*?)</tbody>", htmldata, flags=DOTALL)
 		datablocks = datablocks.group(1) if datablocks else None
-		datablocks = findall(r"\s*<tr>(.*?)</tr>\s*", datablocks, flags=S) if datablocks else []
+		datablocks = findall(r"\s*<tr>(.*?)</tr>\s*", datablocks, flags=DOTALL) if datablocks else []
 		htmldict["boxinfo"] = {}
 		for datablock in datablocks:
 			boxinfo = findall(r'<td\s*class="(.*?)">(.*?)</td>', datablock, flags=M)
