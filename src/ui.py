@@ -82,7 +82,7 @@ class ATVglobs:
 				datetimestr = ""
 		return datetimestr
 
-	def roundMinutes(self, timestr):
+	def round_minutes(self, timestr):
 		if timestr:
 			timestr = timestr.split(",")  # handle those exceptions: e.g. '-1 day, 23:59:24'
 			tlist = timestr[0].strip().split(":") if len(timestr) == 1 else timestr[1].strip().split(":")
@@ -352,7 +352,7 @@ class ATVfavorites(Screen, ATVglobs):
 								nextbuild = self.fmtDateTime((datetime.now(tz=ZoneInfo("Europe/Berlin")) + nextbuild).strftime("%Y/%m/%d, %H:%M:%S")) if config.plugins.OpenATVstatus.nextbuild.value == "absolute" and nextbuild else f"{BS.strf_delta(nextbuild)[:5]} h"
 							else:
 								nextbuild, boxesahead = "server paused", "unclear"
-							buildtime = self.roundMinutes(bd["BuildTime"].strip())
+							buildtime = self.round_minutes(bd["BuildTime"].strip())
 							statuslist.append(box)  # collect all server status (avoids flickering in menu)
 							textlist = [box[0], box[1], bd["BuildStatus"], buildtime, f"{boxesahead}", self.fmtDateTime(bd["StartBuild"]), self.fmtDateTime(bd["EndBuild"]), nextbuild, color, None]
 							baselist.append(textlist)
@@ -391,7 +391,7 @@ class ATVfavorites(Screen, ATVglobs):
 			response = get(f"{self.PICURL}{boxname}.png".encode(), timeout=(3.05, 6))
 			response.raise_for_status()
 		except RequestException as error:
-			print(f"[{self.MODULE_NAME}] ERROR in module 'imageDownload': {str(error)}")
+			print(f"[{self.MODULE_NAME}] ERROR in module 'imageDownload': {error}")
 		else:
 			if exists(self.TEMPPATH):
 				with open(join(self.TEMPPATH, f"{boxname}.png"), "wb") as f:
@@ -420,7 +420,7 @@ class ATVfavorites(Screen, ATVglobs):
 				response = get(url.encode(), timeout=(3.05, 6))
 				response.raise_for_status()
 			except RequestException as error:
-				print(f"[{self.MODULE_NAME}] ERROR in module 'getServerStatus': {str(error)}")
+				print(f"[{self.MODULE_NAME}] ERROR in module 'getServerStatus': {error}")
 			else:
 				try:
 					htmldata = response.content.decode()
@@ -599,7 +599,7 @@ class ATVimageslist(Screen, ATVglobs):
 		self.setTitle(_("Images list"))
 		self.boxlist = []
 		self.htmldict = {}
-		self.requestId = 0
+		self.request_id = 0
 		self.platidx = BS.platlist.index(self.currplat)
 		self.currindex = 0
 		self.favindex = 0
@@ -657,18 +657,18 @@ class ATVimageslist(Screen, ATVglobs):
 
 	def refreshplatlist(self):
 		self.currplat = BS.platlist[self.platidx]
-		self.requestId += 1
-		requestId = self.requestId
+		self.request_id += 1
+		request_id = self.request_id
 		self.htmldict = None
 		self.makeimagelist()
 		# Keep overlapping requests separate and apply results on the GUI thread.
-		buildStatus = Buildstatus()
-		buildStatus.platlist = BS.platlist
-		buildStatus.platdict = BS.platdict
-		buildStatus.getbuildinfos(self.currplat, callback=lambda buildInfo: callFromThread(self.refreshCallback, buildInfo, requestId))
+		buildstatus = Buildstatus()
+		buildstatus.platlist = BS.platlist
+		buildstatus.platdict = BS.platdict
+		buildstatus.getbuildinfos(self.currplat, callback=lambda buildInfo: callFromThread(self.refreshCallback, buildInfo, request_id))
 
-	def refreshCallback(self, htmldict, requestId=None):
-		if requestId is not None and requestId != self.requestId:
+	def refreshCallback(self, htmldict, request_id=None):
+		if request_id is not None and request_id != self.request_id:
 			return
 		self.htmldict = htmldict  # for updateList in case config will be changed
 		self.makeimagelist()
@@ -682,8 +682,8 @@ class ATVimageslist(Screen, ATVglobs):
 				bd = self.htmldict["boxinfo"][boxname]
 				palette = {"Building": 0x00B028, "Failed": 0xFF0400, "Complete": 0xB0B0B0, "Waiting": 0xFFAE00}
 				color = 0xFDFf00 if [item for item in self.FAVLIST if item == (boxname, self.currplat)] else palette.get(bd["BuildStatus"], 0xB0B0B0)
-				buildtime = self.roundMinutes(bd["BuildTime"].strip())
-				synctime = self.roundMinutes(bd["SyncTime"].strip())
+				buildtime = self.round_minutes(bd["BuildTime"].strip())
+				synctime = self.round_minutes(bd["SyncTime"].strip())
 				menulist.append(tuple([bd["No"], boxname, bd["BuildStatus"], self.fmtDateTime(bd["StartBuild"]), self.fmtDateTime(bd["StartFeedSync"]), self.fmtDateTime(bd["EndBuild"]), synctime, buildtime, color]))
 		self.boxlist = boxlist
 		self["menu"].updateList(menulist)
@@ -793,8 +793,8 @@ class ATVimageslist(Screen, ATVglobs):
 	def keyYellow(self):
 		if self.boxlist and self.FAVLIST:
 			for offset in range(1, len(self.FAVLIST) + 1):
-				favoriteIndex = (self.favindex + offset) % len(self.FAVLIST)
-				favorite = self.FAVLIST[favoriteIndex]
+				favoriteindex = (self.favindex + offset) % len(self.FAVLIST)
+				favorite = self.FAVLIST[favoriteindex]
 				if len(favorite) != 2 or not favorite[0] or not favorite[1]:
 					continue
 				platform = favorite[1] if " " in favorite[1] else BS.getplatform(favorite[1])
@@ -803,7 +803,7 @@ class ATVimageslist(Screen, ATVglobs):
 				favorite = (favorite[0], platform)
 				if platform == self.currplat and favorite not in self.boxlist:
 					continue
-				self.favindex = favoriteIndex
+				self.favindex = favoriteindex
 				self.currbox = favorite
 				if self.currbox in self.boxlist:
 					self["menu"].setIndex(self.boxlist.index(self.currbox))
@@ -840,7 +840,7 @@ class ATVimageslist(Screen, ATVglobs):
 		self.updateStatus()
 
 	def exit(self):
-		self.requestId += 1  # Discard pending responses after the screen closes.
+		self.request_id += 1  # Discard pending responses after the screen closes.
 		self.CS.stop()
 		self.close()
 
@@ -927,14 +927,14 @@ class ATVboxdetails(Screen, ATVglobs):
 			response.raise_for_status()
 			return loads(response.content)
 		except RequestException as error:
-			print(f"[{self.MODULE_NAME}] ERROR in module 'getAPIdata': {str(error)}")
+			print(f"[{self.MODULE_NAME}] ERROR in module 'getAPIdata': {error}")
 
 	def imageDownload(self, boxname):
 		try:
 			response = get(f"{self.PICURL}{boxname}.png".encode(), timeout=(3.05, 6))
 			response.raise_for_status()
 		except RequestException as error:
-			print(f"[{self.MODULE_NAME}] ERROR in module 'imageDownload': {str(error)}")
+			print(f"[{self.MODULE_NAME}] ERROR in module 'imageDownload': {error}")
 		else:
 			with open(join(self.TEMPPATH, f"{boxname}.png"), "wb") as f:
 				f.write(response.content)
