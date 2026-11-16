@@ -6,7 +6,7 @@ from os.path import join
 from Components.Language import language
 from Tools.Directories import resolveFilename, SCOPE_PLUGINS
 
-__version__ = "2.9"
+__version__ = "3.0"
 PLUGINPATH = resolveFilename(SCOPE_PLUGINS, "Extensions/OpenATVstatus/")
 
 

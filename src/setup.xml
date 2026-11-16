@@ -1,0 +1,9 @@
+<setupxml>
+	<setup key="OpenATVstatus" title="OpenATVstatus Setup">
+		<item level="0" text="Preferred box architecture:" description="Specify which box architecture should be preferred when the images list will be called.">config.plugins.OpenATVstatus.favarch</item>
+		<item level="0" text="Animation for change of platform:" description="Sets the animation speed for the carousel function when changing platforms in images list.">config.plugins.OpenATVstatus.animate</item>
+		<item level="0" text="Time indication of 'NextBuild':" description="Show 'NextBuild' as relative time in hours or as absolute time.">config.plugins.OpenATVstatus.nextbuild</item>
+		<item level="0" text="Time zone:" description="Show time as local time or as standard time (UTC) from server.">config.plugins.OpenATVstatus.timezone</item>
+		<item level="0" text="Date format:" description="Show date in desired format.">config.plugins.OpenATVstatus.dateformat</item>
+	</setup>
+</setupxml>
