@@ -23,7 +23,7 @@ from requests.exceptions import RequestException
 from twisted.internet.reactor import callFromThread, callInThread
 
 # ENIGMA IMPORTS
-from enigma import BT_HALIGN_CENTER, BT_KEEP_ASPECT_RATIO, BT_SCALE, BT_VALIGN_CENTER, eTimer, getPeerStreamingBoxes
+from enigma import BT_HALIGN_CENTER, BT_KEEP_ASPECT_RATIO, BT_SCALE, BT_VALIGN_CENTER, eTimer, getPeerStreamingBoxes, getDesktop
 from Components.ActionMap import ActionMap
 from Components.config import ConfigSelection, ConfigSubsection, ConfigText, config
 from Components.Label import Label
@@ -66,6 +66,7 @@ class ATVglobs:
 	VERSION = f"v{__version__}"
 	MODULE_NAME = __name__.split(".")[-2]
 	FAVLIST = [tuple(x.strip() for x in item.replace("(", "").replace(")", "").split(",")) for item in config.plugins.OpenATVstatus.favboxes.value.split(";")] if config.plugins.OpenATVstatus.favboxes.value else []
+	RESOLUTION = "fHD" if getDesktop(0).size().width() > 1300 else "HD"
 	PICURL = "https://raw.githubusercontent.com/oe-alliance/remotes/master/boxes/"
 	TEMPPATH = "/tmp/OpenATVstatus/"
 	ICONPATH = resolveFilename(SCOPE_PLUGINS, "Extensions/OpenATVstatus/icons/")
@@ -268,6 +269,8 @@ class ATVfavorites(Screen, ATVglobs):
 
 	def __init__(self, session):
 		self.session = session
+		if self.RESOLUTION == "fHD":
+			self.skin = self.skin.replace("_HD.png", "_fHD.png")
 		Screen.__init__(self, session)
 		self.setTitle(_("Favorites"))
 		self.boxlist = []
@@ -590,6 +593,8 @@ class ATVimageslist(Screen, ATVglobs):
 		self.session = session
 		self.currbox = box
 		self.currplat = box[1]
+		if self.RESOLUTION == "fHD":
+			self.skin = self.skin.replace("_HD.png", "_fHD.png")
 		Screen.__init__(self, session)
 		self.setTitle(_("Images list"))
 		self.boxlist = []
@@ -864,6 +869,8 @@ class ATVboxdetails(Screen, ATVglobs):
 	def __init__(self, session, box):
 		self.session = session
 		self.box = box
+		if self.RESOLUTION == "fHD":
+			self.skin = self.skin.replace("_HD.png", "_fHD.png")
 		Screen.__init__(self, session)
 		self.setTitle(_("Boxdetails"))
 		self["version"] = Label(self.VERSION)
