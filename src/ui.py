@@ -23,7 +23,7 @@ from requests.exceptions import RequestException
 from twisted.internet.reactor import callFromThread, callInThread
 
 # ENIGMA IMPORTS
-from enigma import BT_HALIGN_CENTER, BT_KEEP_ASPECT_RATIO, BT_SCALE, BT_VALIGN_CENTER, eTimer, getPeerStreamingBoxes
+from enigma import BT_HALIGN_CENTER, BT_KEEP_ASPECT_RATIO, BT_SCALE, BT_VALIGN_CENTER, eTimer, getPeerStreamingBoxes, getDesktop
 from Components.ActionMap import ActionMap
 from Components.config import ConfigSelection, ConfigSubsection, ConfigText, config
 from Components.Label import Label
@@ -65,11 +65,15 @@ config.plugins.OpenATVstatus.favboxes = ConfigText(default="", fixed_size=False)
 class ATVglobs:
 	VERSION = f"v{__version__}"
 	MODULE_NAME = __name__.split(".")[-2]
+	RESOLUTION = "fHD" if getDesktop(0).size().width() > 1300 else "HD"
 	FAVLIST = [tuple(x.strip() for x in item.replace("(", "").replace(")", "").split(",")) for item in config.plugins.OpenATVstatus.favboxes.value.split(";")] if config.plugins.OpenATVstatus.favboxes.value else []
 	PICURL = "https://raw.githubusercontent.com/oe-alliance/remotes/master/boxes/"
 	TEMPPATH = "/tmp/OpenATVstatus/"
 	ICONPATH = resolveFilename(SCOPE_PLUGINS, "Extensions/OpenATVstatus/icons/")
 
+atvglobs = ATVglobs
+
+class ATVhelpers:
 	def fmtDateTime(self, datetimestr):
 		if datetimestr:
 			if datetimestr != "00:00:00":
@@ -114,8 +118,7 @@ class ATVglobs:
 		# Last resort: return first available
 		return BS.platlist[0] if BS.platlist else None
 
-
-class Carousel(ATVglobs):
+class Carousel:
 	def __init__(self, delay=50):
 		self.delay = delay
 		self.error = None
@@ -131,7 +134,7 @@ class Carousel(ATVglobs):
 
 	def start(self, choicelist, index, callback):
 		if not choicelist:
-			self.error = f"[{self.MODULE_NAME}] ERROR in module 'start': choicelist is empty or None!"
+			self.error = f"[{atvglobs.MODULE_NAME}] ERROR in module 'start': choicelist is empty or None!"
 			return
 		self.choicelist = choicelist
 		self.callback = callback
@@ -207,8 +210,7 @@ class Carousel(ATVglobs):
 		if self.callactive and self.callback:
 			self.callback((self.prevstr, self.currstr, self.nextstr))
 
-
-class ATVfavorites(Screen, ATVglobs):
+class ATVfavorites(Screen, ATVhelpers):
 	skin = """
 		<screen name="ATVfavorites" position="center,center" size="820,653" resolution="1280,720" title="" flags="wfNoBorder">
 			<ePixmap position="10,10" size="300,50" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/icons/openATV_HD.png" alphatest="blend" zPosition="1" />
@@ -268,13 +270,15 @@ class ATVfavorites(Screen, ATVglobs):
 
 	def __init__(self, session):
 		self.session = session
+		if atvglobs.RESOLUTION == "fHD":
+			self.skin = self.skin.replace("_HD.png", "_fHD.png")
 		Screen.__init__(self, session)
 		self.setTitle(_("Favorites"))
 		self.boxlist = []
 		self.foundFavs = []
 		self.platdict = {}
 		self.currindex = 0
-		self["version"] = Label(self.VERSION)
+		self["version"] = Label(atvglobs.VERSION)
 		self["platinfo"] = Label()
 		self["red"] = Label("")
 		self["key_red"] = Label(_("remove box from favorites"))
@@ -285,24 +289,26 @@ class ATVfavorites(Screen, ATVglobs):
 		self["actions"] = ActionMap(["WizardActions",
 									"DirectionActions",
 									"MenuActions",
-									"ColorActions"], {"ok": self.keyOk,
-													"back": self.exit,
-													"cancel": self.exit,
-													"red": self.keyRed,
-													"blue": self.keyOk,
-													"up": self.keyUp,
-													"down": self.keyDown,
-													"right": self.keyPageDown,
-													"left": self.keyPageUp,
-													"nextBouquet": self.keyPageDown,
-													"prevBouquet": self.keyPageUp,
-													"info": self.keyInfo,
-													"menu": self.openConfig
-													}, -1)
+									"ColorActions"], {
+										"ok": self.keyOk,
+										"back": self.exit,
+										"cancel": self.exit,
+										"red": self.keyRed,
+										"blue": self.keyOk,
+										"up": self.keyUp,
+										"down": self.keyDown,
+										"right": self.keyPageDown,
+										"left": self.keyPageUp,
+										"nextBouquet": self.keyPageDown,
+										"prevBouquet": self.keyPageUp,
+										"info": self.keyInfo,
+										"menu": self.openConfig
+									}, -1
+							)
 		self.onLayoutFinish.append(self.onLayoutFinished)
 		try:
-			if not exists(self.TEMPPATH):
-				makedirs(self.TEMPPATH, exist_ok=True)
+			if not exists(atvglobs.TEMPPATH):
+				makedirs(atvglobs.TEMPPATH, exist_ok=True)
 		except OSError as error:
 			self.session.open(MessageBox, f"Dateipfad für Boxbilder konnte nicht neu angelegt werden:\n'{error}'", type=MessageBox.TYPE_INFO, timeout=2, close_on_any_key=True)
 
@@ -316,10 +322,10 @@ class ATVfavorites(Screen, ATVglobs):
 		statuslist = []
 		self.currindex = 0
 		self["menu"].setList([])
-		if self.FAVLIST and BS.platlist:
+		if atvglobs.FAVLIST and BS.platlist:
 			self["menu"].style = "default"
 			usedarchs = []
-			for favorite in self.FAVLIST:
+			for favorite in atvglobs.FAVLIST:
 				currfav = favorite[1]
 				if currfav not in usedarchs:
 					usedarchs.append(currfav)
@@ -331,7 +337,7 @@ class ATVfavorites(Screen, ATVglobs):
 				boxpix = None
 				textlist = ["no box", "no platform", "unclear", "no server", "no server", "no server found", "no server found", "no server found", 0xFF0400, None]
 				if htmldict:  # favorites' platform found
-					for box in [item for item in self.FAVLIST if item[1] in set([item[1]])]:
+					for box in [item for item in atvglobs.FAVLIST if item[1] in set([item[1]])]:
 						if box[1] in currarch and box[0] in htmldict["boxinfo"]:
 							boxlist.append((box[0], currarch))
 							bd = htmldict["boxinfo"][box[0]]
@@ -355,7 +361,7 @@ class ATVfavorites(Screen, ATVglobs):
 							if not boxpix:
 								boxpiclist.append(box[0])  # collect missing box pictures (avoids flickering in menu)
 				else:  # favorites' platform not found
-					for box in self.FAVLIST:
+					for box in atvglobs.FAVLIST:
 						if box[1] == currarch:
 							boxlist.append((box[0], currarch))
 							textlist = [box[0], box[1], "unclear", "no server", "no server", "no server found", "no server found", "no server found", 0xFF0400, None]
@@ -383,26 +389,26 @@ class ATVfavorites(Screen, ATVglobs):
 
 	def imageDownload(self, boxname):
 		try:
-			response = get(f"{self.PICURL}{boxname}.png".encode(), timeout=(3.05, 6))
+			response = get(f"{atvglobs.PICURL}{boxname}.png".encode(), timeout=(3.05, 6))
 			response.raise_for_status()
 		except RequestException as error:
-			print(f"[{self.MODULE_NAME}] ERROR in module 'imageDownload': {error}")
+			print(f"[{atvglobs.MODULE_NAME}] ERROR in module 'imageDownload': {error}")
 		else:
-			if exists(self.TEMPPATH):
-				with open(join(self.TEMPPATH, f"{boxname}.png"), "wb") as f:
+			if exists(atvglobs.TEMPPATH):
+				with open(join(atvglobs.TEMPPATH, f"{boxname}.png"), "wb") as f:
 					f.write(response.content)
 		self.updateMenulist()
 
 	def imageDisplay(self, box):
-		picfile = join(self.TEMPPATH, f"{box[0]}.png")
+		picfile = join(atvglobs.TEMPPATH, f"{box[0]}.png")
 		return LoadPixmap(cached=True, path=picfile) if exists(picfile) else None
 
 	def updateMenulist(self):
 		menulist = []
 		for textlist in self.baselist:
-			picfile = join(self.TEMPPATH, f"{textlist[0]}.png")
+			picfile = join(atvglobs.TEMPPATH, f"{textlist[0]}.png")
 			boxpix = LoadPixmap(cached=True, path=picfile) if exists(picfile) else None
-			picfile = join(self.ICONPATH, textlist[9]) if textlist[9] else None
+			picfile = join(atvglobs.ICONPATH, textlist[9]) if textlist[9] else None
 			statuspix = LoadPixmap(cached=True, path=picfile) if picfile and exists(picfile) else None
 			menulist.append(tuple(textlist[:-1] + [boxpix] + [statuspix]))  # remove last entry 'serverstatus' from textlist (no need for skin)
 		self["menu"].updateList(menulist)
@@ -415,7 +421,7 @@ class ATVfavorites(Screen, ATVglobs):
 				response = get(url.encode(), timeout=(3.05, 6))
 				response.raise_for_status()
 			except RequestException as error:
-				print(f"[{self.MODULE_NAME}] ERROR in module 'getServerStatus': {error}")
+				print(f"[{atvglobs.MODULE_NAME}] ERROR in module 'getServerStatus': {error}")
 			else:
 				try:
 					htmldata = response.content.decode()
@@ -426,14 +432,14 @@ class ATVfavorites(Screen, ATVglobs):
 								if box == self.baselist[idx][:2]:
 									self.baselist[idx][9] = server.group(1)  # replace last entry 'serverstatus'
 									self.updateMenulist()
-					self.error = f"[{self.MODULE_NAME}] ERROR in module 'getstatus': server access failed."
+					self.error = f"[{atvglobs.MODULE_NAME}] ERROR in module 'getstatus': server access failed."
 				except Exception as err:
-					self.error = f"[{self.MODULE_NAME}] ERROR in module 'getstatus': invalid data from server {err}"
+					self.error = f"[{atvglobs.MODULE_NAME}] ERROR in module 'getstatus': invalid data from server {err}"
 		else:
-			self.error = f"[{self.MODULE_NAME}] ERROR in module 'getstatus': missing boxname"
+			self.error = f"[{atvglobs.MODULE_NAME}] ERROR in module 'getstatus': missing boxname"
 
 	def updateStatus(self):
-		if self.FAVLIST:
+		if atvglobs.FAVLIST:
 			self.currindex = self["menu"].getSelectedIndex()
 			if self.boxlist and self.currindex is not None:
 				currplat = self.boxlist[self.currindex][1]
@@ -445,8 +451,8 @@ class ATVfavorites(Screen, ATVglobs):
 
 	def msgboxCB(self, answer):
 		if answer is True and self.boxlist and self.currindex is not None:
-			self.FAVLIST.remove(self.foundFavs[0])
-			config.plugins.OpenATVstatus.favboxes.value = ";".join(f"({','.join(item)})" for item in self.FAVLIST) if self.FAVLIST else ""
+			atvglobs.FAVLIST.remove(self.foundFavs[0])
+			config.plugins.OpenATVstatus.favboxes.value = ";".join(f"({','.join(item)})" for item in atvglobs.FAVLIST) if atvglobs.FAVLIST else ""
 			config.plugins.OpenATVstatus.favboxes.save()
 			removedbox = self.boxlist[self.currindex]
 			self.createMenulist()
@@ -472,7 +478,7 @@ class ATVfavorites(Screen, ATVglobs):
 			if platform is None:
 				platform = self.getArchitectureWithFallback(fav_arch)
 			currbox = (boxname, platform) if platform else None
-		self.oldfavlist = self.FAVLIST[:]
+		self.oldfavlist = atvglobs.FAVLIST[:]
 		if currbox and currbox[1] in BS.platlist:
 			self.session.openWithCallback(self.ATVimageslistCB, ATVimageslist, currbox)
 
@@ -484,12 +490,12 @@ class ATVfavorites(Screen, ATVglobs):
 
 	def keyRed(self):
 		if self.boxlist and self.currindex is not None:
-			self.foundFavs = [item for item in self.FAVLIST if item == self.boxlist[self.currindex]]
+			self.foundFavs = [item for item in atvglobs.FAVLIST if item == self.boxlist[self.currindex]]
 			if self.foundFavs:
 				self.session.openWithCallback(self.msgboxCB, MessageBox, _("Do you really want to remove Box '%s-%s' from favorites?") % self.boxlist[self.currindex], MessageBox.TYPE_YESNO, timeout=20, default=False)
 
 	def ATVimageslistCB(self):
-		if self.oldfavlist != self.FAVLIST:  # any changes when running 'ATVimageslist'?
+		if self.oldfavlist != atvglobs.FAVLIST:  # any changes when running 'ATVimageslist'?
 			self.createMenulist()
 
 	def keyUp(self):
@@ -518,8 +524,8 @@ class ATVfavorites(Screen, ATVglobs):
 
 	def exit(self):
 		BS.stop()
-		if exists(self.TEMPPATH):
-			rmtree(self.TEMPPATH)
+		if exists(atvglobs.TEMPPATH):
+			rmtree(atvglobs.TEMPPATH)
 		self.close()
 
 	def openConfig(self):
@@ -529,7 +535,7 @@ class ATVfavorites(Screen, ATVglobs):
 			self.createMenulist()
 
 
-class ATVimageslist(Screen, ATVglobs):
+class ATVimageslist(Screen, ATVhelpers):
 	skin = """
 		<screen name="ATVimageslist" position="center,center" size="1240,690" resolution="1280,720" title="" flags="wfNoBorder">
 			<ePixmap position="10,10" size="300,50" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/icons/openATV_HD.png" alphatest="blend" zPosition="1" />
@@ -590,6 +596,8 @@ class ATVimageslist(Screen, ATVglobs):
 		self.session = session
 		self.currbox = box
 		self.currplat = box[1]
+		if atvglobs.RESOLUTION == "fHD":
+			self.skin = self.skin.replace("_HD.png", "_fHD.png")
 		Screen.__init__(self, session)
 		self.setTitle(_("Images list"))
 		self.boxlist = []
@@ -605,7 +613,7 @@ class ATVimageslist(Screen, ATVglobs):
 		self["prev_label"] = Label()
 		self["curr_label"] = Label()
 		self["next_label"] = Label()
-		self["version"] = Label(self.VERSION)
+		self["version"] = Label(atvglobs.VERSION)
 		self["curr_date"] = Label(datetime.now().strftime("%x"))
 		self["boxinfo"] = Label()
 		self["platinfo"] = Label()
@@ -620,23 +628,24 @@ class ATVimageslist(Screen, ATVglobs):
 									"MenuActions",
 									"ChannelSelectBaseActions",
 									"ColorActions"], {
-									"ok": self.keyOk,
-									"back": self.exit,
-									"cancel": self.exit,
-									"red": self.keyRed,
-									"green": self.keyGreen,
-									"yellow": self.keyYellow,
-									"up": self.keyUp,
-									"down": self.keyDown,
-									"right": self.keyPageDown,
-									"left": self.keyPageUp,
-									"nextBouquet": self.keyPageUp,
-									"prevBouquet": self.keyPageDown,
-									"nextMarker": self.nextPlatform,
-									"prevMarker": self.prevPlatform,
-									"info": self.keyOk,
-									"menu": self.openConfig
-									}, -1)
+										"ok": self.keyOk,
+										"back": self.exit,
+										"cancel": self.exit,
+										"red": self.keyRed,
+										"green": self.keyGreen,
+										"yellow": self.keyYellow,
+										"up": self.keyUp,
+										"down": self.keyDown,
+										"right": self.keyPageDown,
+										"left": self.keyPageUp,
+										"nextBouquet": self.keyPageUp,
+										"prevBouquet": self.keyPageDown,
+										"nextMarker": self.nextPlatform,
+										"prevMarker": self.prevPlatform,
+										"info": self.keyOk,
+										"menu": self.openConfig
+										}, -1
+							)
 		delay = int(config.plugins.OpenATVstatus.animate.value)
 		self.CS = Carousel(delay if delay else 50)
 		self.CS.start(BS.platlist, self.platidx, self.CarouselCB)
@@ -676,7 +685,7 @@ class ATVimageslist(Screen, ATVglobs):
 				boxlist.append((boxname, self.currplat))
 				bd = self.htmldict["boxinfo"][boxname]
 				palette = {"Building": 0x00B028, "Failed": 0xFF0400, "Complete": 0xB0B0B0, "Waiting": 0xFFAE00}
-				color = 0xFDFf00 if [item for item in self.FAVLIST if item == (boxname, self.currplat)] else palette.get(bd["BuildStatus"], 0xB0B0B0)
+				color = 0xFDFf00 if [item for item in atvglobs.FAVLIST if item == (boxname, self.currplat)] else palette.get(bd["BuildStatus"], 0xB0B0B0)
 				buildtime = self.round_minutes(bd["BuildTime"].strip())
 				synctime = self.round_minutes(bd["SyncTime"].strip())
 				menulist.append(tuple([bd["No"], boxname, bd["BuildStatus"], self.fmtDateTime(bd["StartBuild"]), self.fmtDateTime(bd["StartFeedSync"]), self.fmtDateTime(bd["EndBuild"]), synctime, buildtime, color]))
@@ -693,7 +702,7 @@ class ATVimageslist(Screen, ATVglobs):
 		self.currindex = self["menu"].getSelectedIndex()
 		buildInfo = self.htmldict
 		if buildInfo and self.currindex is not None and 0 <= self.currindex < len(self.boxlist):
-			if self.boxlist[self.currindex] in self.FAVLIST:
+			if self.boxlist[self.currindex] in atvglobs.FAVLIST:
 				self["key_red"].setText(_("remove box from favorites"))
 			else:
 				self["key_red"].setText(_("add box to favorites"))
@@ -758,20 +767,20 @@ class ATVimageslist(Screen, ATVglobs):
 
 	def msgboxCB(self, answer):
 		if answer is True and self.boxlist and self.currindex is not None:
-			self.FAVLIST.remove(self.foundFavs[0])
-			config.plugins.OpenATVstatus.favboxes.value = ";".join(f"({','.join(item)})" for item in self.FAVLIST) if self.FAVLIST else ""
+			atvglobs.FAVLIST.remove(self.foundFavs[0])
+			config.plugins.OpenATVstatus.favboxes.value = ";".join(f"({','.join(item)})" for item in atvglobs.FAVLIST) if atvglobs.FAVLIST else ""
 			config.plugins.OpenATVstatus.favboxes.save()
 			self.session.open(MessageBox, text=_("Box '%s-%s' was sucessfully removed from favorites!") % self.boxlist[self.currindex], type=MessageBox.TYPE_INFO, timeout=2, close_on_any_key=True)
 			self.refreshplatlist()
 
 	def keyRed(self):
 		if self.boxlist and self.currindex is not None:
-			self.foundFavs = [item for item in self.FAVLIST if item == self.boxlist[self.currindex]]
+			self.foundFavs = [item for item in atvglobs.FAVLIST if item == self.boxlist[self.currindex]]
 			if self.foundFavs:
 				self.session.openWithCallback(self.msgboxCB, MessageBox, _("Do you really want to remove Box '%s-%s' from favorites?") % self.boxlist[self.currindex], MessageBox.TYPE_YESNO, timeout=20, default=False)
 			else:
-				self.FAVLIST.append(self.boxlist[self.currindex])
-				config.plugins.OpenATVstatus.favboxes.value = ";".join(f"({','.join(item)})" for item in self.FAVLIST) if self.FAVLIST else ""
+				atvglobs.FAVLIST.append(self.boxlist[self.currindex])
+				config.plugins.OpenATVstatus.favboxes.value = ";".join(f"({','.join(item)})" for item in atvglobs.FAVLIST) if atvglobs.FAVLIST else ""
 				config.plugins.OpenATVstatus.favboxes.save()
 				self.session.open(MessageBox, text=_("Box '%s-%s' was sucessfully added to favorites!") % self.boxlist[self.currindex], type=MessageBox.TYPE_INFO, timeout=2, close_on_any_key=True)
 				self.refreshplatlist()
@@ -786,10 +795,10 @@ class ATVimageslist(Screen, ATVglobs):
 				self.session.open(MessageBox, text=_("At the moment no image is built on the platform '%s'!") % self.currplat, type=MessageBox.TYPE_INFO, timeout=5, close_on_any_key=True)
 
 	def keyYellow(self):
-		if self.boxlist and self.FAVLIST:
-			for offset in range(1, len(self.FAVLIST) + 1):
-				favoriteindex = (self.favindex + offset) % len(self.FAVLIST)
-				favorite = self.FAVLIST[favoriteindex]
+		if self.boxlist and atvglobs.FAVLIST:
+			for offset in range(1, len(atvglobs.FAVLIST) + 1):
+				favoriteindex = (self.favindex + offset) % len(atvglobs.FAVLIST)
+				favorite = atvglobs.FAVLIST[favoriteindex]
 				if len(favorite) != 2 or not favorite[0] or not favorite[1]:
 					continue
 				platform = favorite[1] if " " in favorite[1] else BS.getplatform(favorite[1])
@@ -846,7 +855,7 @@ class ATVimageslist(Screen, ATVglobs):
 		self.makeimagelist()
 
 
-class ATVboxdetails(Screen, ATVglobs):
+class ATVboxdetails(Screen):
 	skin = """
 		<screen name="ATVboxdetails" position="center,center" size="666,486" resolution="1280,720" title="" flags="wfNoBorder">
 			<ePixmap position="10,10" size="300,50" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/OpenATVstatus/icons/openATV_HD.png" alphatest="blend" zPosition="1" />
@@ -864,25 +873,28 @@ class ATVboxdetails(Screen, ATVglobs):
 	def __init__(self, session, box):
 		self.session = session
 		self.box = box
+		if atvglobs.RESOLUTION == "fHD":
+			self.skin = self.skin.replace("_HD.png", "_fHD.png")
 		Screen.__init__(self, session)
 		self.setTitle(_("Boxdetails"))
-		self["version"] = Label(self.VERSION)
+		self["version"] = Label(atvglobs.VERSION)
 		self["curr_date"] = Label(datetime.now().strftime("%x"))
 		self["status"] = Label()
 		self["picture"] = Pixmap()
 		self["details"] = Label()
 		self["key_red"] = Label(_("Cancel"))
-		self["actions"] = ActionMap(["OkCancelActions",
-									"ColorActions"], {"ok": self.exit,
-													"back": self.exit,
-													"cancel": self.exit,
-													"red": self.exit,
-													}, -1)
+		self["actions"] = ActionMap(["OkCancelActions", "ColorActions"], {
+								"ok": self.exit,
+								"back": self.exit,
+								"cancel": self.exit,
+								"red": self.exit,
+								}, -1
+							)
 		self.onLayoutFinish.append(self.onLayoutFinished)
 
 	def onLayoutFinished(self):
 		self["picture"].hide()
-		self.picfile = join(self.TEMPPATH, f"{self.box[0]}.png")
+		self.picfile = join(atvglobs.TEMPPATH, f"{self.box[0]}.png")
 		if exists(self.picfile):
 			self.idownloadCB()
 		else:
@@ -922,16 +934,16 @@ class ATVboxdetails(Screen, ATVglobs):
 			response.raise_for_status()
 			return loads(response.content)
 		except RequestException as error:
-			print(f"[{self.MODULE_NAME}] ERROR in module 'getAPIdata': {error}")
+			print(f"[{atvglobs.MODULE_NAME}] ERROR in module 'getAPIdata': {error}")
 
 	def imageDownload(self, boxname):
 		try:
-			response = get(f"{self.PICURL}{boxname}.png".encode(), timeout=(3.05, 6))
+			response = get(f"{atvglobs.PICURL}{boxname}.png".encode(), timeout=(3.05, 6))
 			response.raise_for_status()
 		except RequestException as error:
-			print(f"[{self.MODULE_NAME}] ERROR in module 'imageDownload': {error}")
+			print(f"[{atvglobs.MODULE_NAME}] ERROR in module 'imageDownload': {error}")
 		else:
-			with open(join(self.TEMPPATH, f"{boxname}.png"), "wb") as f:
+			with open(join(atvglobs.TEMPPATH, f"{boxname}.png"), "wb") as f:
 				f.write(response.content)
 		self.idownloadCB()
 
